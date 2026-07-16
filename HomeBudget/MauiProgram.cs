@@ -1,4 +1,6 @@
 ﻿using CommunityToolkit.Maui;
+using HomeBudget.Data.Database;
+using HomeBudget.Services;
 using HomeBudget.ViewModels;
 using HomeBudget.Views;
 using Microsoft.Extensions.Logging;
@@ -22,6 +24,10 @@ namespace HomeBudget
             builder.Services.AddSingleton<DashboardViewModel>();
 
             builder.Services.AddSingleton<DashboardPage>();
+
+            builder.Services.AddSingleton<SQLiteContext>();
+
+            builder.Services.AddSingleton<ApplicationStartupService>();
 
 #if DEBUG
             builder.Logging.AddDebug();
