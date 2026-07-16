@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using HomeBudget.Interfaces;
 using HomeBudget.Models;
 using HomeBudget.Repositories;
+using HomeBudget.Services;
 
 namespace HomeBudget.ViewModels;
 
@@ -12,14 +13,19 @@ public partial class AccountDetailViewModel : ObservableObject
     private readonly INavigationService _navigation;
     private readonly IDialogService _dialogs;
     private Account? _editingAccount;
+    private readonly INavigationContext _context;
 
     public AccountDetailViewModel(AccountRepository repository,
         INavigationService navigation,
-        IDialogService dialogs)
+        IDialogService dialogs,
+        INavigationContext parameters)
     {
         _repository = repository;
         _navigation = navigation;
         _dialogs = dialogs;
+        _context = parameters;
+
+        _editingAccount = _context.Get<Account>();
     }
 
     [ObservableProperty]
@@ -31,16 +37,23 @@ public partial class AccountDetailViewModel : ObservableObject
     [ObservableProperty]
     private bool includeInTotal = true;
 
-    public async Task LoadAsync(Account? account)
+    public async Task LoadAsync()
     {
-        _editingAccount = account;
+        _editingAccount = _context.Get<Account>();
 
-        if (account == null)
+        if (_editingAccount == null)
+        {
+            // Add mode
+            AccountName = "";
+            Balance = 0;
+            IncludeInTotal = true;
             return;
+        }
 
-        AccountName = account.Name;
-        Balance = account.Balance;
-        IncludeInTotal = account.IncludeInTotal;
+        // Edit mode
+        AccountName = _editingAccount.Name;
+        Balance = _editingAccount.Balance;
+        IncludeInTotal = _editingAccount.IncludeInTotal;
     }
 
     [RelayCommand]

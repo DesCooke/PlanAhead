@@ -12,16 +12,22 @@ public partial class AccountsViewModel : ObservableObject
     private readonly AccountRepository _repository;
     private readonly INavigationService _navigation;
     private readonly IDialogService _dialogs;
+    private readonly INavigationContext _context;
+
+    [ObservableProperty]
+    private Account? selectedAccount;
 
     public ObservableCollection<Account> Accounts { get; } = new();
 
     public AccountsViewModel(AccountRepository repository,
         INavigationService navigation,
-        IDialogService dialogs)
+        IDialogService dialogs,
+        INavigationContext context)
     {
         _repository = repository;
         _navigation = navigation;
         _dialogs = dialogs;
+        _context = context;
     }
 
     public async Task LoadAsync()
@@ -35,17 +41,25 @@ public partial class AccountsViewModel : ObservableObject
     }
 
     [RelayCommand]
+    private async Task EditAccount(Account account)
+    {
+        _context.Set(account); 
+        await _navigation.GoToAccountDetailAsync();
+    }
+
+    [RelayCommand]
     private async Task AddAccount()
     {
-        var account = new Account
-        {
-            Name = "New Account",
-            Balance = 0,
-            DisplayOrder = Accounts.Count + 1
-        };
+        await _navigation.GoToAccountDetailAsync();
+    }
 
-        await _repository.AddAsync(account);
+    partial void OnSelectedAccountChanged(Account? value)
+    {
+        if (value == null)
+            return;
 
-        await LoadAsync();
+        EditAccountCommand.Execute(value);
+
+        SelectedAccount = null;
     }
 }

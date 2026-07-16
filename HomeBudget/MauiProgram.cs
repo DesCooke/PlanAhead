@@ -41,6 +41,8 @@ namespace HomeBudget
 
             builder.Services.AddSingleton<AccountsViewModel>();
 
+            builder.Services.AddSingleton<AccountDetailViewModel>();
+
             builder.Services.AddSingleton<AccountsPage>();
 
             builder.Services.AddSingleton<INavigationService,
@@ -48,6 +50,9 @@ namespace HomeBudget
 
             builder.Services.AddSingleton<IDialogService,
                 DialogService>();
+
+            builder.Services.AddSingleton<INavigationContext,
+                              NavigationContext>();
 
 #if DEBUG
             builder.Logging.AddDebug();

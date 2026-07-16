@@ -7,6 +7,10 @@ namespace HomeBudget
         public AppShell()
         {
             InitializeComponent();
+
+            Routing.RegisterRoute(
+                nameof(AccountDetailPage),
+                typeof(AccountDetailPage));
         }
     }
 }

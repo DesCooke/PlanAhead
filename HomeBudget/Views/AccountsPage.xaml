@@ -16,7 +16,9 @@
         <CollectionView
             Grid.Row="1"
             ItemsSource="{Binding Accounts}"
-            Margin="10">
+            Margin="10" 
+            SelectionMode="Single"
+            SelectedItem="{Binding SelectedAccount}">
 
             <CollectionView.ItemTemplate>
 
