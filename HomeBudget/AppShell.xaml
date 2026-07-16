@@ -18,4 +18,12 @@
             ContentTemplate="{DataTemplate views:DeveloperToolsPage}" />
     </FlyoutItem>
 
+    <FlyoutItem Title="Accounts">
+
+        <ShellContent
+        Title="Accounts"
+        ContentTemplate="{DataTemplate views:AccountsPage}" />
+
+    </FlyoutItem>
+
 </Shell>

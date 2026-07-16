@@ -38,6 +38,10 @@ namespace HomeBudget
 
             builder.Services.AddSingleton<AppShell>();
 
+            builder.Services.AddSingleton<AccountsViewModel>();
+
+            builder.Services.AddSingleton<AccountsPage>();
+
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
