@@ -1,8 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using HomeBudget.Constants;
-using HomeBudget.Repositories;
+using HomeBudget.Interfaces;
 using HomeBudget.Models;
+using HomeBudget.Repositories;
 
 namespace HomeBudget.ViewModels;
 
@@ -20,10 +21,16 @@ public partial class DashboardViewModel : ObservableObject
         $"Version {AppConstants.Version}";
 
     private readonly AccountRepository _repository;
+    private readonly INavigationService _navigation;
+    private readonly IDialogService _dialogs;
 
-    public DashboardViewModel(AccountRepository repository)
+    public DashboardViewModel(AccountRepository repository,
+        INavigationService navigation,
+        IDialogService dialogs)
     {
         _repository = repository;
+        _navigation = navigation;
+        _dialogs = dialogs;
     }
 
     [RelayCommand]

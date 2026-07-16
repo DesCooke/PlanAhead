@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using HomeBudget.Interfaces;
 using HomeBudget.Models;
 using HomeBudget.Repositories;
 
@@ -8,10 +9,16 @@ namespace HomeBudget.ViewModels;
 public partial class DeveloperToolsViewModel : ObservableObject
 {
     private readonly AccountRepository _repository;
+    private readonly INavigationService _navigation;
+    private readonly IDialogService _dialogs;
 
-    public DeveloperToolsViewModel(AccountRepository repository)
+    public DeveloperToolsViewModel(AccountRepository repository,
+        INavigationService navigation,
+        IDialogService dialogs)
     {
         _repository = repository;
+        _navigation = navigation;
+        _dialogs = dialogs;
     }
 
     [RelayCommand]
@@ -24,10 +31,8 @@ public partial class DeveloperToolsViewModel : ObservableObject
             DisplayOrder = 1
         });
 
-        await Shell.Current.DisplayAlert(
-            "Developer",
-            "Test account created.",
-            "OK");
+        await _dialogs.ShowMessageAsync(
+                "Developer", "Test account created.");
     }
 
     [RelayCommand]
@@ -37,10 +42,8 @@ public partial class DeveloperToolsViewModel : ObservableObject
 
         if (accounts.Count == 0)
         {
-            await Shell.Current.DisplayAlert(
-                "Accounts",
-                "No accounts found.",
-                "OK");
+            await _dialogs.ShowMessageAsync(
+                "Accounts","No accounts found.");
 
             return;
         }
@@ -50,10 +53,8 @@ public partial class DeveloperToolsViewModel : ObservableObject
             accounts.Select(a =>
                 $"{a.Name}   {a.Balance:C}"));
 
-        await Shell.Current.DisplayAlert(
-            "Accounts",
-            text,
-            "OK");
+        await _dialogs.ShowMessageAsync(
+                "Accounts",$"{text}");
     }
 
     [RelayCommand]
@@ -64,20 +65,16 @@ public partial class DeveloperToolsViewModel : ObservableObject
         foreach (var account in accounts)
             await _repository.DeleteAsync(account);
 
-        await Shell.Current.DisplayAlert(
-            "Developer",
-            "All accounts deleted.",
-            "OK");
+        await _dialogs.ShowMessageAsync(
+                "Developer","All accounts deleted.");
     }
     [RelayCommand]
     private async Task ShowAccountCount()
     {
         var accounts = await _repository.GetAllAsync();
 
-        await Shell.Current.DisplayAlert(
-            "Accounts",
-            $"There are {accounts.Count} accounts.",
-            "OK");
+        await _dialogs.ShowMessageAsync(
+                "Accounts",$"There are {accounts.Count} accounts.");
     }
 
     [RelayCommand]
@@ -87,9 +84,7 @@ public partial class DeveloperToolsViewModel : ObservableObject
             FileSystem.AppDataDirectory,
             "homebudget.db");
 
-        await Shell.Current.DisplayAlert(
-            "Database",
-            path,
-            "OK");
+        await _dialogs.ShowMessageAsync(
+                "Database",$"{path}");
     }
 }

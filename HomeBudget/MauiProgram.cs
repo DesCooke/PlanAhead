@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Maui;
 using HomeBudget.Data.Database;
+using HomeBudget.Interfaces;
 using HomeBudget.Repositories;
 using HomeBudget.Services;
 using HomeBudget.ViewModels;
@@ -41,6 +42,12 @@ namespace HomeBudget
             builder.Services.AddSingleton<AccountsViewModel>();
 
             builder.Services.AddSingleton<AccountsPage>();
+
+            builder.Services.AddSingleton<INavigationService,
+                NavigationService>();
+
+            builder.Services.AddSingleton<IDialogService,
+                DialogService>();
 
 #if DEBUG
             builder.Logging.AddDebug();

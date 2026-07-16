@@ -22,6 +22,14 @@ public class AccountRepository
         return db;
     }
 
+    public async Task<Account?> GetByIdAsync(Guid id)
+    {
+        var db = await Database();
+
+        return await db.Table<Account>()
+                       .FirstOrDefaultAsync(a => a.Id == id);
+    }
+
     public async Task<List<Account>> GetAllAsync()
     {
         var db = await Database();
@@ -43,6 +51,8 @@ public class AccountRepository
         account.UpdatedUtc = DateTime.UtcNow;
 
         account.NeedsSync = true;
+
+        account.DisplayOrder = await db.Table<Account>().CountAsync() + 1;
 
         await db.InsertAsync(account);
     }

@@ -1,0 +1,48 @@
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="HomeBudget.Views.AccountDetailPage"
+    Title="Account">
+
+    <ScrollView>
+
+        <VerticalStackLayout
+            Padding="20"
+            Spacing="15">
+
+            <Label
+                Text="Account Name"/>
+
+            <Entry
+                Text="{Binding AccountName}" />
+
+            <Label
+                Text="Opening Balance"/>
+
+            <Entry
+                Keyboard="Numeric"
+                Text="{Binding Balance}" />
+
+            <CheckBox
+                IsChecked="{Binding IncludeInTotal}" />
+
+            <Label
+                Text="Include in Total" />
+
+            <HorizontalStackLayout>
+
+                <Button
+                    Text="Save"
+                    Command="{Binding SaveCommand}" />
+
+                <Button
+                    Text="Cancel"
+                    Command="{Binding CancelCommand}" />
+
+            </HorizontalStackLayout>
+
+        </VerticalStackLayout>
+
+    </ScrollView>
+
+</ContentPage>
