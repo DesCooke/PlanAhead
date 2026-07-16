@@ -1,4 +1,6 @@
-﻿namespace HomeBudget
+﻿using HomeBudget.Views;
+
+namespace HomeBudget
 {
     public partial class AppShell : Shell
     {

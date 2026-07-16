@@ -32,6 +32,12 @@ namespace HomeBudget
 
             builder.Services.AddSingleton<AccountRepository>();
 
+            builder.Services.AddSingleton<DeveloperToolsViewModel>();
+
+            builder.Services.AddSingleton<DeveloperToolsPage>();
+
+            builder.Services.AddSingleton<AppShell>();
+
 #if DEBUG
             builder.Logging.AddDebug();
 #endif

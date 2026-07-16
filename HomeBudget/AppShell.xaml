@@ -6,8 +6,16 @@
     xmlns:views="clr-namespace:HomeBudget.Views"
     x:Class="HomeBudget.AppShell">
 
-    <ShellContent
-        Title="Dashboard"
-        ContentTemplate="{DataTemplate views:DashboardPage}" />
+    <FlyoutItem Title="Dashboard">
+        <ShellContent
+            Title="Dashboard"
+            ContentTemplate="{DataTemplate views:DashboardPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Title="Developer">
+        <ShellContent
+            Title="Developer Tools"
+            ContentTemplate="{DataTemplate views:DeveloperToolsPage}" />
+    </FlyoutItem>
 
 </Shell>

@@ -27,6 +27,7 @@ public class AccountRepository
         var db = await Database();
 
         return await db.Table<Account>()
+                       .Where(a => !a.Deleted)
                        .OrderBy(a => a.DisplayOrder)
                        .ToListAsync();
     }

@@ -2,11 +2,13 @@ using HomeBudget.ViewModels;
 
 namespace HomeBudget.Views;
 
-public partial class DashboardPage : ContentPage
+public partial class DeveloperToolsPage : ContentPage
 {
-    public DashboardPage(DashboardViewModel viewModel)
+    public DeveloperToolsPage(
+        DeveloperToolsViewModel viewModel)
     {
         InitializeComponent();
+
         BindingContext = viewModel;
     }
 }

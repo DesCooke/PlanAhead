@@ -14,22 +14,17 @@
             Text="{Binding Title}"
             FontSize="32"
             FontAttributes="Bold"
-            HorizontalOptions="Center" />
+            HorizontalOptions="Center"/>
 
         <Label
             Text="{Binding WelcomeMessage}"
             FontSize="20"
-            HorizontalOptions="Center" />
+            HorizontalOptions="Center"/>
 
         <Label
             Text="{Binding Version}"
-            HorizontalOptions="Center" />
+            HorizontalOptions="Center"/>
 
-        <Button
-            Text="Run Repository Test"
-            Command="{Binding TestRepositoryCommand}" />
-        
-        
     </VerticalStackLayout>
 
 </ContentPage>
