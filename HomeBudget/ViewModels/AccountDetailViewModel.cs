@@ -7,22 +7,18 @@ using HomeBudget.Services;
 
 namespace HomeBudget.ViewModels;
 
-public partial class AccountDetailViewModel : ObservableObject
+public partial class AccountDetailViewModel : BaseViewModel
 {
     private readonly AccountRepository _repository;
-    private readonly INavigationService _navigation;
-    private readonly IDialogService _dialogs;
     private Account? _editingAccount;
     private readonly INavigationContext _context;
 
     public AccountDetailViewModel(AccountRepository repository,
         INavigationService navigation,
         IDialogService dialogs,
-        INavigationContext parameters)
+        INavigationContext parameters): base(navigation, dialogs)
     {
         _repository = repository;
-        _navigation = navigation;
-        _dialogs = dialogs;
         _context = parameters;
 
         _editingAccount = _context.Get<Account>();
@@ -59,7 +55,7 @@ public partial class AccountDetailViewModel : ObservableObject
     [RelayCommand]
     private async Task Cancel()
     {
-        await _navigation.GoBackAsync();
+        await Navigation.GoBackAsync();
     }
 
     [RelayCommand]
@@ -67,7 +63,7 @@ public partial class AccountDetailViewModel : ObservableObject
     {
         if (string.IsNullOrWhiteSpace(AccountName))
         {
-            await _dialogs.ShowErrorAsync(
+            await Dialogs.ShowErrorAsync(
                 "Please enter an account name.");
 
             return;
@@ -92,7 +88,7 @@ public partial class AccountDetailViewModel : ObservableObject
             await _repository.UpdateAsync(_editingAccount);
         }
 
-        await _navigation.GoBackAsync();
+        await Navigation.GoBackAsync();
     }
 
 }

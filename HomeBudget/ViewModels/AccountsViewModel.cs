@@ -7,11 +7,9 @@ using System.Collections.ObjectModel;
 
 namespace HomeBudget.ViewModels;
 
-public partial class AccountsViewModel : ObservableObject
+public partial class AccountsViewModel : BaseViewModel
 {
     private readonly AccountRepository _repository;
-    private readonly INavigationService _navigation;
-    private readonly IDialogService _dialogs;
     private readonly INavigationContext _context;
 
     [ObservableProperty]
@@ -22,11 +20,9 @@ public partial class AccountsViewModel : ObservableObject
     public AccountsViewModel(AccountRepository repository,
         INavigationService navigation,
         IDialogService dialogs,
-        INavigationContext context)
+        INavigationContext context): base(navigation, dialogs)
     {
         _repository = repository;
-        _navigation = navigation;
-        _dialogs = dialogs;
         _context = context;
     }
 
@@ -44,13 +40,13 @@ public partial class AccountsViewModel : ObservableObject
     private async Task EditAccount(Account account)
     {
         _context.Set(account); 
-        await _navigation.GoToAccountDetailAsync();
+        await Navigation.GoToAccountDetailAsync();
     }
 
     [RelayCommand]
     private async Task AddAccount()
     {
-        await _navigation.GoToAccountDetailAsync();
+        await Navigation.GoToAccountDetailAsync();
     }
 
     partial void OnSelectedAccountChanged(Account? value)

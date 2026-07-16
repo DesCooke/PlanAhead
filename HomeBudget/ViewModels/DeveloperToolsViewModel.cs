@@ -6,19 +6,15 @@ using HomeBudget.Repositories;
 
 namespace HomeBudget.ViewModels;
 
-public partial class DeveloperToolsViewModel : ObservableObject
+public partial class DeveloperToolsViewModel : BaseViewModel
 {
     private readonly AccountRepository _repository;
-    private readonly INavigationService _navigation;
-    private readonly IDialogService _dialogs;
 
     public DeveloperToolsViewModel(AccountRepository repository,
         INavigationService navigation,
-        IDialogService dialogs)
+        IDialogService dialogs): base (navigation, dialogs)
     {
         _repository = repository;
-        _navigation = navigation;
-        _dialogs = dialogs;
     }
 
     [RelayCommand]
@@ -31,7 +27,7 @@ public partial class DeveloperToolsViewModel : ObservableObject
             DisplayOrder = 1
         });
 
-        await _dialogs.ShowMessageAsync(
+        await Dialogs.ShowMessageAsync(
                 "Developer", "Test account created.");
     }
 
@@ -42,7 +38,7 @@ public partial class DeveloperToolsViewModel : ObservableObject
 
         if (accounts.Count == 0)
         {
-            await _dialogs.ShowMessageAsync(
+            await Dialogs.ShowMessageAsync(
                 "Accounts","No accounts found.");
 
             return;
@@ -53,7 +49,7 @@ public partial class DeveloperToolsViewModel : ObservableObject
             accounts.Select(a =>
                 $"{a.Name}   {a.Balance:C}"));
 
-        await _dialogs.ShowMessageAsync(
+        await Dialogs.ShowMessageAsync(
                 "Accounts",$"{text}");
     }
 
@@ -65,7 +61,7 @@ public partial class DeveloperToolsViewModel : ObservableObject
         foreach (var account in accounts)
             await _repository.DeleteAsync(account);
 
-        await _dialogs.ShowMessageAsync(
+        await Dialogs.ShowMessageAsync(
                 "Developer","All accounts deleted.");
     }
     [RelayCommand]
@@ -73,7 +69,7 @@ public partial class DeveloperToolsViewModel : ObservableObject
     {
         var accounts = await _repository.GetAllAsync();
 
-        await _dialogs.ShowMessageAsync(
+        await Dialogs.ShowMessageAsync(
                 "Accounts",$"There are {accounts.Count} accounts.");
     }
 
@@ -84,7 +80,7 @@ public partial class DeveloperToolsViewModel : ObservableObject
             FileSystem.AppDataDirectory,
             "homebudget.db");
 
-        await _dialogs.ShowMessageAsync(
+        await Dialogs.ShowMessageAsync(
                 "Database",$"{path}");
     }
 }

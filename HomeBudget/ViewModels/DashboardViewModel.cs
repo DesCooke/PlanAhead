@@ -7,7 +7,7 @@ using HomeBudget.Repositories;
 
 namespace HomeBudget.ViewModels;
 
-public partial class DashboardViewModel : ObservableObject
+public partial class DashboardViewModel : BaseViewModel
 {
     [ObservableProperty]
     private string title = AppConstants.ApplicationName;
@@ -21,16 +21,12 @@ public partial class DashboardViewModel : ObservableObject
         $"Version {AppConstants.Version}";
 
     private readonly AccountRepository _repository;
-    private readonly INavigationService _navigation;
-    private readonly IDialogService _dialogs;
 
     public DashboardViewModel(AccountRepository repository,
         INavigationService navigation,
-        IDialogService dialogs)
+        IDialogService dialogs): base (navigation, dialogs)
     {
         _repository = repository;
-        _navigation = navigation;
-        _dialogs = dialogs;
     }
 
     [RelayCommand]
