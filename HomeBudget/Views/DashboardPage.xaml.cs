@@ -9,5 +9,6 @@ public partial class DashboardPage : ContentPage
         InitializeComponent();
 
         BindingContext = viewModel;
+
     }
 }

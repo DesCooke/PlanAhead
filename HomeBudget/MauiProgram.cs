@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Maui;
 using HomeBudget.Data.Database;
+using HomeBudget.Repositories;
 using HomeBudget.Services;
 using HomeBudget.ViewModels;
 using HomeBudget.Views;
@@ -28,6 +29,8 @@ namespace HomeBudget
             builder.Services.AddSingleton<SQLiteContext>();
 
             builder.Services.AddSingleton<ApplicationStartupService>();
+
+            builder.Services.AddSingleton<AccountRepository>();
 
 #if DEBUG
             builder.Logging.AddDebug();

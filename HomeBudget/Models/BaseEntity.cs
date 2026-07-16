@@ -1,7 +1,10 @@
-﻿namespace HomeBudget.Models;
+﻿using SQLite;
+
+namespace HomeBudget.Models;
 
 public abstract class BaseEntity
 {
+    [PrimaryKey]
     public Guid Id { get; set; }
 
     public DateTime CreatedUtc { get; set; }

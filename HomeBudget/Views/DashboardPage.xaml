@@ -25,6 +25,11 @@
             Text="{Binding Version}"
             HorizontalOptions="Center" />
 
+        <Button
+            Text="Run Repository Test"
+            Command="{Binding TestRepositoryCommand}" />
+        
+        
     </VerticalStackLayout>
 
 </ContentPage>
