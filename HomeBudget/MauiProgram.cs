@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Maui;
+using HomeBudget;
 using HomeBudget.Data.Database;
 using HomeBudget.Interfaces;
 using HomeBudget.Repositories;
@@ -7,7 +8,7 @@ using HomeBudget.ViewModels;
 using HomeBudget.Views;
 using Microsoft.Extensions.Logging;
 
-namespace HomeBudget
+namespace AnnualBudgetForecaster
 {
     public static class MauiProgram
     {
