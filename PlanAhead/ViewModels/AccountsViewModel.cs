@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using PlanAhead.Interfaces;
-using PlanAhead.Models;
+using PlanAhead.core.Interfaces;
+using PlanAhead.core.Models.Domain;
 using PlanAhead.Repositories;
 using System.Collections.ObjectModel;
 

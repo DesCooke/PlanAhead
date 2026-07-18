@@ -4,7 +4,7 @@ using HomeBudget.ViewModels;
 using HomeBudget.Views;
 using Microsoft.Extensions.Logging;
 using PlanAhead.Data.Database;
-using PlanAhead.Interfaces;
+using PlanAhead.core.Interfaces;
 using PlanAhead.Repositories;
 using PlanAhead.Services;
 

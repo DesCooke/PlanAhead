@@ -1,5 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using PlanAhead.Interfaces;
+using PlanAhead.core.Interfaces;
 
 public abstract partial class BaseViewModel : ObservableObject
 {

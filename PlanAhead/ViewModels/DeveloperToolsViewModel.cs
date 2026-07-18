@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using PlanAhead.Models;
-using PlanAhead.Interfaces;
+using PlanAhead.core.Interfaces;
 using PlanAhead.Repositories;
 
 namespace HomeBudget.ViewModels;
@@ -20,12 +19,12 @@ public partial class DeveloperToolsViewModel : BaseViewModel
     [RelayCommand]
     private async Task CreateTestAccount()
     {
-        await _repository.AddAsync(new Account
-        {
-            Name = $"Current Account {DateTime.Now:HHmmss}",
-            Balance = 1000m,
-            DisplayOrder = 1
-        });
+//        await _repository.AddAsync(new Account
+  //      {
+    //        Name = $"Current Account {DateTime.Now:HHmmss}",
+      //      Balance = 1000m,
+        //    DisplayOrder = 1
+//        });
 
         await Dialogs.ShowMessageAsync(
                 "Developer", "Test account created.");
@@ -44,13 +43,13 @@ public partial class DeveloperToolsViewModel : BaseViewModel
             return;
         }
 
-        var text = string.Join(
-            Environment.NewLine,
-            accounts.Select(a =>
-                $"{a.Name}   {a.Balance:C}"));
+//        var text = string.Join(
+  //          Environment.NewLine,
+    //        accounts.Select(a =>
+      //          $"{a.Name}   {a.Balance:C}"));
 
-        await Dialogs.ShowMessageAsync(
-                "Accounts",$"{text}");
+        //await Dialogs.ShowMessageAsync(
+          //      "Accounts",$"{text}");
     }
 
     [RelayCommand]

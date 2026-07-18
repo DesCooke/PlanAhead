@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace PlanAhead.Models
+namespace PlanAhead.core.Models.Configuration
 {
-    internal class FundTarget
+    internal class ApplicationInfo
     {
     }
 }

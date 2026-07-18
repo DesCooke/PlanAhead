@@ -1,0 +1,16 @@
+﻿using PlanAhead.core.Models.Base;
+
+namespace PlanAhead.core.Models.Domain;
+
+public class Account : BaseEntity
+{
+    public string Name { get; set; } = "";
+
+    public decimal OpeningBalance { get; set; }
+
+    public int DisplayOrder { get; set; }
+
+    public string Notes { get; set; } = "";
+
+    public bool Archived { get; set; }
+}

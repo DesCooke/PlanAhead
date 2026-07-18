@@ -1,5 +1,5 @@
 ﻿using HomeBudget.Views;
-using PlanAhead.Interfaces;
+using PlanAhead.core.Interfaces;
 
 namespace PlanAhead.Services;
 

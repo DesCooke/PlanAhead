@@ -1,8 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using PlanAhead.Models;
-using PlanAhead.Constants;
-using PlanAhead.Interfaces;
+using PlanAhead.core.Constants;
+using PlanAhead.core.Interfaces;
 using PlanAhead.Repositories;
 
 namespace HomeBudget.ViewModels;
@@ -32,14 +31,14 @@ public partial class DashboardViewModel : BaseViewModel
     [RelayCommand]
     private async Task TestRepository()
     {
-        var account = new Account
-        {
-            Name = "Current Account",
-            Balance = 1250.00m,
-            DisplayOrder = 1
-        };
+//        var account = new Account
+  //      {
+    //        Name = "Current Account",
+      //      Balance = 1250.00m,
+        //    DisplayOrder = 1
+//        };
 
-        await _repository.AddAsync(account);
+  //      await _repository.AddAsync(account);
 
         var accounts = await _repository.GetAllAsync();
 

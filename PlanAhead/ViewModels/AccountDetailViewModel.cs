@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using PlanAhead.Interfaces;
-using PlanAhead.Models;
+using PlanAhead.core.Interfaces;
+using PlanAhead.core.Models.Domain;
 using PlanAhead.Repositories;
 
 namespace HomeBudget.ViewModels;
@@ -46,9 +46,9 @@ public partial class AccountDetailViewModel : BaseViewModel
         }
 
         // Edit mode
-        AccountName = _editingAccount.Name;
-        Balance = _editingAccount.Balance;
-        IncludeInTotal = _editingAccount.IncludeInTotal;
+//        AccountName = _editingAccount.Name;
+  //      Balance = _editingAccount.Balance;
+    //    IncludeInTotal = _editingAccount.IncludeInTotal;
     }
 
     [RelayCommand]
@@ -73,16 +73,16 @@ public partial class AccountDetailViewModel : BaseViewModel
             await _repository.AddAsync(
                 new Account
                 {
-                    Name = AccountName,
-                    Balance = Balance,
-                    IncludeInTotal = IncludeInTotal
+//                    Name = AccountName,
+  //                  Balance = Balance,
+    //                IncludeInTotal = IncludeInTotal
                 });
         }
         else
         {
-            _editingAccount.Name = AccountName;
-            _editingAccount.Balance = Balance;
-            _editingAccount.IncludeInTotal = IncludeInTotal;
+      //      _editingAccount.Name = AccountName;
+        //    _editingAccount.Balance = Balance;
+          //  _editingAccount.IncludeInTotal = IncludeInTotal;
 
             await _repository.UpdateAsync(_editingAccount);
         }

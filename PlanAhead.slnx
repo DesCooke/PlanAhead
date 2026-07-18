@@ -1,4 +1,6 @@
 <Solution>
+  <Project Path="PlanAhead.core/PlanAhead.core.csproj" DisplayName="PlanAhead.Core" />
+  <Project Path="PlanAhead.Tests/PlanAhead.Tests.csproj" Id="c6d7409d-a582-403a-b647-324609ffc04f" />
   <Project Path="PlanAhead/PlanAhead.csproj">
     <Deploy Solution="Debug|*" />
   </Project>
