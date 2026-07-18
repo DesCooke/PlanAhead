@@ -14,7 +14,7 @@ public partial class DashboardViewModel : BaseViewModel
 
     [ObservableProperty]
     private string welcomeMessage =
-        "Welcome to Home Budget";
+        "Welcome to Plan Ahead";
 
     [ObservableProperty]
     private string version =
