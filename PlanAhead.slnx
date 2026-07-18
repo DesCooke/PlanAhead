@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="PlanAhead/PlanAhead.csproj">
+    <Deploy Solution="Debug|*" />
+  </Project>
+</Solution>

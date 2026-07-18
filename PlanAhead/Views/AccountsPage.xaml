@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="HomeBudget.Views.AccountsPage"
+    Title="Accounts">
+
+    <Grid RowDefinitions="Auto,*">
+
+        <Button
+            Text="Add Account"
+            Command="{Binding AddAccountCommand}"
+            Margin="10"/>
+
+        <CollectionView
+            Grid.Row="1"
+            ItemsSource="{Binding Accounts}"
+            Margin="10" 
+            SelectionMode="Single"
+            SelectedItem="{Binding SelectedAccount}">
+
+            <CollectionView.ItemTemplate>
+
+                <DataTemplate>
+
+                    <Frame
+                        Margin="0,5"
+                        Padding="10">
+
+                        <Grid ColumnDefinitions="*,Auto">
+
+                            <VerticalStackLayout>
+
+                                <Label
+                                    Text="{Binding Name}"
+                                    FontAttributes="Bold"/>
+
+                                <Label
+                                    Text="{Binding Balance,
+                                           StringFormat='{}{0:C}'}"/>
+
+                            </VerticalStackLayout>
+
+                        </Grid>
+
+                    </Frame>
+
+                </DataTemplate>
+
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+
+    </Grid>
+
+</ContentPage>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="HomeBudget.Views.DeveloperToolsPage"
+    Title="Developer Tools">
+
+    <ScrollView>
+
+        <VerticalStackLayout
+            Padding="20"
+            Spacing="15">
+
+            <Label
+                Text="Developer Tools"
+                FontSize="30"
+                FontAttributes="Bold"/>
+
+            <Label
+                Text="Database"/>
+
+            <Button
+                Text="Show Database Path"
+                Command="{Binding ShowDatabasePathCommand}"/>
+
+            <Button
+                Text="Create Test Account"
+                Command="{Binding CreateTestAccountCommand}"/>
+
+            <Button
+                Text="Show Account Count"
+                Command="{Binding ShowAccountCountCommand}"/>
+
+            <Button
+                Text="Delete All Accounts"
+                Command="{Binding DeleteAllAccountsCommand}" />
+
+            <Button
+                Text="Show All Accounts"
+                Command="{Binding ShowAllAccountsCommand}" />
+
+        </VerticalStackLayout>
+
+    </ScrollView>
+
+</ContentPage>
