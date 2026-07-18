@@ -1,4 +1,4 @@
-﻿namespace PlanAhead.core.Models.Enums;
+﻿namespace PlanAhead.Core.Models.Enums;
 
 public enum FundSortOrder
 {

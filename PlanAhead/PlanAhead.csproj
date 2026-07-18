@@ -107,7 +107,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\PlanAhead.core\PlanAhead.Core.csproj" />
+	  <ProjectReference Include="..\PlanAhead.Core\PlanAhead.Core.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace PlanAhead.core.Models.Enums;
+namespace PlanAhead.Core.Models.Enums;
 
 public enum Frequency
 {

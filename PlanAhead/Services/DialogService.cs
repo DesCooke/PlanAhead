@@ -1,4 +1,4 @@
-﻿using PlanAhead.core.Interfaces;
+﻿using PlanAhead.Core.Interfaces;
 
 namespace PlanAhead.Services;
 

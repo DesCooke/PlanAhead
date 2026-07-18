@@ -1,4 +1,4 @@
-﻿namespace PlanAhead.core.Models.Base;
+﻿namespace PlanAhead.Core.Models.Base;
 
 public abstract class BaseEntity
 {

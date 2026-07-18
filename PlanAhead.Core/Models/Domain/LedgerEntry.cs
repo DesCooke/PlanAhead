@@ -1,7 +1,7 @@
-﻿using PlanAhead.core.Models.Base;
-using PlanAhead.core.Models.Enums;
+﻿using PlanAhead.Core.Models.Base;
+using PlanAhead.Core.Models.Enums;
 
-namespace PlanAhead.core.Models.Domain;
+namespace PlanAhead.Core.Models.Domain;
 
 public class LedgerEntry : BaseEntity
 {

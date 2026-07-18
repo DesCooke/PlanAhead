@@ -1,6 +1,6 @@
-﻿using PlanAhead.core.Models.Base;
+﻿using PlanAhead.Core.Models.Base;
 
-namespace PlanAhead.core.Models.Domain;
+namespace PlanAhead.Core.Models.Domain;
 
 public class FundTarget : BaseEntity
 {

@@ -1,5 +1,5 @@
 ﻿using PlanAhead.Data.Database;
-using PlanAhead.core.Models.Domain;
+using PlanAhead.Core.Models.Domain;
 using SQLite;
 
 namespace PlanAhead.Repositories;

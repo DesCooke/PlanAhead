@@ -1,6 +1,6 @@
-﻿using PlanAhead.core.Models.Enums;
+﻿using PlanAhead.Core.Models.Enums;
 
-namespace PlanAhead.core.Models.Configuration;
+namespace PlanAhead.Core.Models.Configuration;
 
 public class UserPreferences 
 {

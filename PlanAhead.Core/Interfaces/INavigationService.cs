@@ -1,4 +1,4 @@
-﻿namespace PlanAhead.core.Interfaces;
+﻿namespace PlanAhead.Core.Interfaces;
 
 public interface INavigationService
 {

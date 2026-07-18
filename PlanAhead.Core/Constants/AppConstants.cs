@@ -1,4 +1,4 @@
-﻿namespace PlanAhead.core.Constants;
+﻿namespace PlanAhead.Core.Constants;
 
 public static class AppConstants
 {
