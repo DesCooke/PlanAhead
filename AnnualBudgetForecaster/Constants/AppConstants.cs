@@ -1,4 +1,4 @@
-﻿namespace HomeBudget.Constants;
+﻿namespace PlanAhead.Constants;
 
 public static class AppConstants
 {

@@ -1,8 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using HomeBudget.Interfaces;
-using HomeBudget.Models;
-using HomeBudget.Repositories;
+using PlanAhead.Interfaces;
+using PlanAhead.Models;
+using PlanAhead.Repositories;
 using System.Collections.ObjectModel;
 
 namespace HomeBudget.ViewModels;

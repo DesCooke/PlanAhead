@@ -1,14 +1,14 @@
 ﻿using CommunityToolkit.Maui;
 using HomeBudget;
-using HomeBudget.Data.Database;
-using HomeBudget.Interfaces;
-using HomeBudget.Repositories;
-using HomeBudget.Services;
 using HomeBudget.ViewModels;
 using HomeBudget.Views;
 using Microsoft.Extensions.Logging;
+using PlanAhead.Data.Database;
+using PlanAhead.Interfaces;
+using PlanAhead.Repositories;
+using PlanAhead.Services;
 
-namespace AnnualBudgetForecaster
+namespace PlanAhead
 {
     public static class MauiProgram
     {

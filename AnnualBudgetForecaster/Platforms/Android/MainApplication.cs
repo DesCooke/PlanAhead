@@ -1,8 +1,8 @@
 ﻿using Android.App;
 using Android.Runtime;
-using AnnualBudgetForecaster;
+using PlanAhead;
 
-namespace HomeBudget
+namespace PlanAhead.Platforms.Android
 {
     [Application]
     public class MainApplication : MauiApplication

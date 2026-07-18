@@ -1,6 +1,6 @@
 ﻿using SQLite;
 
-namespace HomeBudget.Data.Database;
+namespace PlanAhead.Data.Database;
 
 public sealed class SQLiteContext
 {

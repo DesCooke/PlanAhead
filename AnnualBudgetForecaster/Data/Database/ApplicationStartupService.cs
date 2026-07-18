@@ -1,6 +1,4 @@
-﻿using HomeBudget.Data.Database;
-
-namespace HomeBudget.Services;
+﻿namespace PlanAhead.Data.Database;
 
 public class ApplicationStartupService
 {

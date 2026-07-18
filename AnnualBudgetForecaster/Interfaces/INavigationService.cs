@@ -1,4 +1,4 @@
-﻿namespace HomeBudget.Interfaces;
+﻿namespace PlanAhead.Interfaces;
 
 public interface INavigationService
 {

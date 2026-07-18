@@ -1,6 +1,6 @@
-﻿using HomeBudget.Interfaces;
+﻿using PlanAhead.Interfaces;
 
-namespace HomeBudget.Services;
+namespace PlanAhead.Services;
 
 public class NavigationContext : INavigationContext
 {

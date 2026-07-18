@@ -1,7 +1,7 @@
 ﻿using ObjCRuntime;
 using UIKit;
 
-namespace HomeBudget
+namespace PlanAhead.Platforms.MacCatalyst
 {
     public class Program
     {

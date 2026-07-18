@@ -1,7 +1,7 @@
-﻿using AnnualBudgetForecaster;
-using Foundation;
+﻿using Foundation;
+using PlanAhead;
 
-namespace HomeBudget
+namespace PlanAhead.Platforms.MacCatalyst
 {
     [Register("AppDelegate")]
     public class AppDelegate : MauiUIApplicationDelegate

@@ -1,6 +1,6 @@
 ﻿using SQLite;
 
-namespace HomeBudget.Models;
+namespace PlanAhead.Models;
 
 [Table("Accounts")]
 public class Account : BaseEntity

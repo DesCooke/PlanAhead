@@ -1,8 +1,8 @@
-﻿using HomeBudget.Data.Database;
-using HomeBudget.Models;
+﻿using PlanAhead.Data.Database;
+using PlanAhead.Models;
 using SQLite;
 
-namespace HomeBudget.Repositories;
+namespace PlanAhead.Repositories;
 
 public class AccountRepository
 {

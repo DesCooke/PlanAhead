@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="AnnualBudgetForecaster/PlanAhead.csproj">
+    <Deploy Solution="Debug|*" />
+  </Project>
+</Solution>

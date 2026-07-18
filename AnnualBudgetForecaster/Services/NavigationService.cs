@@ -1,7 +1,7 @@
-﻿using HomeBudget.Interfaces;
-using HomeBudget.Views;
+﻿using HomeBudget.Views;
+using PlanAhead.Interfaces;
 
-namespace HomeBudget.Services;
+namespace PlanAhead.Services;
 
 public class NavigationService
     : INavigationService

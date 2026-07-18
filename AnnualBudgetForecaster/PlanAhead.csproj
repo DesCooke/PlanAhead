@@ -13,7 +13,7 @@
 		<!-- For example: <RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers> -->
 
 		<OutputType>Exe</OutputType>
-		<RootNamespace>AnnualBudgetForecaster</RootNamespace>
+		<RootNamespace>PlanAhead</RootNamespace>
 		<UseMaui>true</UseMaui>
 		<SingleProject>true</SingleProject>
 		<ImplicitUsings>enable</ImplicitUsings>
@@ -29,10 +29,10 @@
     <!-- <MauiXamlInflator>SourceGen</MauiXamlInflator> -->
 
 		<!-- Display name -->
-		<ApplicationTitle>Annual Budget Forecaster</ApplicationTitle>
+		<ApplicationTitle>Plan Ahead</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>uk.co.desmondcooke.annualbudgetforecaste</ApplicationId>
+		<ApplicationId>uk.co.eastforge.planahead</ApplicationId>
 
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
