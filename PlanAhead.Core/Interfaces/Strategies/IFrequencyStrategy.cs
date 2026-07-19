@@ -1,9 +1,12 @@
 ﻿using PlanAhead.Core.Models.Domain;
+using PlanAhead.Core.Models.Enums;
 
-namespace PlanAhead.Core.Services.Dates;
+namespace PlanAhead.Core.Interfaces.Strategies;
 
-public interface IDateCalculator
+public interface IFrequencyStrategy
 {
+    Frequency Frequency { get; }
+
     DateOnly? NextOccurrence(
         FundingRule rule,
         DateOnly currentDate);

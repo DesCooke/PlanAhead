@@ -1,7 +1,7 @@
-﻿using PlanAhead.Core.Models.Domain;
+﻿using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.Interfaces.Strategies;
+using PlanAhead.Core.Models.Domain;
 using PlanAhead.Core.Models.Enums;
-using PlanAhead.Core.Services.Dates;
-using PlanAhead.Core.Services.Dates.Strategies;
 
 public class DateCalculator : IDateCalculator
 {

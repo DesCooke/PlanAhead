@@ -1,10 +1,9 @@
 ﻿using PlanAhead.Core.Models.Domain;
 using PlanAhead.Core.Models.Projections;
-using PlanAhead.Core.Services.Dates;
-using PlanAhead.Core.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using PlanAhead.Core.Interfaces.Services;
 
 namespace PlanAhead.Core.Services.Planning
 {

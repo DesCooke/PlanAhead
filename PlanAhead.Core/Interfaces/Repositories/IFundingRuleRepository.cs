@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace PlanAhead.Repositories
+namespace PlanAhead.Core.Interfaces.Repositories
 {
     public interface IFundingRuleRepository
     {

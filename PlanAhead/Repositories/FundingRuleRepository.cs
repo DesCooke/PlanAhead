@@ -1,4 +1,5 @@
-﻿using PlanAhead.Core.Models.Domain;
+﻿using PlanAhead.Core.Interfaces.Repositories;
+using PlanAhead.Core.Models.Domain;
 using PlanAhead.Data.Database;
 using SQLite;
 
