@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using PlanAhead.Core.Interfaces;
 using PlanAhead.Core.Services.Dates;
 using PlanAhead.Core.Services.Dates.Strategies;
+using PlanAhead.Core.Services.Planning;
 using PlanAhead.Data.Database;
 using PlanAhead.Repositories;
 using PlanAhead.Services;
@@ -67,6 +68,9 @@ namespace PlanAhead
             builder.Services.AddSingleton<BaseFrequencyStrategy, OneOffFrequencyStrategy>();
 
             builder.Services.AddSingleton<IDateCalculator, DateCalculator>();
+
+            builder.Services.AddSingleton<IFundingProjectionService, FundingProjectionService>();
+            builder.Services.AddSingleton<IFundingRuleRepository, FundingRuleRepository>();
 
 #if DEBUG
             builder.Logging.AddDebug();
