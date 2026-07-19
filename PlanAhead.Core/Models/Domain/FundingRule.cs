@@ -18,4 +18,10 @@ public class FundingRule : BaseEntity
     public DateOnly? EndDate { get; set; }
 
     public string Notes { get; set; } = "";
+
+    public int? DayOfMonth { get; set; }
+
+    public int? MonthOfYear { get; set; }
+
+    public int? QuarterStartMonth { get; set; }
 }

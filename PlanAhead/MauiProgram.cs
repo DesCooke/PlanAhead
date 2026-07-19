@@ -3,8 +3,10 @@ using HomeBudget;
 using HomeBudget.ViewModels;
 using HomeBudget.Views;
 using Microsoft.Extensions.Logging;
-using PlanAhead.Data.Database;
 using PlanAhead.Core.Interfaces;
+using PlanAhead.Core.Services.Dates;
+using PlanAhead.Core.Services.Dates.Strategies;
+using PlanAhead.Data.Database;
 using PlanAhead.Repositories;
 using PlanAhead.Services;
 
@@ -54,6 +56,17 @@ namespace PlanAhead
 
             builder.Services.AddSingleton<INavigationContext,
                               NavigationContext>();
+            builder.Services.AddSingleton<BaseFrequencyStrategy, MonthlyFrequencyStrategy>();
+
+            builder.Services.AddSingleton<BaseFrequencyStrategy, QuarterlyFrequencyStrategy>();
+
+            builder.Services.AddSingleton<BaseFrequencyStrategy, BiAnnualFrequencyStrategy>();
+
+            builder.Services.AddSingleton<BaseFrequencyStrategy, AnnualFrequencyStrategy>();
+
+            builder.Services.AddSingleton<BaseFrequencyStrategy, OneOffFrequencyStrategy>();
+
+            builder.Services.AddSingleton<IDateCalculator, DateCalculator>();
 
 #if DEBUG
             builder.Logging.AddDebug();

@@ -1,0 +1,16 @@
+﻿using PlanAhead.Core.Models.Domain;
+using PlanAhead.Core.Models.Projections;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace PlanAhead.Core.Interfaces
+{
+    public interface IFundingProjectionService
+    {
+        IEnumerable<ProjectedFunding> Generate(
+            FundingRule rule,
+            DateOnly from,
+            DateOnly to);
+    }
+}

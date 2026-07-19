@@ -12,5 +12,7 @@ public enum Frequency
 
     BiAnnual = 2,
 
-    Annual = 3
+    Annual = 3,
+
+    OneOff = 4,
 }
