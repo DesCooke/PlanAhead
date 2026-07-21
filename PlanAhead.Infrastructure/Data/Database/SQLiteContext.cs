@@ -1,23 +1,24 @@
 ﻿using SQLite;
 
-namespace PlanAhead.Data.Database;
+namespace PlanAhead.Infrastructure.Data.Database;
 
 public sealed class SQLiteContext
 {
+    private readonly string _databasePath;
+
     private SQLiteAsyncConnection? _connection;
+
+    public SQLiteContext(string databasePath)
+    {
+        _databasePath = databasePath;
+    }
 
     public async Task<SQLiteAsyncConnection> GetConnectionAsync()
     {
         if (_connection != null)
             return _connection;
 
-        var databasePath =
-            Path.Combine(
-                FileSystem.AppDataDirectory,
-                "homebudget.db");
-
-        _connection =
-            new SQLiteAsyncConnection(databasePath);
+        _connection = new SQLiteAsyncConnection(_databasePath);
 
         return _connection;
     }

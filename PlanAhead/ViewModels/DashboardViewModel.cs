@@ -2,7 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using PlanAhead.Core.Constants;
 using PlanAhead.Core.Interfaces;
-using PlanAhead.Repositories;
+using PlanAhead.Infrastructure.Repositories;
 
 namespace HomeBudget.ViewModels;
 

@@ -1,4 +1,6 @@
-﻿namespace PlanAhead.Data.Database;
+﻿using PlanAhead.Infrastructure.Data.Database;
+
+namespace PlanAhead.Data.Database;
 
 public class ApplicationStartupService
 {

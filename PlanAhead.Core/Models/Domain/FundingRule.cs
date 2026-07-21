@@ -5,8 +5,6 @@ namespace PlanAhead.Core.Models.Domain;
 
 public class FundingRule : BaseEntity
 {
-    public Guid AccountId { get; set; }
-
     public Guid FundId { get; set; }
 
     public decimal Amount { get; set; }

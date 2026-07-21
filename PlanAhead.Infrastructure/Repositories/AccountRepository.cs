@@ -1,10 +1,11 @@
-﻿using PlanAhead.Data.Database;
-using PlanAhead.Core.Models.Domain;
+﻿using PlanAhead.Core.Models.Domain;
 using SQLite;
+using PlanAhead.Infrastructure.Data.Database;
+using PlanAhead.Core.Interfaces.Repositories;
 
-namespace PlanAhead.Repositories;
+namespace PlanAhead.Infrastructure.Repositories;
 
-public class AccountRepository
+public class AccountRepository: IAccountRepository
 {
     private readonly SQLiteContext _context;
 

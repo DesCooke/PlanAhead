@@ -1,5 +1,6 @@
 <Solution>
   <Project Path="PlanAhead.Core/PlanAhead.Core.csproj" />
+  <Project Path="PlanAhead.Infrastructure/PlanAhead.Infrastructure.csproj" Id="8ec63f7f-49c2-467b-9a63-b1a635811a30" />
   <Project Path="PlanAhead.Tests/PlanAhead.Tests.csproj" />
   <Project Path="PlanAhead/PlanAhead.csproj" />
 </Solution>

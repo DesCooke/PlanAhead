@@ -1,9 +1,9 @@
 ﻿using PlanAhead.Core.Interfaces.Repositories;
 using PlanAhead.Core.Models.Domain;
-using PlanAhead.Data.Database;
+using PlanAhead.Infrastructure.Data.Database;
 using SQLite;
 
-namespace PlanAhead.Repositories;
+namespace PlanAhead.Infrastructure.Repositories;
 
 public class FundingRuleRepository : IFundingRuleRepository
 {

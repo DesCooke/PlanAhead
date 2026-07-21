@@ -10,8 +10,10 @@ using PlanAhead.Core.Services.Dates.Strategies;
 using PlanAhead.Core.Services.Planning;
 using PlanAhead.Core.Extensions;
 using PlanAhead.Data.Database;
-using PlanAhead.Repositories;
 using PlanAhead.Services;
+using PlanAhead.Infrastructure.Data.Database;
+using PlanAhead.Infrastructure.Repositories;
+using PlanAhead.Infrastructure.Extensions;
 
 namespace PlanAhead
 {
@@ -33,7 +35,11 @@ namespace PlanAhead
 
             builder.Services.AddSingleton<DashboardPage>();
 
-            builder.Services.AddSingleton<SQLiteContext>();
+            builder.Services.AddSingleton(
+                new SQLiteContext(
+                    Path.Combine(
+                        FileSystem.AppDataDirectory,
+                        "planahead.db")));
 
             builder.Services.AddSingleton<ApplicationStartupService>();
 
@@ -70,6 +76,10 @@ namespace PlanAhead
             builder.Services.AddSingleton<BaseFrequencyStrategy, OneOffFrequencyStrategy>();
 
             builder.Services.AddPlanAheadCore();
+            builder.Services.AddPlanAheadInfrastructure(
+                Path.Combine(
+                    FileSystem.AppDataDirectory,
+                    "planahead.db"));
 
 #if DEBUG
             builder.Logging.AddDebug();
