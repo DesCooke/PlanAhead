@@ -1,12 +1,11 @@
-﻿using PlanAhead.Core.Models.Domain;
-using PlanAhead.Core.Models.Projections;
+﻿using PlanAhead.Core.Models.Projections;
 
 namespace PlanAhead.Core.Interfaces.Services;
 
 public interface IForecastEngine
 {
-    Forecast Generate(
-        IEnumerable<FundingRule> fundingRules,
+    Task<Forecast> GenerateAsync(
+        Guid accountId,
         DateOnly from,
         DateOnly to);
 }

@@ -28,16 +28,19 @@ public class FundingRuleRepository : IFundingRuleRepository
         var db = await Database();
 
         return await db.Table<FundingRule>()
-            .FirstOrDefaultAsync(r => r.Id == id && !r.Deleted);
+            .FirstOrDefaultAsync(r =>
+                r.Id == id &&
+                !r.Deleted);
     }
 
-    public async Task<List<FundingRule>> GetByAccountIdAsync(Guid accountId)
+    public async Task<List<FundingRule>> GetAllAsync()
     {
         var db = await Database();
 
         return await db.Table<FundingRule>()
-            .Where(r => r.AccountId == accountId && !r.Deleted)
-            .OrderBy(r => r.StartDate)
+            .Where(r => !r.Deleted)
+            .OrderBy(r => r.FundId)
+            .ThenBy(r => r.StartDate)
             .ToListAsync();
     }
 
@@ -46,37 +49,52 @@ public class FundingRuleRepository : IFundingRuleRepository
         var db = await Database();
 
         return await db.Table<FundingRule>()
-            .Where(r => r.FundId == fundId && !r.Deleted)
+            .Where(r =>
+                r.FundId == fundId &&
+                !r.Deleted)
             .OrderBy(r => r.StartDate)
             .ToListAsync();
     }
 
-    public async Task AddAsync(FundingRule rule)
+    public async Task<FundingRule?> GetByFundAndPeriodAsync(
+        Guid fundId,
+        DateOnly periodStart)
     {
         var db = await Database();
 
-        rule.Id = Guid.NewGuid();
-        rule.CreatedUtc = DateTime.UtcNow;
-        rule.UpdatedUtc = DateTime.UtcNow;
-        rule.NeedsSync = true;
-
-        await db.InsertAsync(rule);
+        return await db.Table<FundingRule>()
+            .FirstOrDefaultAsync(r =>
+                r.FundId == fundId &&
+                r.StartDate == periodStart &&
+                !r.Deleted);
     }
 
-    public async Task UpdateAsync(FundingRule rule)
+    public async Task AddAsync(FundingRule fundingRule)
     {
         var db = await Database();
 
-        rule.UpdatedUtc = DateTime.UtcNow;
-        rule.NeedsSync = true;
+        fundingRule.Id = Guid.NewGuid();
+        fundingRule.CreatedUtc = DateTime.UtcNow;
+        fundingRule.UpdatedUtc = DateTime.UtcNow;
+        fundingRule.NeedsSync = true;
 
-        await db.UpdateAsync(rule);
+        await db.InsertAsync(fundingRule);
     }
 
-    public async Task DeleteAsync(FundingRule rule)
+    public async Task UpdateAsync(FundingRule fundingRule)
     {
-        rule.Deleted = true;
+        var db = await Database();
 
-        await UpdateAsync(rule);
+        fundingRule.UpdatedUtc = DateTime.UtcNow;
+        fundingRule.NeedsSync = true;
+
+        await db.UpdateAsync(fundingRule);
+    }
+
+    public async Task DeleteAsync(FundingRule fundingRule)
+    {
+        fundingRule.Deleted = true;
+
+        await UpdateAsync(fundingRule);
     }
 }

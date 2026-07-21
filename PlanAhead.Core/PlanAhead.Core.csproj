@@ -10,6 +10,8 @@
   </PropertyGroup>
   
   <ItemGroup>
+    <Folder Include="Interfaces\Strategies\" />
+    <Folder Include="Services\Planning\Dates\Strategies\" />
     <Folder Include="Utilities\" />
   </ItemGroup>
   

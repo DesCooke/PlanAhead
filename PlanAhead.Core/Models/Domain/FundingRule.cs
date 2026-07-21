@@ -9,17 +9,15 @@ public class FundingRule : BaseEntity
 
     public decimal Amount { get; set; }
 
-    public Frequency Frequency { get; set; }
-
+    /// <summary>
+    /// Canonical start of the occurrence this rule applies to.
+    /// Examples:
+    /// Annual:    2027-01-01
+    /// Quarterly: 2027-04-01
+    /// Monthly:   2027-03-01
+    /// OneOff:    Actual event date
+    /// </summary>
     public DateOnly StartDate { get; set; }
 
-    public DateOnly? EndDate { get; set; }
-
     public string Notes { get; set; } = "";
-
-    public int? DayOfMonth { get; set; }
-
-    public int? MonthOfYear { get; set; }
-
-    public int? QuarterStartMonth { get; set; }
 }

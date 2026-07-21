@@ -1,38 +1,59 @@
-﻿using PlanAhead.Core.Models.Domain;
+﻿using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.Models.Domain;
 using PlanAhead.Core.Models.Projections;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using PlanAhead.Core.Interfaces.Services;
 
-namespace PlanAhead.Core.Services.Planning
+namespace PlanAhead.Core.Services.Planning;
+
+public class FundingProjectionService : IFundingProjectionService
 {
-    public class FundingProjectionService : IFundingProjectionService
+    private readonly IPeriodCalculator _periodCalculator;
+
+    public FundingProjectionService(
+        IPeriodCalculator periodCalculator)
     {
-        private readonly IDateCalculator _dateCalculator;
+        _periodCalculator = periodCalculator;
+    }
 
-        public FundingProjectionService(
-            IDateCalculator dateCalculator)
-        {
-            _dateCalculator = dateCalculator;
-        }
+    public IEnumerable<ProjectionEntry> Generate(
+        Fund fund,
+        IEnumerable<FundingRule> rules,
+        DateOnly from,
+        DateOnly to)
+    {
+        var orderedRules = rules
+            .OrderBy(r => r.StartDate)
+            .ToList();
 
-        public IEnumerable<ProjectionEntry> Generate(
-            FundingRule rule,
-            DateOnly from,
-            DateOnly to)
+        foreach (var period in _periodCalculator.GeneratePeriods(
+                     fund.Frequency,
+                     from,
+                     to))
         {
-            foreach (var date in _dateCalculator.GenerateOccurrences(rule, from, to))
+            var rule = GetRuleForPeriod(
+                orderedRules,
+                period);
+
+            if (rule == null)
+                continue;
+
+            yield return new ProjectionEntry
             {
-                yield return new ProjectionEntry
-                {
-                    AccountId = rule.AccountId,
-                    FundId = rule.FundId,
-                    Date = date,
-                    Amount = rule.Amount,
-                    Type = ProjectionType.Funding
-                };
-            }
+                AccountId = fund.AccountId,
+                FundId = fund.Id,
+                Date = period,
+                Amount = rule.Amount,
+                Type = ProjectionType.Funding
+            };
         }
+    }
+
+    private static FundingRule? GetRuleForPeriod(
+        IReadOnlyList<FundingRule> rules,
+        DateOnly period)
+    {
+        return rules
+            .Where(r => r.StartDate <= period)
+            .OrderByDescending(r => r.StartDate)
+            .FirstOrDefault();
     }
 }

@@ -9,7 +9,7 @@ public class Fund : BaseEntity
 
     public string Description { get; set; } = "";
 
-    public FundType FundType { get; set; }
+    public Frequency Frequency { get; set; }
 
     public FundStatus Status { get; set; }
 

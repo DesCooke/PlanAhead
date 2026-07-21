@@ -1,4 +1,7 @@
 ﻿using PlanAhead.Core.Models.Domain;
+using PlanAhead.Core.Models.Enums;
+
+namespace PlanAhead.Tests.Builders;
 
 public class FundBuilder
 {
@@ -11,17 +14,16 @@ public class FundBuilder
             Id = Guid.NewGuid(),
             AccountId = Guid.NewGuid(),
             Name = "New Fund",
-            DisplayOrder = 1
+            Description = "",
+            Status = FundStatus.Active,
+            DisplayOrder = 1,
+            Notes = ""
         };
     }
 
     public static FundBuilder Create()
-        => new();
-
-    public FundBuilder WithName(string name)
     {
-        _fund.Name = name;
-        return this;
+        return new FundBuilder();
     }
 
     public FundBuilder ForAccount(Guid accountId)
@@ -30,12 +32,45 @@ public class FundBuilder
         return this;
     }
 
-    public FundBuilder DisplayOrder(int order)
+    public FundBuilder WithName(string name)
     {
-        _fund.DisplayOrder = order;
+        _fund.Name = name;
+        return this;
+    }
+
+    public FundBuilder WithDescription(string description)
+    {
+        _fund.Description = description;
+        return this;
+    }
+
+
+    public FundBuilder WithStatus(FundStatus status)
+    {
+        _fund.Status = status;
+        return this;
+    }
+
+    public FundBuilder WithDisplayOrder(int displayOrder)
+    {
+        _fund.DisplayOrder = displayOrder;
+        return this;
+    }
+
+    public FundBuilder WithNotes(string notes)
+    {
+        _fund.Notes = notes;
+        return this;
+    }
+
+    public FundBuilder WithFrequency(Frequency frequency)
+    {
+        _fund.Frequency = frequency;
         return this;
     }
 
     public Fund Build()
-        => _fund;
+    {
+        return _fund;
+    }
 }

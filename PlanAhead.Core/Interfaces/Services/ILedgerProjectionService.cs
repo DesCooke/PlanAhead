@@ -8,8 +8,8 @@ namespace PlanAhead.Core.Interfaces.Services
 {
     public interface ILedgerProjectionService
     {
-        IEnumerable<ProjectionEntry> Generate(
-            FundingRule rule,
+        public IEnumerable<ProjectionEntry> Generate(
+            IEnumerable<LedgerEntry> ledgerEntries,
             DateOnly from,
             DateOnly to);
     }

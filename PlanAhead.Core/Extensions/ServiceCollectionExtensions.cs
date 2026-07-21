@@ -12,8 +12,6 @@ namespace PlanAhead.Core.Extensions
         public static IServiceCollection AddPlanAheadCore(
             this IServiceCollection services)
         {
-            services.AddSingleton<IDateCalculator, DateCalculator>();
-
             services.AddSingleton<IFundingProjectionService, FundingProjectionService>();
 
             services.AddSingleton<IForecastEngine, ForecastEngine>();

@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 using PlanAhead.Core.Interfaces;
 using PlanAhead.Core.Interfaces.Repositories;
 using PlanAhead.Core.Interfaces.Services;
-using PlanAhead.Core.Services.Dates.Strategies;
 using PlanAhead.Core.Services.Planning;
 using PlanAhead.Core.Extensions;
 using PlanAhead.Data.Database;
@@ -65,15 +64,6 @@ namespace PlanAhead
 
             builder.Services.AddSingleton<INavigationContext,
                               NavigationContext>();
-            builder.Services.AddSingleton<BaseFrequencyStrategy, MonthlyFrequencyStrategy>();
-
-            builder.Services.AddSingleton<BaseFrequencyStrategy, QuarterlyFrequencyStrategy>();
-
-            builder.Services.AddSingleton<BaseFrequencyStrategy, BiAnnualFrequencyStrategy>();
-
-            builder.Services.AddSingleton<BaseFrequencyStrategy, AnnualFrequencyStrategy>();
-
-            builder.Services.AddSingleton<BaseFrequencyStrategy, OneOffFrequencyStrategy>();
 
             builder.Services.AddPlanAheadCore();
             builder.Services.AddPlanAheadInfrastructure(

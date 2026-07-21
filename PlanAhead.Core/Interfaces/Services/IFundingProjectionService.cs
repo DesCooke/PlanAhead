@@ -9,7 +9,8 @@ namespace PlanAhead.Core.Interfaces.Services
     public interface IFundingProjectionService
     {
         IEnumerable<ProjectionEntry> Generate(
-            FundingRule rule,
+            Fund fund,
+            IEnumerable<FundingRule> rules,
             DateOnly from,
             DateOnly to);
     }

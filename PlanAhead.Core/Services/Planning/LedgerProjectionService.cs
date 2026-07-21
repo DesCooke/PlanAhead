@@ -6,20 +6,28 @@ namespace PlanAhead.Core.Services.Planning
 {
     public class LedgerProjectionService : ILedgerProjectionService
     {
-        private readonly IDateCalculator _dateCalculator;
-
-        public LedgerProjectionService(
-            IDateCalculator dateCalculator)
+        public LedgerProjectionService()
         {
-            _dateCalculator = dateCalculator;
         }
 
         public IEnumerable<ProjectionEntry> Generate(
-            FundingRule rule,
+            IEnumerable<LedgerEntry> ledgerEntries,
             DateOnly from,
             DateOnly to)
         {
-            return Enumerable.Empty<ProjectionEntry>();
+            return ledgerEntries
+                .Where(e => e.EntryDate >= from)
+                .Where(e => e.EntryDate <= to)
+                .OrderBy(e => e.EntryDate)
+                .Select(e => new ProjectionEntry
+                {
+                    AccountId = e.AccountId,
+                    FundId = e.FundId,
+                    Date = e.EntryDate,
+                    Amount = -e.Amount,
+                    Type = ProjectionType.Ledger
+                });
         }
+
     }
 }

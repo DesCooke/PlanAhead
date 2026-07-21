@@ -6,7 +6,7 @@ namespace PlanAhead.Core.Models.Projections;
 
 public class Forecast
 {
-    public List<ProjectionEntry> Entries { get; } = new();
+    public List<ProjectionEntry> Entries { get; set;  } = new();
 
     public DateOnly From { get; init; }
 

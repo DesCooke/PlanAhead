@@ -1,20 +1,22 @@
 ﻿using PlanAhead.Core.Models.Domain;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace PlanAhead.Core.Interfaces.Repositories
+namespace PlanAhead.Core.Interfaces.Repositories;
+
+public interface IFundingRuleRepository
 {
-    public interface IFundingRuleRepository
-    {
-        Task<FundingRule?> GetByIdAsync(Guid id);
+    Task<FundingRule?> GetByIdAsync(Guid id);
 
-        Task<List<FundingRule>> GetByAccountIdAsync(Guid accountId);
+    Task<List<FundingRule>> GetAllAsync();
 
-        Task AddAsync(FundingRule rule);
+    Task<List<FundingRule>> GetByFundIdAsync(Guid fundId);
 
-        Task UpdateAsync(FundingRule rule);
+    Task<FundingRule?> GetByFundAndPeriodAsync(
+        Guid fundId,
+        DateOnly periodStart);
 
-        Task DeleteAsync(FundingRule rule);
-    }
+    Task AddAsync(FundingRule fundingRule);
+
+    Task UpdateAsync(FundingRule fundingRule);
+
+    Task DeleteAsync(FundingRule fundingRule);
 }
