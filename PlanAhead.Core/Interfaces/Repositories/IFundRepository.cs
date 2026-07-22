@@ -16,5 +16,7 @@ namespace PlanAhead.Core.Interfaces.Repositories
         Task UpdateAsync(Fund fund);
 
         Task DeleteAsync(Fund fund);
+
+        Task<List<Fund>> GetAllAsync();
     }
 }

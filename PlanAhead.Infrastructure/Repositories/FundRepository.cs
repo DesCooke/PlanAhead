@@ -23,6 +23,16 @@ public class FundRepository : IFundRepository
         return db;
     }
 
+    public async Task<List<Fund>> GetAllAsync()
+    {
+        var db = await Database();
+
+        return await db.Table<Fund>()
+            .Where(f => !f.Deleted)
+            .OrderBy(f => f.DisplayOrder)
+            .ToListAsync();
+    }
+
     public async Task<Fund?> GetByIdAsync(Guid id)
     {
         var db = await Database();

@@ -14,5 +14,9 @@ namespace PlanAhead.Core.Interfaces.Repositories
         Task UpdateAsync(Account account);
 
         Task DeleteAsync(Account account);
+
+        Task<List<Account>> GetAllAsync();
+
+        Task<List<Account>> GetActiveAsync();
     }
 }

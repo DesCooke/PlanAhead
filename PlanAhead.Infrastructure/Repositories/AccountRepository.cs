@@ -14,6 +14,16 @@ public class AccountRepository: IAccountRepository
         _context = context;
     }
 
+    public async Task<List<Account>> GetAllAsync()
+    {
+        var db = await Database();
+
+        return await db.Table<Account>()
+            .Where(a => !a.Deleted)
+            .OrderBy(a => a.DisplayOrder)
+            .ToListAsync();
+    }
+
     private async Task<SQLiteAsyncConnection> Database()
     {
         var db = await _context.GetConnectionAsync();
@@ -23,22 +33,22 @@ public class AccountRepository: IAccountRepository
         return db;
     }
 
+    public async Task<List<Account>> GetActiveAsync()
+    {
+        var db = await Database();
+
+        return await db.Table<Account>()
+            .Where(a => !a.Deleted && !a.Archived)
+            .OrderBy(a => a.DisplayOrder)
+            .ToListAsync();
+    }
     public async Task<Account?> GetByIdAsync(Guid id)
     {
         var db = await Database();
 
         return await db.Table<Account>()
-                       .FirstOrDefaultAsync(a => a.Id == id);
-    }
-
-    public async Task<List<Account>> GetAllAsync()
-    {
-        var db = await Database();
-
-        return await db.Table<Account>()
-                       .Where(a => !a.Deleted)
-                       .OrderBy(a => a.DisplayOrder)
-                       .ToListAsync();
+                       .FirstOrDefaultAsync(a => a.Id == id &&
+            !a.Deleted);
     }
 
     public async Task AddAsync(Account account)
