@@ -3,16 +3,19 @@ using HomeBudget;
 using HomeBudget.ViewModels;
 using HomeBudget.Views;
 using Microsoft.Extensions.Logging;
+using PlanAhead.Core.Extensions;
 using PlanAhead.Core.Interfaces.Repositories;
 using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Core.Services.Planning;
-using PlanAhead.Core.Extensions;
 using PlanAhead.Data.Database;
-using PlanAhead.Services;
 using PlanAhead.Infrastructure.Data.Database;
-using PlanAhead.Infrastructure.Repositories;
 using PlanAhead.Infrastructure.Extensions;
+using PlanAhead.Infrastructure.Repositories;
 using PlanAhead.Interfaces;
+using PlanAhead.Navigation;
+using PlanAhead.Services;
+using PlanAhead.ViewModels.Funds;
+using PlanAhead.Views.Funds;
 
 namespace PlanAhead
 {
@@ -59,6 +62,10 @@ namespace PlanAhead
             builder.Services.AddSingleton<INavigationService,
                 NavigationService>();
 
+            builder.Services.AddTransient<FundListViewModel>();
+
+            builder.Services.AddTransient<FundListPage>();
+
             builder.Services.AddSingleton<IDialogService,
                 DialogService>();
 
@@ -70,6 +77,9 @@ namespace PlanAhead
                 Path.Combine(
                     FileSystem.AppDataDirectory,
                     "planahead.db"));
+
+            RouteRegistry.Register<FundListPage>(
+                "funds");
 
 #if DEBUG
             builder.Logging.AddDebug();

@@ -1,6 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using PlanAhead.Interfaces;
 
+namespace PlanAhead.ViewModels;
+
 public abstract partial class BaseViewModel : ObservableObject
 {
     protected INavigationService Navigation { get; }
@@ -12,5 +14,30 @@ public abstract partial class BaseViewModel : ObservableObject
     {
         Navigation = navigation;
         Dialogs = dialogs;
+    }
+
+    [ObservableProperty]
+    private string title = string.Empty;
+
+    [ObservableProperty]
+    private bool isBusy;
+
+    [ObservableProperty]
+    private bool isRefreshing;
+
+    protected async Task ExecuteBusyAsync(Func<Task> action)
+    {
+        if (IsBusy)
+            return;
+
+        try
+        {
+            IsBusy = true;
+            await action();
+        }
+        finally
+        {
+            IsBusy = false;
+        }
     }
 }

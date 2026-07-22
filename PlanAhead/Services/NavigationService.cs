@@ -1,31 +1,33 @@
-﻿using HomeBudget.Views;
-using PlanAhead.Interfaces;
+﻿using PlanAhead.Interfaces;
+using PlanAhead.Navigation;
 
 namespace PlanAhead.Services;
 
-public class NavigationService
-    : INavigationService
+public class NavigationService : INavigationService
 {
+    public Task NavigateToAsync<TPage>()
+        where TPage : Page
+    {
+        return Shell.Current.GoToAsync(
+            RouteRegistry.GetRoute<TPage>());
+    }
+
+    public Task NavigateToAsync<TPage>(
+        IDictionary<string, object> parameters)
+        where TPage : Page
+    {
+        return Shell.Current.GoToAsync(
+            RouteRegistry.GetRoute<TPage>(),
+            parameters);
+    }
+
     public Task GoBackAsync()
     {
         return Shell.Current.GoToAsync("..");
     }
 
-    public Task GoToAsync(string route)
+    public Task GoToRootAsync()
     {
-        return Shell.Current.GoToAsync(route);
-    }
-
-    public async Task GoToAccountDetailAsync(Guid? accountId = null)
-    {
-        if (accountId == null)
-        {
-            await Shell.Current.GoToAsync(nameof(AccountDetailPage));
-        }
-        else
-        {
-            await Shell.Current.GoToAsync(
-                $"{nameof(AccountDetailPage)}?id={accountId}");
-        }
+        return Shell.Current.GoToAsync("//");
     }
 }

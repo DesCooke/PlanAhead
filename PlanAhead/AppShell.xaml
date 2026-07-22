@@ -26,4 +26,11 @@
 
     </FlyoutItem>
 
+    <FlyoutItem Title="Funds">
+
+        <ShellContent
+        ContentTemplate="{DataTemplate views:FundListPage}" />
+
+    </FlyoutItem>
+
 </Shell>

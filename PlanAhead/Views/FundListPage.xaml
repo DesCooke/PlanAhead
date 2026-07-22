@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<ContentPage
+    x:Class="PlanAhead.Views.Funds.FundListPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="{Binding Title}">
+
+    <Grid>
+
+        <CollectionView
+            ItemsSource="{Binding Funds}"
+            SelectionMode="Single"
+            SelectedItem="{Binding SelectedFund}">
+
+            <CollectionView.ItemTemplate>
+
+                <DataTemplate>
+
+                    <Frame
+                        Margin="10,5"
+                        Padding="12">
+
+                        <VerticalStackLayout>
+
+                            <Label
+                                FontAttributes="Bold"
+                                FontSize="18"
+                                Text="{Binding Name}" />
+
+                            <Label
+                                FontSize="14"
+                                Opacity="0.7"
+                                Text="{Binding Frequency}" />
+
+                        </VerticalStackLayout>
+
+                    </Frame>
+
+                </DataTemplate>
+
+            </CollectionView.ItemTemplate>
+
+        </CollectionView>
+
+    </Grid>
+
+</ContentPage>
