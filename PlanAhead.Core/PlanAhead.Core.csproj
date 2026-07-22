@@ -8,9 +8,15 @@
     <RootNamespace>PlanAhead.Core</RootNamespace>
     <AssemblyName>PlanAhead.Core</AssemblyName>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Interfaces\Strategies\**" />
+    <EmbeddedResource Remove="Interfaces\Strategies\**" />
+    <None Remove="Interfaces\Strategies\**" />
+  </ItemGroup>
   
   <ItemGroup>
-    <Folder Include="Interfaces\Strategies\" />
+    <Folder Include="Services\Calculations\" />
     <Folder Include="Services\Planning\Dates\Strategies\" />
     <Folder Include="Utilities\" />
   </ItemGroup>

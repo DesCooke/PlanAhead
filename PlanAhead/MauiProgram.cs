@@ -3,7 +3,6 @@ using HomeBudget;
 using HomeBudget.ViewModels;
 using HomeBudget.Views;
 using Microsoft.Extensions.Logging;
-using PlanAhead.Core.Interfaces;
 using PlanAhead.Core.Interfaces.Repositories;
 using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Core.Services.Planning;
@@ -13,6 +12,7 @@ using PlanAhead.Services;
 using PlanAhead.Infrastructure.Data.Database;
 using PlanAhead.Infrastructure.Repositories;
 using PlanAhead.Infrastructure.Extensions;
+using PlanAhead.Interfaces;
 
 namespace PlanAhead
 {
