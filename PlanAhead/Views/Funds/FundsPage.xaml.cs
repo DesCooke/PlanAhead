@@ -21,4 +21,6 @@ public partial class FundsPage : ContentPage
 
         await _viewModel.LoadCommand.ExecuteAsync(null);
     }
+
+
 }

@@ -35,6 +35,8 @@ public class FundService : IFundService
         Fund fund)
     {
         // Future business rules go here.
+        if (fund.Id == Guid.Empty)
+            fund.Id = Guid.NewGuid();
 
         return _fundRepository.AddAsync(fund);
     }

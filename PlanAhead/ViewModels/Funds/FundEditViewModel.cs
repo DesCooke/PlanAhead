@@ -11,12 +11,17 @@ public partial class FundEditViewModel : BaseViewModel
 {
     private readonly IFundService _fundService;
     private readonly IAccountService _accountService;
-
-    private Guid _fundId;
-    private Guid _accountId;
+    private readonly INavigationContext _navigationContext;
 
     public IEnumerable<Frequency> Frequencies =>
         Enum.GetValues<Frequency>();
+
+
+    [ObservableProperty]
+    private Guid id;
+
+    [ObservableProperty]
+    private Guid accountId;
 
     [ObservableProperty]
     private string name = string.Empty;
@@ -34,93 +39,91 @@ public partial class FundEditViewModel : BaseViewModel
         IFundService fundService,
         IAccountService accountService,
         INavigationService navigation,
+        INavigationContext navigationContext,
         IDialogService dialogs)
         : base(navigation, dialogs)
     {
         _fundService = fundService;
         _accountService = accountService;
+        _navigationContext = navigationContext;
 
         Title = "New Fund";
     }
 
-    public async Task InitialiseAsync(Guid? fundId = null)
+    public async Task InitialiseAsync()
     {
-        if (fundId == null)
+        var fund = _navigationContext.Get<Fund>();
+
+        if (fund == null)
         {
             //
-            // New Fund
+            // New fund
             //
-
-            var account =
-                (await _accountService.GetAllAsync())
-                .OrderBy(a => a.DisplayOrder)
-                .FirstOrDefault();
-
-            if (account != null)
-                _accountId = account.Id;
-
-            _fundId = Guid.Empty;
-            Title = "New Fund";
-
             return;
         }
 
         //
-        // Existing Fund
+        // Existing fund
         //
 
-        var fund =
-            await _fundService.GetByIdAsync(fundId.Value);
+        Load(fund);
 
-        if (fund == null)
-            return;
+        _navigationContext.Clear();
+    }
 
-        _fundId = fund.Id;
-        _accountId = fund.AccountId;
-
+    private void Load(Fund fund)
+    {
+        Id = fund.Id;
         Name = fund.Name;
-        Description = fund.Description;
-        Frequency = fund.Frequency;
+        AccountId = fund.AccountId;
         Notes = fund.Notes;
+    }
 
-        Title = "Edit Fund";
+    private Fund Build()
+    {
+        return new Fund
+        {
+            Id = Id,
+
+            AccountId = AccountId,
+
+            Name = Name.Trim(),
+
+            Description = Description.Trim(),
+
+            Frequency = Frequency,
+
+            Notes = Notes.Trim()
+        };
+    }
+
+    string? Validate() 
+    {
+        if (string.IsNullOrWhiteSpace(Name))
+            return("Please enter a fund name.");
+
+        return null;
     }
 
     [RelayCommand]
     private async Task SaveAsync()
     {
-        if (string.IsNullOrWhiteSpace(Name))
+        var error = Validate();
+        if (error!=null)
         {
             await Dialogs.ShowMessageAsync(
                 "Validation",
-                "Please enter a fund name.");
+                error);
 
             return;
         }
 
         try
         {
-            var fund = new Fund
-            {
-                Id = _fundId == Guid.Empty
-                    ? Guid.NewGuid()
-                    : _fundId,
-
-                AccountId = _accountId,
-
-                Name = Name.Trim(),
-
-                Description = Description.Trim(),
-
-                Frequency = Frequency,
-
-                Notes = Notes.Trim()
-            };
-
-            if (_fundId == Guid.Empty)
-                await _fundService.AddAsync(fund);
+            if (Id == Guid.Empty)
+                await _fundService.AddAsync(Build());
             else
-                await _fundService.UpdateAsync(fund);
+                await _fundService.UpdateAsync(Build());
 
             await Navigation.GoBackAsync();
         }
