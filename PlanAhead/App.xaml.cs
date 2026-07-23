@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace HomeBudget
+namespace PlanAhead
 {
     public partial class App : Application
     {

@@ -4,7 +4,7 @@ using PlanAhead.Core.Constants;
 using PlanAhead.Infrastructure.Repositories;
 using PlanAhead.Interfaces;
 
-namespace HomeBudget.ViewModels;
+namespace PlanAhead.ViewModels;
 
 public partial class DashboardViewModel : BaseViewModel
 {

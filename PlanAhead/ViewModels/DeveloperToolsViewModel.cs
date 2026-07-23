@@ -3,7 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using PlanAhead.Infrastructure.Repositories;
 using PlanAhead.Interfaces;
 
-namespace HomeBudget.ViewModels;
+namespace PlanAhead.ViewModels;
 
 public partial class DeveloperToolsViewModel : BaseViewModel
 {
@@ -77,7 +77,7 @@ public partial class DeveloperToolsViewModel : BaseViewModel
     {
         var path = Path.Combine(
             FileSystem.AppDataDirectory,
-            "homebudget.db");
+            "PlanAhead.db");
 
         await Dialogs.ShowMessageAsync(
                 "Database",$"{path}");

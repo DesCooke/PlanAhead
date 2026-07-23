@@ -1,4 +1,4 @@
-﻿namespace HomeBudget
+﻿namespace PlanAhead
 {
     public partial class MainPage : ContentPage
     {

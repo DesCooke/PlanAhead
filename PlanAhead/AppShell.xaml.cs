@@ -1,6 +1,10 @@
-﻿using HomeBudget.Views;
+﻿using PlanAhead.Navigation;
+using PlanAhead.Views;
+using PlanAhead.Views.Accounts;
+using PlanAhead.Views.Funds;
 
-namespace HomeBudget
+
+namespace PlanAhead
 {
     public partial class AppShell : Shell
     {
@@ -8,9 +12,7 @@ namespace HomeBudget
         {
             InitializeComponent();
 
-            Routing.RegisterRoute(
-                nameof(AccountDetailPage),
-                typeof(AccountDetailPage));
+            RouteRegistry.RegisterRoutes();
         }
     }
 }

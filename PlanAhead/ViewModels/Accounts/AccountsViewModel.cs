@@ -3,9 +3,11 @@ using CommunityToolkit.Mvvm.Input;
 using PlanAhead.Core.Models.Domain;
 using PlanAhead.Infrastructure.Repositories;
 using PlanAhead.Interfaces;
+using PlanAhead.Navigation;
+using PlanAhead.Views;
 using System.Collections.ObjectModel;
 
-namespace HomeBudget.ViewModels;
+namespace PlanAhead.ViewModels.Accounts;
 
 public partial class AccountsViewModel : BaseViewModel
 {
@@ -39,14 +41,20 @@ public partial class AccountsViewModel : BaseViewModel
     [RelayCommand]
     private async Task EditAccount(Account account)
     {
-        _context.Set(account); 
-        await Navigation.GoToAccountDetailAsync();
+/*        await Navigation.NavigateToAsync(
+            Routes.AccountDetail,
+            new Dictionary<string, object>
+            {
+                ["AccountId"] = account.Id
+            });*/
     }
 
     [RelayCommand]
     private async Task AddAccount()
     {
-        await Navigation.GoToAccountDetailAsync();
+        /*
+        await Navigation.NavigateToAsync(
+            Routes.AccountDetail);*/
     }
 
     partial void OnSelectedAccountChanged(Account? value)

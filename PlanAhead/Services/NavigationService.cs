@@ -1,8 +1,6 @@
 ﻿using PlanAhead.Interfaces;
 using PlanAhead.Navigation;
 
-namespace PlanAhead.Services;
-
 public class NavigationService : INavigationService
 {
     public Task NavigateToAsync<TPage>()

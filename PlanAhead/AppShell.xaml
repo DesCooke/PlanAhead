@@ -3,8 +3,10 @@
 <Shell
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:views="clr-namespace:HomeBudget.Views"
-    x:Class="HomeBudget.AppShell">
+    xmlns:views="clr-namespace:PlanAhead.Views"
+    xmlns:accounts="clr-namespace:PlanAhead.Views.Accounts"
+    xmlns:funds="clr-namespace:PlanAhead.Views.Funds"
+    x:Class="PlanAhead.AppShell">
 
     <FlyoutItem Title="Dashboard">
         <ShellContent
@@ -22,15 +24,13 @@
 
         <ShellContent
         Title="Accounts"
-        ContentTemplate="{DataTemplate views:AccountsPage}" />
-
+        ContentTemplate="{DataTemplate accounts:AccountsPage}" />
     </FlyoutItem>
 
     <FlyoutItem Title="Funds">
-
         <ShellContent
-        ContentTemplate="{DataTemplate views:FundListPage}" />
-
+        Title="Funds"
+        ContentTemplate="{DataTemplate funds:FundsPage}" />
     </FlyoutItem>
 
 </Shell>

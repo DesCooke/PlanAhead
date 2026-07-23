@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<ContentPage
+    x:Class="PlanAhead.Views.Funds.FundEditPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="{Binding Title}">
+
+    <ScrollView>
+
+        <VerticalStackLayout
+            Padding="20"
+            Spacing="16">
+
+            <Label
+                FontAttributes="Bold"
+                FontSize="24"
+                Text="Fund Details" />
+
+            <Label
+                FontAttributes="Bold"
+                Text="Name" />
+
+            <Entry
+                Text="{Binding Name}" />
+
+            <Label
+                FontAttributes="Bold"
+                Text="Description" />
+
+            <Editor
+                AutoSize="TextChanges"
+                HeightRequest="80"
+                Text="{Binding Description}" />
+
+            <Label
+                FontAttributes="Bold"
+                Text="Frequency" />
+
+            <Picker
+                Title="Frequency"
+                ItemsSource="{Binding Frequencies}"
+                SelectedItem="{Binding Frequency}" />
+
+            <Label
+                FontAttributes="Bold"
+                Text="Notes" />
+
+            <Editor
+                AutoSize="TextChanges"
+                HeightRequest="120"
+                Text="{Binding Notes}" />
+
+            <HorizontalStackLayout
+                HorizontalOptions="End"
+                Spacing="10">
+
+                <Button
+                    Command="{Binding CancelCommand}"
+                    Text="Cancel" />
+
+                <Button
+                    Command="{Binding SaveCommand}"
+                    Text="Save" />
+
+            </HorizontalStackLayout>
+
+        </VerticalStackLayout>
+
+    </ScrollView>
+
+</ContentPage>

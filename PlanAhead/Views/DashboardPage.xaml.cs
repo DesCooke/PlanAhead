@@ -1,6 +1,6 @@
-using HomeBudget.ViewModels;
+using PlanAhead.ViewModels;
 
-namespace HomeBudget.Views;
+namespace PlanAhead.Views;
 
 public partial class DashboardPage : ContentPage
 {

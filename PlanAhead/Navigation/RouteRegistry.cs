@@ -1,4 +1,8 @@
-﻿namespace PlanAhead.Navigation;
+﻿using PlanAhead.Views;
+using PlanAhead.Views.Accounts;
+using PlanAhead.Views.Funds;
+
+namespace PlanAhead.Navigation;
 
 public static class RouteRegistry
 {
@@ -27,5 +31,11 @@ public static class RouteRegistry
         }
 
         return route;
+    }
+
+    public static void RegisterRoutes()
+    {
+        Register<AccountDetailPage>("account-detail");
+        Register<FundEditPage>("fund-edit");
     }
 }

@@ -1,6 +1,6 @@
-using HomeBudget.ViewModels;
+using PlanAhead.ViewModels.Accounts;
 
-namespace HomeBudget.Views;
+namespace PlanAhead.Views.Accounts;
 
 public partial class AccountDetailPage : ContentPage
 {

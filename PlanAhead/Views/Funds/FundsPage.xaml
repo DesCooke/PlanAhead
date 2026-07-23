@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <ContentPage
-    x:Class="PlanAhead.Views.Funds.FundListPage"
+    x:Class="PlanAhead.Views.Funds.FundsPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:PlanAhead.Controls"
     Title="{Binding Title}">
 
     <Grid>
 
+        <!-- Placeholder until we add the CollectionView -->
         <CollectionView
             ItemsSource="{Binding Funds}"
             SelectionMode="Single"
@@ -17,7 +19,7 @@
 
                 <DataTemplate>
 
-                    <Frame
+                    <Border
                         Margin="10,5"
                         Padding="12">
 
@@ -29,19 +31,23 @@
                                 Text="{Binding Name}" />
 
                             <Label
-                                FontSize="14"
                                 Opacity="0.7"
                                 Text="{Binding Frequency}" />
-
                         </VerticalStackLayout>
 
-                    </Frame>
+                    </Border>
 
                 </DataTemplate>
 
             </CollectionView.ItemTemplate>
 
         </CollectionView>
+        
+        <controls:FloatingActionButton
+            Margin="24"
+            HorizontalOptions="End"
+            VerticalOptions="End"
+            Command="{Binding AddCommand}" />
 
     </Grid>
 

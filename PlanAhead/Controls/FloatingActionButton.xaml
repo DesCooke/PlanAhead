@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<ContentView
+    x:Class="PlanAhead.Controls.FloatingActionButton"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Name="Root">
+
+    <Border
+        WidthRequest="64"
+        HeightRequest="64"
+        HorizontalOptions="End"
+        VerticalOptions="End"
+        StrokeThickness="0"
+        BackgroundColor="{AppThemeBinding Light=#1976D2, Dark=#2196F3}"
+        StrokeShape="RoundRectangle 32">
+
+        <Button
+            BackgroundColor="Transparent"
+            BorderWidth="0"
+            CornerRadius="32"
+            Command="{Binding Command, Source={x:Reference Root}}"
+            FontAttributes="Bold"
+            FontSize="28"
+            Text="{Binding Text, Source={x:Reference Root}}"
+            TextColor="White" />
+
+    </Border>
+
+</ContentView>

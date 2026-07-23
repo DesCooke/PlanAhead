@@ -4,7 +4,7 @@ using PlanAhead.Core.Models.Domain;
 using PlanAhead.Infrastructure.Repositories;
 using PlanAhead.Interfaces;
 
-namespace HomeBudget.ViewModels;
+namespace PlanAhead.ViewModels.Accounts;
 
 public partial class AccountDetailViewModel : BaseViewModel
 {
