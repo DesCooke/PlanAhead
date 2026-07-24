@@ -1,7 +1,10 @@
-﻿namespace PlanAhead.Core.Models.Base;
+﻿using SQLite;
+
+namespace PlanAhead.Core.Models.Base;
 
 public abstract class BaseEntity
 {
+    [PrimaryKey]
     public Guid Id { get; set; }
 
     public DateTime CreatedUtc { get; set; }

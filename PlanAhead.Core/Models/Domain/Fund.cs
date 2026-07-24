@@ -16,4 +16,7 @@ public class Fund : BaseEntity
     public int DisplayOrder { get; set; }
 
     public string Notes { get; set; } = "";
+
+    public string IconName { get; set; } = "Plane";
+
 }

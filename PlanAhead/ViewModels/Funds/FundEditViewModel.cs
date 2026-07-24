@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PlanAhead.Core.Interfaces.Services;
-using PlanAhead.Core.Models.Domain;
 using PlanAhead.Core.Models.Enums;
 using PlanAhead.Interfaces;
 
@@ -76,6 +75,7 @@ public partial class FundEditViewModel : BaseViewModel
         Id = fund.Id;
         Name = fund.Name;
         AccountId = fund.AccountId;
+        Description = fund.Description;
         Notes = fund.Notes;
     }
 

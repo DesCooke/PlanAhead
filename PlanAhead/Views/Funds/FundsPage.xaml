@@ -35,19 +35,25 @@
 
                         </SwipeView.RightItems>
 
-                        <controls:Card 
-                            Padding="16">
+                        <controls:Card Padding="16">
 
                             <Grid
-                                ColumnDefinitions="*,auto"
+                                ColumnDefinitions="auto,*,auto"
                                 ColumnSpacing="12"
                                 RowDefinitions="Auto,Auto,Auto"
                                 RowSpacing="4">
 
+                                <controls:ObjectIcon
+                                    Grid.Row="0"
+                                    Grid.RowSpan="3"
+                                    Grid.Column="0"
+                                    IconName="{Binding IconName}"
+                                    IconSize="28" />
+
                                 <!--  Fund Name  -->
                                 <Label
                                     Grid.Row="0"
-                                    Grid.Column="0"
+                                    Grid.Column="1"
                                     FontAttributes="Bold"
                                     FontSize="18"
                                     LineBreakMode="TailTruncation"
@@ -56,7 +62,7 @@
                                 <!--  Frequency  -->
                                 <Label
                                     Grid.Row="1"
-                                    Grid.Column="0"
+                                    Grid.Column="1"
                                     FontSize="13"
                                     Opacity="0.6"
                                     Text="{Binding Frequency}" />
@@ -64,7 +70,7 @@
                                 <!--  Description  -->
                                 <Label
                                     Grid.Row="2"
-                                    Grid.Column="0"
+                                    Grid.Column="1"
                                     FontSize="13"
                                     LineBreakMode="TailTruncation"
                                     MaxLines="2"
@@ -74,7 +80,7 @@
                                 <controls:CardActionsButton
                                     Grid.Row="0"
                                     Grid.RowSpan="3"
-                                    Grid.Column="1"
+                                    Grid.Column="2"
                                     CommandParameter="{Binding}"
                                     DeleteCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteCommand}"
                                     EditCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditCommand}"

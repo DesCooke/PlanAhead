@@ -10,8 +10,8 @@
         Margin="{Binding Source={x:Reference Self}, Path=CardMargin}"
         Padding="{Binding Source={x:Reference Self}, Path=CardPadding}"
         Stroke="{Binding Source={x:Reference Self}, Path=BorderColor}"
-        StrokeThickness="{Binding Source={x:Reference Self}, Path=BorderThickness}"
-        StrokeShape="RoundRectangle 8">
+        StrokeShape="RoundRectangle 8"
+        StrokeThickness="{Binding Source={x:Reference Self}, Path=BorderThickness}">
 
         <ContentPresenter />
 

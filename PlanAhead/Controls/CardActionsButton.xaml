@@ -6,12 +6,12 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <ImageButton
-    WidthRequest="40"
-    HeightRequest="40"
-    Padding="0"
-    CornerRadius="6"
-    BackgroundColor="Transparent"
-    Source="more_vert.png"
-    Clicked="Button_Clicked"/>
+        Padding="0"
+        BackgroundColor="Transparent"
+        Clicked="Button_Clicked"
+        CornerRadius="6"
+        HeightRequest="40"
+        Source="more_vert.png"
+        WidthRequest="40" />
 
 </ContentView>
