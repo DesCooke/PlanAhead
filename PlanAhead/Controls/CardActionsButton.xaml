@@ -5,11 +5,13 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <Button
-        Clicked="Button_Clicked"
-        FontSize="20"
-        HeightRequest="32"
-        Text="⋮"
-        WidthRequest="32" />
+    <ImageButton
+    WidthRequest="40"
+    HeightRequest="40"
+    Padding="0"
+    CornerRadius="6"
+    BackgroundColor="Transparent"
+    Source="more_vert.png"
+    Clicked="Button_Clicked"/>
 
 </ContentView>

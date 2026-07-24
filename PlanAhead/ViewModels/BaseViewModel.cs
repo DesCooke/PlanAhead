@@ -25,6 +25,14 @@ public abstract partial class BaseViewModel : ObservableObject
     [ObservableProperty]
     private bool isRefreshing;
 
+    protected void RefreshUi(params string[] properties)
+    {
+        foreach (var property in properties)
+        {
+            OnPropertyChanged(property);
+        }
+    }
+
     protected async Task ExecuteBusyAsync(Func<Task> action)
     {
         if (IsBusy)

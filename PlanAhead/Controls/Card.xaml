@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<ContentView
+    x:Class="PlanAhead.Controls.Card"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Name="Self">
+
+    <Border
+        Margin="{Binding Source={x:Reference Self}, Path=CardMargin}"
+        Padding="{Binding Source={x:Reference Self}, Path=CardPadding}"
+        Stroke="{Binding Source={x:Reference Self}, Path=BorderColor}"
+        StrokeThickness="{Binding Source={x:Reference Self}, Path=BorderThickness}"
+        StrokeShape="RoundRectangle 8">
+
+        <ContentPresenter />
+
+    </Border>
+
+</ContentView>

@@ -19,6 +19,7 @@ public partial class FundsViewModel : BaseViewModel
     public bool HasFunds => Funds.Any();
     public bool HasNoFunds => !HasFunds;
 
+
     [ObservableProperty]
     private Fund? selectedFund;
 
@@ -33,8 +34,6 @@ public partial class FundsViewModel : BaseViewModel
         _accountService = accountService;
         _fundService = fundService;
         _navigationContext = navigationContext;
-
-        Title = "Funds";
     }
 
     [RelayCommand]
@@ -42,7 +41,6 @@ public partial class FundsViewModel : BaseViewModel
     {
         await ExecuteBusyAsync(async () =>
         {
-            Funds.Clear();
             /*
                         var accounts = await _accountService.GetAllAsync();
                         var account = accounts.FirstOrDefault();
@@ -54,12 +52,17 @@ public partial class FundsViewModel : BaseViewModel
             */
             var funds = await _fundService.GetAllAsync();
 
+            Funds.Clear();
             foreach (var fund in funds)
                 Funds.Add(fund);
 
-            OnPropertyChanged(nameof(HasFunds));
-            OnPropertyChanged(nameof(HasNoFunds));
+            RefreshUi(
+                nameof(HasFunds),
+                nameof(HasNoFunds),
+                nameof(Title));
         });
+
+        Title = $"Funds ({Funds.Count})";
     }
 
     [RelayCommand]

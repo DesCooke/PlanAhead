@@ -23,7 +23,7 @@
 
                         <SwipeView.RightItems>
 
-                            <SwipeItems>
+                            <SwipeItems Mode="Reveal">
 
                                 <SwipeItem
                                     BackgroundColor="Red"
@@ -35,14 +35,11 @@
 
                         </SwipeView.RightItems>
 
-                        <Border
-                            Margin="10,5"
-                            Padding="16"
-                            StrokeShape="RoundRectangle 8"
-                            StrokeThickness="1">
+                        <controls:Card 
+                            Padding="16">
 
                             <Grid
-                                ColumnDefinitions="*,Auto"
+                                ColumnDefinitions="*,auto"
                                 ColumnSpacing="12"
                                 RowDefinitions="Auto,Auto,Auto"
                                 RowSpacing="4">
@@ -82,11 +79,11 @@
                                     DeleteCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteCommand}"
                                     EditCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditCommand}"
                                     HorizontalOptions="End"
-                                    VerticalOptions="Start" />
+                                    VerticalOptions="Center" />
 
                             </Grid>
 
-                        </Border>
+                        </controls:Card>
                     </SwipeView>
 
 
