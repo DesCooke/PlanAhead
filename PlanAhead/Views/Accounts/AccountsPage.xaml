@@ -1,44 +1,38 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <ContentPage
+    x:Class="PlanAhead.Views.Accounts.AccountsPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    x:Class="PlanAhead.Views.Accounts.AccountsPage"
     Title="Accounts">
 
     <Grid RowDefinitions="Auto,*">
 
         <Button
-            Text="Add Account"
+            Margin="10"
             Command="{Binding AddAccountCommand}"
-            Margin="10"/>
+            Text="Add Account" />
 
         <CollectionView
             Grid.Row="1"
+            Margin="10"
             ItemsSource="{Binding Accounts}"
-            Margin="10" 
-            SelectionMode="Single"
-            SelectedItem="{Binding SelectedAccount}">
+            SelectedItem="{Binding SelectedAccount}"
+            SelectionMode="Single">
 
             <CollectionView.ItemTemplate>
 
                 <DataTemplate>
 
-                    <Frame
-                        Margin="0,5"
-                        Padding="10">
+                    <Frame Margin="0,5" Padding="10">
 
                         <Grid ColumnDefinitions="*,Auto">
 
                             <VerticalStackLayout>
 
-                                <Label
-                                    Text="{Binding Name}"
-                                    FontAttributes="Bold"/>
+                                <Label FontAttributes="Bold" Text="{Binding Name}" />
 
-                                <Label
-                                    Text="{Binding Balance,
-                                           StringFormat='{}{0:C}'}"/>
+                                <Label Text="{Binding Balance, StringFormat='{}{0:C}'}" />
 
                             </VerticalStackLayout>
 

@@ -12,8 +12,8 @@
         <CollectionView
             IsVisible="{Binding HasFunds}"
             ItemsSource="{Binding Funds}"
-            SelectionMode="None"
-            SelectedItem="{Binding SelectedFund}">
+            SelectedItem="{Binding SelectedFund}"
+            SelectionMode="None">
 
             <CollectionView.ItemTemplate>
 
@@ -26,11 +26,10 @@
                             <SwipeItems>
 
                                 <SwipeItem
-                                    Text="Delete"
                                     BackgroundColor="Red"
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}},
-                                        Path=BindingContext.DeleteCommand}"
-                                    CommandParameter="{Binding}" />
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteCommand}"
+                                    CommandParameter="{Binding}"
+                                    Text="Delete" />
 
                             </SwipeItems>
 
@@ -38,37 +37,52 @@
 
                         <Border
                             Margin="10,5"
-                            Padding="12"
+                            Padding="16"
+                            StrokeShape="RoundRectangle 8"
                             StrokeThickness="1">
 
                             <Grid
-                                ColumnDefinitions="*,Auto">
+                                ColumnDefinitions="*,Auto"
+                                ColumnSpacing="12"
+                                RowDefinitions="Auto,Auto,Auto"
+                                RowSpacing="4">
 
-                                <VerticalStackLayout
-                                    Grid.Column="0">
+                                <!--  Fund Name  -->
+                                <Label
+                                    Grid.Row="0"
+                                    Grid.Column="0"
+                                    FontAttributes="Bold"
+                                    FontSize="18"
+                                    LineBreakMode="TailTruncation"
+                                    Text="{Binding Name}" />
 
-                                    <Label
-                                        FontAttributes="Bold"
-                                        FontSize="18"
-                                        Text="{Binding Name}" />
+                                <!--  Frequency  -->
+                                <Label
+                                    Grid.Row="1"
+                                    Grid.Column="0"
+                                    FontSize="13"
+                                    Opacity="0.6"
+                                    Text="{Binding Frequency}" />
 
-                                    <Label
-                                        Opacity="0.7"
-                                        Text="{Binding Frequency}" />
+                                <!--  Description  -->
+                                <Label
+                                    Grid.Row="2"
+                                    Grid.Column="0"
+                                    FontSize="13"
+                                    LineBreakMode="TailTruncation"
+                                    MaxLines="2"
+                                    Text="{Binding Description}" />
 
-                                </VerticalStackLayout>
-
+                                <!--  Actions  -->
                                 <controls:CardActionsButton
+                                    Grid.Row="0"
+                                    Grid.RowSpan="3"
                                     Grid.Column="1"
-                                    VerticalOptions="Start"
-
-                                    EditCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}},
-                                        Path=BindingContext.EditCommand}"
-
-                                    DeleteCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}},
-                                        Path=BindingContext.DeleteCommand}"
-
-                                    CommandParameter="{Binding}" />
+                                    CommandParameter="{Binding}"
+                                    DeleteCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteCommand}"
+                                    EditCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditCommand}"
+                                    HorizontalOptions="End"
+                                    VerticalOptions="Start" />
 
                             </Grid>
 
@@ -83,16 +97,16 @@
         </CollectionView>
 
         <controls:EmptyState
-            IsVisible="{Binding HasNoFunds}"
-            Icon="💰"
             Title="No Funds"
+            Icon="💰"
+            IsVisible="{Binding HasNoFunds}"
             Message="Tap the + button to create your first fund." />
 
         <controls:FloatingActionButton
             Margin="24"
+            Command="{Binding AddCommand}"
             HorizontalOptions="End"
-            VerticalOptions="End"
-            Command="{Binding AddCommand}" />
+            VerticalOptions="End" />
 
     </Grid>
 

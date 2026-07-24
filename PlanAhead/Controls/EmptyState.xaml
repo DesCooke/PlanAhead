@@ -2,14 +2,14 @@
 
 <ContentView
     x:Class="PlanAhead.Controls.EmptyState"
-    x:Name="Self"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Name="Self">
 
     <VerticalStackLayout
         HorizontalOptions="Center"
-        VerticalOptions="Center"
-        Spacing="12">
+        Spacing="12"
+        VerticalOptions="Center">
 
         <Label
             FontSize="64"
@@ -17,8 +17,8 @@
             Text="{Binding Source={x:Reference Self}, Path=Icon}" />
 
         <Label
-            FontSize="22"
             FontAttributes="Bold"
+            FontSize="22"
             HorizontalOptions="Center"
             Text="{Binding Source={x:Reference Self}, Path=Title}" />
 
@@ -27,8 +27,8 @@
             HorizontalOptions="Center"
             HorizontalTextAlignment="Center"
             Opacity="0.7"
-            WidthRequest="250"
-            Text="{Binding Source={x:Reference Self}, Path=Message}" />
+            Text="{Binding Source={x:Reference Self}, Path=Message}"
+            WidthRequest="250" />
 
     </VerticalStackLayout>
 

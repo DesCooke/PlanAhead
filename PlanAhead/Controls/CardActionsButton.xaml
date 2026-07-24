@@ -6,10 +6,10 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
     <Button
-    Text="⋮"
-    FontSize="20"
-    WidthRequest="32"
-    HeightRequest="32"
-    Clicked="Button_Clicked"/>
+        Clicked="Button_Clicked"
+        FontSize="20"
+        HeightRequest="32"
+        Text="⋮"
+        WidthRequest="32" />
 
 </ContentView>
