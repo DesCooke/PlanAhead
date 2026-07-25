@@ -15,4 +15,8 @@
     <ProjectReference Include="..\PlanAhead.Core\PlanAhead.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Icons\" />
+  </ItemGroup>
+
 </Project>

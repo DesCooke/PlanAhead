@@ -7,6 +7,7 @@ using PlanAhead.Services;
 using PlanAhead.ViewModels;
 using PlanAhead.ViewModels.Accounts;
 using PlanAhead.ViewModels.Funds;
+using PlanAhead.ViewModels.Icons;
 using PlanAhead.Views;
 using PlanAhead.Views.Accounts;
 using PlanAhead.Views.Funds;
@@ -26,6 +27,8 @@ namespace PlanAhead.Extensions
 
             // Services 
             services.AddTransient<IDialogService, DialogService>();
+            services.AddTransient<IconPickerViewModel>();
+            services.AddTransient<IconPickerPopup>();
 
             // Repositories
             services.AddTransient<AccountRepository>();

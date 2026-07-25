@@ -16,5 +16,6 @@ namespace PlanAhead.Resources.Icons
         public IReadOnlyList<string> Categories { get; init; } = [];
 
         public IReadOnlyList<string> Keywords { get; init; } = [];
+        public int Popularity { get; init; }
     }
 }

@@ -10,6 +10,8 @@
 
         <VerticalStackLayout Padding="20" Spacing="16">
 
+            <Button Clicked="ChooseIcon_Clicked" Text="Choose Icon" />
+
             <Label
                 FontAttributes="Bold"
                 FontSize="24"

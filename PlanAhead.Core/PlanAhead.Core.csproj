@@ -16,6 +16,7 @@
   </ItemGroup>
   
   <ItemGroup>
+    <Folder Include="Models\Icons\" />
     <Folder Include="Services\Calculations\" />
     <Folder Include="Services\Planning\Dates\Strategies\" />
     <Folder Include="Utilities\" />

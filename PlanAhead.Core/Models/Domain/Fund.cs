@@ -17,6 +17,6 @@ public class Fund : BaseEntity
 
     public string Notes { get; set; } = "";
 
-    public string IconName { get; set; } = "Plane";
+    public string IconId { get; set; } = "PiggyBank";
 
 }

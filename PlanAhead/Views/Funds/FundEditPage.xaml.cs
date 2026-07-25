@@ -1,4 +1,6 @@
+using CommunityToolkit.Maui.Extensions;
 using PlanAhead.ViewModels.Funds;
+using PlanAhead.Views.Popups;
 
 namespace PlanAhead.Views.Funds;
 
@@ -14,6 +16,15 @@ public partial class FundEditPage : ContentPage
         _viewModel = viewModel;
 
         BindingContext = viewModel;
+    }
+
+    private async void ChooseIcon_Clicked(object sender, EventArgs e)
+    {
+        var popup = Handler.MauiContext!
+            .Services
+            .GetRequiredService<IconPickerPopup>();
+
+        await this.ShowPopupAsync(popup);
     }
 
     protected override async void OnAppearing()
