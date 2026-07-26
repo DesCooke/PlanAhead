@@ -94,7 +94,7 @@
 	  <MauiXaml Update="Controls\ObjectIcon.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="ViewModels\Icons\IconPickerPopup.xaml">
+	  <MauiXaml Update="Resources\Styles\Sizes.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\Popups\IconPickerPopup.xaml">

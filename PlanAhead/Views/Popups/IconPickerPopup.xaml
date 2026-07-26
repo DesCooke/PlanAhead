@@ -1,16 +1,72 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage
+<toolkit:Popup
     x:Class="PlanAhead.Views.Popups.IconPickerPopup"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    Title="IconPickerPopup">
-    <VerticalStackLayout>
-        <CollectionView ItemsSource="{Binding Icons}" SelectionMode="Single">
+    xmlns:controls="clr-namespace:PlanAhead.Controls"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
 
-            <CollectionView.ItemsLayout>
-                <GridItemsLayout Orientation="Vertical" Span="5" />
-            </CollectionView.ItemsLayout>
+    <Border Padding="20" StrokeThickness="1">
 
-        </CollectionView>
-    </VerticalStackLayout>
-</ContentPage>
+        <Border.WidthRequest>
+            <OnPlatform x:TypeArguments="x:Double">
+                <On Platform="Android" Value="320" />
+                <On Platform="WinUI" Value="460" />
+            </OnPlatform>
+        </Border.WidthRequest>
+
+        <VerticalStackLayout Padding="20" Spacing="20">
+
+            <Label
+                FontAttributes="Bold"
+                FontSize="22"
+                Text="Choose an icon" />
+
+            <CollectionView
+                ItemsSource="{Binding Icons}"
+                SelectedItem="{Binding SelectedIcon}"
+                SelectionMode="Single">
+
+                <CollectionView.ItemsLayout>
+
+                    <GridItemsLayout Orientation="Vertical" Span="3" />
+
+                </CollectionView.ItemsLayout>
+
+                <CollectionView.ItemTemplate>
+
+                    <DataTemplate>
+
+                        <Border
+                            Margin="4"
+                            Padding="8"
+                            HeightRequest="{StaticResource IconTileWidth}"
+                            StrokeThickness="1"
+                            WidthRequest="{StaticResource IconTileWidth}">
+
+                            <VerticalStackLayout HorizontalOptions="Center" Spacing="6">
+
+                                <controls:ObjectIcon IconName="{Binding Id}" IconSize="{StaticResource PickerIconSize}" />
+
+                                <Label
+                                    FontSize="12"
+                                    HorizontalOptions="Center"
+                                    HorizontalTextAlignment="Center"
+                                    LineBreakMode="WordWrap"
+                                    MaxLines="2"
+                                    Text="{Binding DisplayName}"
+                                    WidthRequest="{StaticResource IconTileTextWidth}" />
+
+                            </VerticalStackLayout>
+
+                        </Border>
+
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+
+            </CollectionView>
+
+        </VerticalStackLayout>
+
+    </Border>
+
+</toolkit:Popup>

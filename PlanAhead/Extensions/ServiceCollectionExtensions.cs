@@ -11,6 +11,7 @@ using PlanAhead.ViewModels.Icons;
 using PlanAhead.Views;
 using PlanAhead.Views.Accounts;
 using PlanAhead.Views.Funds;
+using PlanAhead.Views.Popups;
 
 namespace PlanAhead.Extensions
 {

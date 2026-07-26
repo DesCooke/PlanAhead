@@ -4,9 +4,14 @@
     x:Class="PlanAhead.Controls.ObjectIcon"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    x:Name="Self">
+    x:Name="Self"
+    WidthRequest="{Binding Source={x:Reference Self}, Path=IconSize}"
+    HeightRequest="{Binding Source={x:Reference Self}, Path=IconSize}">
 
-
-    <Image x:Name="IconImage" Aspect="AspectFit" />
+    <Image
+        x:Name="IconImage"
+        Aspect="AspectFit"
+        WidthRequest="{Binding Source={x:Reference Self}, Path=IconSize}"
+        HeightRequest="{Binding Source={x:Reference Self}, Path=IconSize}" />
 
 </ContentView>

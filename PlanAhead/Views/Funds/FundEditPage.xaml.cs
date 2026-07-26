@@ -20,13 +20,19 @@ public partial class FundEditPage : ContentPage
 
     private async void ChooseIcon_Clicked(object sender, EventArgs e)
     {
-        var popup = Handler.MauiContext!
-            .Services
-            .GetRequiredService<IconPickerPopup>();
+        try
+        {
+            var popup = Handler!.MauiContext!
+                .Services
+                .GetRequiredService<IconPickerPopup>();
 
-        await this.ShowPopupAsync(popup);
+            await this.ShowPopupAsync(popup);
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync("Exception", ex.ToString(), "OK");
+        }
     }
-
     protected override async void OnAppearing()
     {
         base.OnAppearing();
