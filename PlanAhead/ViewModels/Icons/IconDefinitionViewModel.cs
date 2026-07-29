@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using PlanAhead.Resources.Icons;
 
 namespace PlanAhead.ViewModels.Icons;
@@ -20,4 +21,6 @@ public partial class IconDefinitionViewModel : ObservableObject
 
     [ObservableProperty]
     private bool isSelected;
+
+    public IRelayCommand SelectCommand { get; }
 }

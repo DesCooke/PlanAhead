@@ -47,7 +47,7 @@
                                     Grid.Row="0"
                                     Grid.RowSpan="3"
                                     Grid.Column="0"
-                                    IconName="{Binding IconName}"
+                                    IconId="{Binding IconId}"
                                     IconSize="{StaticResource ListIconSize}" />
 
                                 <!--  Fund Name  -->

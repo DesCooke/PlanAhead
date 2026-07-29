@@ -18,6 +18,16 @@ public partial class IconPickerViewModel : ObservableObject
         }
     }
 
+    public void Initialise(string? currentIconId)
+    {
+        SelectedIcon = Icons.FirstOrDefault(i => i.Id == currentIconId);
+    }
+
     [ObservableProperty]
     private IconDefinitionViewModel? selectedIcon;
+
+    partial void OnSelectedIconChanged(IconDefinitionViewModel? value)
+    {
+        // This will fire whenever the user taps an icon.
+    }
 }

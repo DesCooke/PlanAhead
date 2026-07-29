@@ -34,6 +34,9 @@ public partial class FundEditViewModel : BaseViewModel
     [ObservableProperty]
     private string notes = string.Empty;
 
+    [ObservableProperty]
+    private string iconId = string.Empty;
+
     public FundEditViewModel(
         IFundService fundService,
         IAccountService accountService,
@@ -77,6 +80,7 @@ public partial class FundEditViewModel : BaseViewModel
         AccountId = fund.AccountId;
         Description = fund.Description;
         Notes = fund.Notes;
+        IconId = fund.IconId;
     }
 
     private Fund Build()
@@ -93,7 +97,9 @@ public partial class FundEditViewModel : BaseViewModel
 
             Frequency = Frequency,
 
-            Notes = Notes.Trim()
+            Notes = Notes.Trim(),
+
+            IconId = IconId.Trim()
         };
     }
 

@@ -4,13 +4,34 @@
     x:Class="PlanAhead.Views.Funds.FundEditPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:PlanAhead.Controls"
     Title="{Binding Title}">
 
     <ScrollView>
 
         <VerticalStackLayout Padding="20" Spacing="16">
 
-            <Button Clicked="ChooseIcon_Clicked" Text="Choose Icon" />
+            <Border
+                Padding="16"
+                HorizontalOptions="Center"
+                StrokeThickness="1">
+
+                <VerticalStackLayout>
+
+                    <controls:ObjectIcon IconId="{Binding IconId}" IconSize="{StaticResource CardIconSize}" />
+
+                    <Label
+                        FontSize="12"
+                        HorizontalOptions="Center"
+                        Text="Change Icon" />
+
+                </VerticalStackLayout>
+
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="ChooseIcon_Tapped" />
+                </Border.GestureRecognizers>
+
+            </Border>
 
             <Label
                 FontAttributes="Bold"

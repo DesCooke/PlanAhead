@@ -1,10 +1,19 @@
-﻿using PlanAhead.Interfaces;
+﻿using CommunityToolkit.Maui.Extensions;
+using PlanAhead.Interfaces;
+using PlanAhead.Views.Popups;
 
 namespace PlanAhead.Services;
 
 public class DialogService
     : IDialogService
 {
+    private readonly IServiceProvider _serviceProvider;
+
+    public DialogService(IServiceProvider serviceProvider)
+    {
+        _serviceProvider = serviceProvider;
+    }
+
     public Task ShowMessageAsync(
         string title,
         string message)
@@ -33,5 +42,16 @@ public class DialogService
             message,
             "Yes",
             "No");
+    }
+
+    public async Task<string?> PickIconAsync(string? currentIconId)
+    {
+        var popup = _serviceProvider.GetRequiredService<IconPickerPopup>();
+
+        popup.Initialise(currentIconId);
+
+        await Shell.Current.ShowPopupAsync(popup);
+
+        return popup.SelectedIconId;
     }
 }

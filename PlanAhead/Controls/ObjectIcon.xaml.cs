@@ -11,18 +11,18 @@ public partial class ObjectIcon : ContentView
         UpdateImageSource();
     }
 
-    public static readonly BindableProperty IconNameProperty =
+    public static readonly BindableProperty IconIdProperty =
         BindableProperty.Create(
-            nameof(IconName),
+            nameof(IconId),
             typeof(string),
             typeof(ObjectIcon),
             "PiggyBank",
-            propertyChanged: OnIconNameChanged);
+            propertyChanged: OnIconIdChanged);
 
-    public string IconName
+    public string IconId
     {
-        get => (string)GetValue(IconNameProperty);
-        set => SetValue(IconNameProperty, value);
+        get => (string)GetValue(IconIdProperty);
+        set => SetValue(IconIdProperty, value);
     }
 
     public static readonly BindableProperty IconSizeProperty =
@@ -38,7 +38,7 @@ public partial class ObjectIcon : ContentView
         set => SetValue(IconSizeProperty, value);
     }
 
-    private static void OnIconNameChanged(
+    private static void OnIconIdChanged(
         BindableObject bindable,
         object oldValue,
         object newValue)
@@ -48,7 +48,7 @@ public partial class ObjectIcon : ContentView
 
     private void UpdateImageSource()
     {
-        var resourceName = IconCatalogue.GetResourceName(IconName);
+        var resourceName = IconCatalogue.GetResourceName(IconId);
 
         IconImage.Source = ImageSource.FromFile($"{resourceName}.png");
     }

@@ -1,4 +1,6 @@
-﻿namespace PlanAhead.Interfaces;
+﻿using PlanAhead.Resources.Icons;
+
+namespace PlanAhead.Interfaces;
 
 public interface IDialogService
 {
@@ -12,4 +14,6 @@ public interface IDialogService
     Task<bool> ConfirmAsync(
         string title,
         string message);
+
+    Task<string?> PickIconAsync(string? currentIcon);
 }
