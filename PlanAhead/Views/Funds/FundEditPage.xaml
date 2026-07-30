@@ -12,27 +12,35 @@
         <VerticalStackLayout Padding="20" Spacing="16">
 
             <Border
-                Padding="16"
+                Margin="0,0,0,20"
+                Padding="20"
                 HorizontalOptions="Center"
+                Stroke="{AppThemeBinding Light=#D0D0D0,
+                                         Dark=#505050}"
+                StrokeShape="RoundRectangle 12"
                 StrokeThickness="1">
-
-                <VerticalStackLayout>
-
-                    <controls:ObjectIcon IconId="{Binding IconId}" IconSize="{StaticResource CardIconSize}" />
-
-                    <Label
-                        FontSize="12"
-                        HorizontalOptions="Center"
-                        Text="Change Icon" />
-
-                </VerticalStackLayout>
 
                 <Border.GestureRecognizers>
                     <TapGestureRecognizer Tapped="ChooseIcon_Tapped" />
                 </Border.GestureRecognizers>
 
-            </Border>
+                <VerticalStackLayout HorizontalOptions="Center" Spacing="10">
 
+                    <controls:ObjectIcon
+                        HorizontalOptions="Center"
+                        IconId="{Binding IconId}"
+                        IconSize="{StaticResource CardIconSize}" />
+
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="13"
+                        HorizontalOptions="Center"
+                        Text="Change Icon"
+                        TextColor="{DynamicResource SecondaryTextColor}" />
+
+                </VerticalStackLayout>
+
+            </Border>
             <Label
                 FontAttributes="Bold"
                 FontSize="24"
