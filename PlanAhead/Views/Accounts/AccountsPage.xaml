@@ -4,47 +4,94 @@
     x:Class="PlanAhead.Views.Accounts.AccountsPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    Title="Accounts">
+    xmlns:controls="clr-namespace:PlanAhead.Controls"
+    Title="{Binding Title}">
 
-    <Grid RowDefinitions="Auto,*">
-
-        <Button
-            Margin="10"
-            Command="{Binding AddAccountCommand}"
-            Text="Add Account" />
+    <Grid>
 
         <CollectionView
-            Grid.Row="1"
-            Margin="10"
+            IsVisible="{Binding HasAccounts}"
             ItemsSource="{Binding Accounts}"
             SelectedItem="{Binding SelectedAccount}"
-            SelectionMode="Single">
+            SelectionMode="None">
 
             <CollectionView.ItemTemplate>
 
                 <DataTemplate>
 
-                    <Frame Margin="0,5" Padding="10">
+                    <SwipeView>
 
-                        <Grid ColumnDefinitions="*,Auto">
+                        <SwipeView.RightItems>
 
-                            <VerticalStackLayout>
+                            <SwipeItems Mode="Reveal">
 
-                                <Label FontAttributes="Bold" Text="{Binding Name}" />
+                                <SwipeItem
+                                    BackgroundColor="Red"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteCommand}"
+                                    CommandParameter="{Binding}"
+                                    Text="Delete" />
 
-                                <Label Text="{Binding Balance, StringFormat='{}{0:C}'}" />
+                            </SwipeItems>
 
-                            </VerticalStackLayout>
+                        </SwipeView.RightItems>
 
-                        </Grid>
+                        <controls:Card Padding="16">
 
-                    </Frame>
+                            <Grid
+                                ColumnDefinitions="auto,*,auto"
+                                ColumnSpacing="12"
+                                RowDefinitions="Auto,Auto,Auto"
+                                RowSpacing="4">
+
+                                <controls:ObjectIcon
+                                    Grid.Row="0"
+                                    Grid.RowSpan="3"
+                                    Grid.Column="0"
+                                    IconId="{Binding IconId}"
+                                    IconSize="{StaticResource ListIconSize}" />
+
+                                <!--  Fund Name  -->
+                                <Label
+                                    Grid.Row="0"
+                                    Grid.Column="1"
+                                    FontAttributes="Bold"
+                                    FontSize="18"
+                                    LineBreakMode="TailTruncation"
+                                    Text="{Binding Name}" />
+
+                                <!--  Actions  -->
+                                <controls:CardActionsButton
+                                    Grid.Row="0"
+                                    Grid.RowSpan="3"
+                                    Grid.Column="2"
+                                    CommandParameter="{Binding}"
+                                    DeleteCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteCommand}"
+                                    EditCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditCommand}"
+                                    HorizontalOptions="End"
+                                    VerticalOptions="Center" />
+
+                            </Grid>
+
+                        </controls:Card>
+                    </SwipeView>
 
                 </DataTemplate>
 
             </CollectionView.ItemTemplate>
 
         </CollectionView>
+
+        <controls:EmptyState
+            Title="No Accounts"
+            Icon="💰"
+            IsVisible="{Binding HasNoAccounts}"
+            Message="Tap the + button to create your first account." />
+
+        <controls:FloatingActionButton
+            Margin="24"
+            Command="{Binding AddCommand}"
+            HorizontalOptions="End"
+            VerticalOptions="End" />
 
     </Grid>
 

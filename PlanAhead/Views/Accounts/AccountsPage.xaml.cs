@@ -1,4 +1,5 @@
 using PlanAhead.ViewModels.Accounts;
+using PlanAhead.ViewModels.Funds;
 
 namespace PlanAhead.Views.Accounts;
 
@@ -19,6 +20,8 @@ public partial class AccountsPage : ContentPage
     {
         base.OnAppearing();
 
-        await _viewModel.LoadAsync();
+        await _viewModel.LoadCommand.ExecuteAsync(null);
     }
+
+
 }

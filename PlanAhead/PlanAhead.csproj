@@ -82,6 +82,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Views\Accounts\AccountEditPage.xaml.cs">
+	    <DependentUpon>AccountEditPage.xaml</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
 	  <MauiXaml Update="Controls\Card.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

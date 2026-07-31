@@ -1,60 +1,80 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using PlanAhead.Core.Models.Domain;
-using PlanAhead.Infrastructure.Repositories;
+using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.Services.Accounts;
 using PlanAhead.Interfaces;
-using PlanAhead.Navigation;
-using PlanAhead.Views;
+using PlanAhead.Services;
+using PlanAhead.Views.Accounts;
 using System.Collections.ObjectModel;
+using PlanAhead.Core.Models.Domain;
 
 namespace PlanAhead.ViewModels.Accounts;
-
+    
 public partial class AccountsViewModel : BaseViewModel
 {
-    private readonly AccountRepository _repository;
-    private readonly INavigationContext _context;
+    private readonly IAccountService _accountService;
+    private readonly INavigationContext _navigationContext;
+
+    public ObservableCollection<Account> Accounts{ get; } = new();
+
+    public bool HasAccounts => Accounts.Any();
+    public bool HasNoAccounts => !HasAccounts;
+
 
     [ObservableProperty]
     private Account? selectedAccount;
 
-    public ObservableCollection<Account> Accounts { get; } = new();
-
-    public AccountsViewModel(AccountRepository repository,
+    public AccountsViewModel(
+        IAccountService accountService,
         INavigationService navigation,
-        IDialogService dialogs,
-        INavigationContext context): base(navigation, dialogs)
+        INavigationContext navigationContext,
+        IDialogService dialogs)
+        : base(navigation, dialogs)
     {
-        _repository = repository;
-        _context = context;
-    }
-
-    public async Task LoadAsync()
-    {
-        Accounts.Clear();
-
-        var accounts = await _repository.GetAllAsync();
-
-        foreach (var account in accounts)
-            Accounts.Add(account);
+        _accountService = accountService;
+        _navigationContext = navigationContext;
     }
 
     [RelayCommand]
-    private async Task EditAccount(Account account)
+    private async Task LoadAsync()
     {
-/*        await Navigation.NavigateToAsync(
-            Routes.AccountDetail,
-            new Dictionary<string, object>
-            {
-                ["AccountId"] = account.Id
-            });*/
+        await ExecuteBusyAsync(async () =>
+        {
+            var accounts = await _accountService.GetAllAsync();
+
+            Accounts.Clear();
+            foreach (var account in accounts)
+                Accounts.Add(account);
+
+            RefreshUi(
+                nameof(HasAccounts),
+                nameof(HasNoAccounts),
+                nameof(Title));
+        });
+
+        Title = $"Accounts ({Accounts.Count})";
     }
 
     [RelayCommand]
-    private async Task AddAccount()
+    private async Task DeleteAsync(Account account)
     {
-        /*
-        await Navigation.NavigateToAsync(
-            Routes.AccountDetail);*/
+        var delete =
+            await Dialogs.ConfirmAsync(
+                "Delete Account",
+                $"Delete '{account.Name}'?");
+
+        if (!delete)
+            return;
+
+        await _accountService.DeleteAsync(account.Id);
+
+        await LoadAsync();
+    }
+
+    [RelayCommand]
+    private async Task AddAsync()
+    {
+        await Navigation.NavigateToAsync<AccountEditPage>();
     }
 
     partial void OnSelectedAccountChanged(Account? value)
@@ -62,8 +82,17 @@ public partial class AccountsViewModel : BaseViewModel
         if (value == null)
             return;
 
-        EditAccountCommand.Execute(value);
+        EditCommand.Execute(value);
+    }
+
+    [RelayCommand]
+    private async Task EditAsync(Account account)
+    {
+        _navigationContext.Set(account);
+
+        await Navigation.NavigateToAsync<AccountEditPage>();
 
         SelectedAccount = null;
     }
+
 }

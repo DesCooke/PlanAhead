@@ -35,7 +35,7 @@ public static class RouteRegistry
 
     public static void RegisterRoutes()
     {
-        Register<AccountDetailPage>("account-detail");
+        Register<AccountEditPage>("account-edit");
         Register<FundEditPage>("fund-edit");
     }
 }

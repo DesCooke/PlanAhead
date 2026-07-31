@@ -24,7 +24,18 @@ namespace PlanAhead.Resources.Icons
             ResourceName = "plane",
             Categories = ["Travel"],
             Keywords = ["holiday", "flight", "vacation"]
+        },
+
+        new()
+        {
+            Id = "Bank",
+            DisplayName = "Bank",
+            ResourceName = "bank",
+            Categories = ["finance"],
+            Keywords = ["bank"]
         }
+
+
         ];
 
         public static IReadOnlyList<IconDefinition> All => _icons;

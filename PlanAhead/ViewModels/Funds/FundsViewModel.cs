@@ -41,15 +41,6 @@ public partial class FundsViewModel : BaseViewModel
     {
         await ExecuteBusyAsync(async () =>
         {
-            /*
-                        var accounts = await _accountService.GetAllAsync();
-                        var account = accounts.FirstOrDefault();
-
-                        if (account == null)
-                            return;
-
-                        var funds = await _fundService.GetByAccountIdAsync(account.Id);
-            */
             var funds = await _fundService.GetAllAsync();
 
             Funds.Clear();
