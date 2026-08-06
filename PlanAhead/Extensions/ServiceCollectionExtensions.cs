@@ -38,6 +38,9 @@ namespace PlanAhead.Extensions
             services.AddTransient<AccountEditPage>();
             services.AddTransient<AccountEditViewModel>();
 
+            services.AddTransient<AccountViewPage>();
+            services.AddTransient<AccountViewViewModel>();
+
             services.AddTransient<AccountsPage>();
             services.AddTransient<AccountsViewModel>();
 

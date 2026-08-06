@@ -7,8 +7,10 @@
     x:Name="Self">
 
     <Border
+        x:Name="CardBorder"
         Margin="{Binding Source={x:Reference Self}, Path=CardMargin}"
         Padding="{Binding Source={x:Reference Self}, Path=CardPadding}"
+        BackgroundColor="{DynamicResource CardBackgroundColor}"
         Stroke="{Binding Source={x:Reference Self}, Path=BorderColor}"
         StrokeShape="RoundRectangle 8"
         StrokeThickness="{Binding Source={x:Reference Self}, Path=BorderThickness}">

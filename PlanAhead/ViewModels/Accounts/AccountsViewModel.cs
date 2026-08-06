@@ -77,12 +77,14 @@ public partial class AccountsViewModel : BaseViewModel
         await Navigation.NavigateToAsync<AccountEditPage>();
     }
 
-    partial void OnSelectedAccountChanged(Account? value)
+    [RelayCommand]
+    private async Task OpenAsync(Account account)
     {
-        if (value == null)
-            return;
+        _navigationContext.Set(account);
 
-        EditCommand.Execute(value);
+        await Navigation.NavigateToAsync<AccountViewPage>();
+
+        SelectedAccount = null;
     }
 
     [RelayCommand]

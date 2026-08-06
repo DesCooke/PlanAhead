@@ -1,5 +1,6 @@
 using PlanAhead.ViewModels.Accounts;
 using PlanAhead.ViewModels.Funds;
+using System.Diagnostics;
 
 namespace PlanAhead.Views.Accounts;
 
@@ -15,6 +16,7 @@ public partial class AccountsPage : ContentPage
 
         BindingContext = viewModel;
     }
+
 
     protected override async void OnAppearing()
     {

@@ -1,3 +1,5 @@
+using System.Windows.Input;
+
 namespace PlanAhead.Controls;
 
 public partial class Card : ContentView
@@ -46,7 +48,7 @@ public partial class Card : ContentView
         set => SetValue(BorderColorProperty, value);
     }
 
-    public static readonly BindableProperty BorderThicknessProperty =
+   public static readonly BindableProperty BorderThicknessProperty =
         BindableProperty.Create(
             nameof(BorderThickness),
             typeof(double),
@@ -57,5 +59,30 @@ public partial class Card : ContentView
     {
         get => (double)GetValue(BorderThicknessProperty);
         set => SetValue(BorderThicknessProperty, value);
+    }
+
+
+    public static readonly BindableProperty CommandProperty =
+        BindableProperty.Create(
+            nameof(Command),
+            typeof(ICommand),
+            typeof(Card));
+
+    public ICommand? Command
+    {
+        get => (ICommand?)GetValue(CommandProperty);
+        set => SetValue(CommandProperty, value);
+    }
+
+    public static readonly BindableProperty CommandParameterProperty =
+        BindableProperty.Create(
+            nameof(CommandParameter),
+            typeof(object),
+            typeof(Card));
+
+    public object? CommandParameter
+    {
+        get => GetValue(CommandParameterProperty);
+        set => SetValue(CommandParameterProperty, value);
     }
 }

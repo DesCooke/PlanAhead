@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<ContentPage
+    x:Class="PlanAhead.Views.Accounts.AccountViewPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:PlanAhead.Controls"
+    Title="{Binding Title}">
+
+    <ScrollView>
+
+        <VerticalStackLayout Padding="20" Spacing="16">
+
+            <Border
+                Margin="0,0,0,20"
+                Padding="20"
+                HorizontalOptions="Center"
+                Stroke="{AppThemeBinding Light=#D0D0D0,
+                                         Dark=#505050}"
+                StrokeShape="RoundRectangle 12"
+                StrokeThickness="1">
+
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="ChooseIcon_Tapped" />
+                </Border.GestureRecognizers>
+
+                <VerticalStackLayout HorizontalOptions="Center" Spacing="10">
+
+                    <controls:ObjectIcon
+                        HorizontalOptions="Center"
+                        IconId="{Binding IconId}"
+                        IconSize="{StaticResource CardIconSize}" />
+
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="13"
+                        HorizontalOptions="Center"
+                        Text="Change Icon"
+                        TextColor="{DynamicResource SecondaryTextColor}" />
+
+                </VerticalStackLayout>
+
+            </Border>
+
+            <Label
+                FontAttributes="Bold"
+                FontSize="24"
+                Text="Account View" />
+
+            <Label FontAttributes="Bold" Text="Name" />
+
+            <Entry Text="{Binding Name}" />
+
+            <Label FontAttributes="Bold" Text="Description" />
+
+            <Editor
+                AutoSize="TextChanges"
+                HeightRequest="80"
+                Text="{Binding Description}" />
+
+            <Label FontAttributes="Bold" Text="Opening Balance" />
+
+            <Entry Text="{Binding OpeningBalance}" />
+
+            <Label FontAttributes="Bold" Text="Archived" />
+
+            <CheckBox IsChecked="{Binding Archived}" />
+
+            <Label FontAttributes="Bold" Text="Notes" />
+
+            <Editor
+                AutoSize="TextChanges"
+                HeightRequest="120"
+                Text="{Binding Notes}" />
+
+            <HorizontalStackLayout HorizontalOptions="End" Spacing="10">
+
+                <Button Command="{Binding CancelCommand}" Text="Cancel" />
+
+                <Button Command="{Binding SaveCommand}" Text="Save" />
+
+            </HorizontalStackLayout>
+
+        </VerticalStackLayout>
+
+    </ScrollView>
+
+</ContentPage>

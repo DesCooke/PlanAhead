@@ -10,6 +10,8 @@ namespace PlanAhead.Navigation
 
         public const string AccountDetail = "account-detail";
 
+        public const string Accountview = "account-view";
+
         public const string FundDetail = "fund-detail";
 
         public const string Forecast = "forecast";

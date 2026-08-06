@@ -26,7 +26,7 @@
                             <SwipeItems Mode="Reveal">
 
                                 <SwipeItem
-                                    BackgroundColor="Red"
+                                    BackgroundColor="#F44336"
                                     Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteCommand}"
                                     CommandParameter="{Binding}"
                                     Text="Delete" />
@@ -35,35 +35,64 @@
 
                         </SwipeView.RightItems>
 
-                        <controls:Card Padding="16">
+                        <SwipeView.LeftItems>
+
+                            <SwipeItems Mode="Reveal">
+
+                                <SwipeItem
+                                    BackgroundColor="#2196F3"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditCommand}"
+                                    CommandParameter="{Binding}"
+                                    Text="Edit" />
+
+                            </SwipeItems>
+
+                        </SwipeView.LeftItems>
+
+                        <controls:Card Padding="16" CommandParameter="{Binding}" BackgroundColor="White" >
 
                             <Grid
-                                ColumnDefinitions="auto,*,auto"
+                                ColumnDefinitions="*,auto"
                                 ColumnSpacing="12"
                                 RowDefinitions="Auto,Auto,Auto"
                                 RowSpacing="4">
 
-                                <controls:ObjectIcon
-                                    Grid.Row="0"
-                                    Grid.RowSpan="3"
-                                    Grid.Column="0"
-                                    IconId="{Binding IconId}"
-                                    IconSize="{StaticResource ListIconSize}" />
 
-                                <!--  Fund Name  -->
-                                <Label
-                                    Grid.Row="0"
-                                    Grid.Column="1"
-                                    FontAttributes="Bold"
-                                    FontSize="18"
-                                    LineBreakMode="TailTruncation"
-                                    Text="{Binding Name}" />
+                                <Grid Grid.Column="0">
+
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.OpenCommand}" CommandParameter="{Binding}" />
+                                    </Grid.GestureRecognizers>
+
+                                    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto">
+
+                                        <controls:ObjectIcon
+                                            
+                                            Grid.Row="0"
+                                            Grid.RowSpan="3"
+                                            Grid.Column="0"
+                                            IconId="{Binding IconId}"
+                                            IconSize="{StaticResource ListIconSize}"/>
+
+                                        <!--  Account Name  -->
+                                        <Label
+                                            Grid.Row="0"
+                                            Grid.Column="1"
+                                            FontAttributes="Bold"
+                                            FontSize="18"
+                                            LineBreakMode="TailTruncation"
+                                            Text="{Binding Name}" />
+
+                                    </Grid>
+                                </Grid>
+
+
 
                                 <!--  Actions  -->
                                 <controls:CardActionsButton
                                     Grid.Row="0"
                                     Grid.RowSpan="3"
-                                    Grid.Column="2"
+                                    Grid.Column="1"
                                     CommandParameter="{Binding}"
                                     DeleteCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteCommand}"
                                     EditCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditCommand}"
