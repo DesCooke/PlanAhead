@@ -10,12 +10,17 @@
     <ContentPage.ToolbarItems>
 
         <ToolbarItem
-        Text="Delete"
-        Order="Secondary"
-        Command="{Binding DeleteCommand}" />
+            Command="{Binding EditCommand}"
+            Order="Secondary"
+            Text="Edit" />
+
+        <ToolbarItem
+            Command="{Binding DeleteCommand}"
+            Order="Secondary"
+            Text="Delete" />
 
     </ContentPage.ToolbarItems>
-    
+
     <Grid>
         <ScrollView>
 
@@ -41,6 +46,26 @@
 
                 </Border>
 
+                <Border
+                    Padding="10,4"
+                    BackgroundColor="{Binding HealthBackground}"
+                    StrokeShape="RoundRectangle 16"
+                    StrokeThickness="0">
+
+                    <HorizontalStackLayout Spacing="6">
+
+                        <BoxView
+                            CornerRadius="5"
+                            HeightRequest="10"
+                            WidthRequest="10"
+                            Color="{Binding HealthColour}" />
+
+                        <Label FontAttributes="Bold" Text="{Binding HealthText}" />
+
+                    </HorizontalStackLayout>
+
+                </Border>
+
                 <Label
                     FontAttributes="Bold"
                     FontSize="24"
@@ -56,7 +81,7 @@
 
                 <Label FontAttributes="Bold" Text="Opening Balance" />
 
-                <Label Text="{Binding OpeningBalance}" />
+                <Label Text="{Binding OpeningBalanceDisplay}" />
 
                 <Label FontAttributes="Bold" Text="Archived" />
 

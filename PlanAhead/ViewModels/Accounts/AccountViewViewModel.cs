@@ -33,6 +33,9 @@ public partial class AccountViewViewModel : BaseViewModel
     private Decimal openingBalance = 0.00M;
 
     [ObservableProperty]
+    private string openingBalanceDisplay = string.Empty;
+
+    [ObservableProperty]
     private bool archived = false;
 
     [ObservableProperty]
@@ -40,6 +43,15 @@ public partial class AccountViewViewModel : BaseViewModel
 
     [ObservableProperty]
     private string iconId = string.Empty;
+
+    [ObservableProperty]
+    public AccountHealth health = AccountHealth.Green;
+
+    [ObservableProperty]
+    public string healthText = "Healthy";
+
+    [ObservableProperty]
+    public Color healthColour = Colors.Green;
 
     public AccountViewViewModel(
         IAccountService accountService,
@@ -60,9 +72,37 @@ public partial class AccountViewViewModel : BaseViewModel
         Name = account.Name;
         Description = account.Description;
         OpeningBalance = account.OpeningBalance;
+        OpeningBalanceDisplay = account.OpeningBalanceDisplay;
         Archived = account.Archived;
         Notes = account.Notes;
         IconId = account.IconId;
+
+
+        Health =
+                OpeningBalance switch
+                {
+                    < 0 => AccountHealth.Red,
+                    < 500 => AccountHealth.Amber,
+                    _ => AccountHealth.Green
+                };
+
+        HealthText =
+            Health switch
+            {
+                AccountHealth.Green => "Healthy",
+                AccountHealth.Amber => "Warning",
+                _ => "Critical"
+            };
+    
+        HealthColour =
+            Health switch
+            {
+                AccountHealth.Green => Colors.Green,
+                AccountHealth.Amber => Colors.Yellow,
+                _ => Colors.Red
+            };
+
+
     }
 
     private Account Build()

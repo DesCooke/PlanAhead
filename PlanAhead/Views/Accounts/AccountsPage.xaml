@@ -21,6 +21,20 @@
 
                     <SwipeView>
 
+                        <SwipeView.LeftItems>
+
+                            <SwipeItems Mode="Reveal">
+
+                                <SwipeItem
+                                    BackgroundColor="LightSkyBlue"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditCommand}"
+                                    CommandParameter="{Binding}"
+                                    Text="Edit" />
+
+                            </SwipeItems>
+
+                        </SwipeView.LeftItems>
+
                         <SwipeView.RightItems>
 
                             <SwipeItems Mode="Reveal">
@@ -35,63 +49,52 @@
 
                         </SwipeView.RightItems>
 
-                        <SwipeView.LeftItems>
+                        <controls:Card Padding="20">
 
-                            <SwipeItems Mode="Reveal">
+                            <HorizontalStackLayout Padding="4" Spacing="16">
 
-                                <SwipeItem
-                                    BackgroundColor="#2196F3"
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditCommand}"
-                                    CommandParameter="{Binding}"
-                                    Text="Edit" />
+                                <!--  Tappable Account Area  -->
+                                <HorizontalStackLayout HorizontalOptions="FillAndExpand" Spacing="16">
 
-                            </SwipeItems>
+                                    <HorizontalStackLayout.GestureRecognizers>
 
-                        </SwipeView.LeftItems>
-
-                        <controls:Card Padding="16" CommandParameter="{Binding}" BackgroundColor="White" >
-
-                            <Grid
-                                ColumnDefinitions="*,auto"
-                                ColumnSpacing="12"
-                                RowDefinitions="Auto,Auto,Auto"
-                                RowSpacing="4">
-
-
-                                <Grid Grid.Column="0">
-
-                                    <Grid.GestureRecognizers>
                                         <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.OpenCommand}" CommandParameter="{Binding}" />
-                                    </Grid.GestureRecognizers>
 
-                                    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto">
+                                    </HorizontalStackLayout.GestureRecognizers>
 
-                                        <controls:ObjectIcon
-                                            
-                                            Grid.Row="0"
-                                            Grid.RowSpan="3"
-                                            Grid.Column="0"
-                                            IconId="{Binding IconId}"
-                                            IconSize="{StaticResource ListIconSize}"/>
+                                    <controls:ObjectIcon
+                                        IconId="{Binding IconId}"
+                                        IconSize="40"
+                                        VerticalOptions="Center" />
 
-                                        <!--  Account Name  -->
+                                    <VerticalStackLayout Spacing="3" VerticalOptions="Center">
+
                                         <Label
-                                            Grid.Row="0"
-                                            Grid.Column="1"
                                             FontAttributes="Bold"
-                                            FontSize="18"
-                                            LineBreakMode="TailTruncation"
+                                            FontSize="20"
                                             Text="{Binding Name}" />
 
-                                    </Grid>
-                                </Grid>
-                            </Grid>
+                                        <Label
+                                            FontSize="13"
+                                            Opacity="0.65"
+                                            Text="{Binding Description}" />
+
+                                        <Label
+                                            FontAttributes="Bold"
+                                            FontSize="16"
+                                            Text="{Binding OpeningBalanceDisplay}" />
+
+                                    </VerticalStackLayout>
+
+                                </HorizontalStackLayout>
+
+                            </HorizontalStackLayout>
 
                         </controls:Card>
+
                     </SwipeView>
 
                 </DataTemplate>
-
             </CollectionView.ItemTemplate>
 
         </CollectionView>
@@ -105,8 +108,8 @@
         <controls:FloatingActionButton
             Margin="24"
             Command="{Binding AddCommand}"
-            Icon="add.png"
             HorizontalOptions="End"
+            Icon="add.png"
             VerticalOptions="End" />
 
     </Grid>

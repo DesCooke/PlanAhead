@@ -8,6 +8,8 @@ public class Account : BaseEntity
     public string Description { get; set; } = "";
 
     public decimal OpeningBalance { get; set; }
+    
+    public string OpeningBalanceDisplay =>  OpeningBalance.ToString("C");
 
     public int DisplayOrder { get; set; }
 

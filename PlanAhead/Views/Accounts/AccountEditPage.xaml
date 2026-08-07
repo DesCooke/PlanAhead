@@ -41,7 +41,7 @@
                 </VerticalStackLayout>
 
             </Border>
-            
+
             <Label
                 FontAttributes="Bold"
                 FontSize="24"
@@ -60,12 +60,12 @@
 
             <Label FontAttributes="Bold" Text="Opening Balance" />
 
-            <Entry Text="{Binding OpeningBalance}" />
+            <Entry Keyboard="Numeric" Text="{Binding OpeningBalance}" />
 
             <Label FontAttributes="Bold" Text="Archived" />
-            
+
             <CheckBox IsChecked="{Binding Archived}" />
-            
+
             <Label FontAttributes="Bold" Text="Notes" />
 
             <Editor
