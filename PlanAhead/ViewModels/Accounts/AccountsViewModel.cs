@@ -80,7 +80,7 @@ public partial class AccountsViewModel : BaseViewModel
     [RelayCommand]
     private async Task OpenAsync(Account account)
     {
-        _navigationContext.Set(account);
+        _navigationContext.Set(account.Id);
 
         await Navigation.NavigateToAsync<AccountViewPage>();
 

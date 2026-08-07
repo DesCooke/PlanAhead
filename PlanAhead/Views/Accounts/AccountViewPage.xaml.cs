@@ -37,8 +37,9 @@ public partial class AccountViewPage : ContentPage
     {
         base.OnAppearing();
 
-        await _viewModel.InitialiseAsync();
+        await _viewModel.LoadCommand.ExecuteAsync(null);
     }
+
 
     private async void ChooseIcon_Tapped(object sender, TappedEventArgs e)
     {

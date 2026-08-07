@@ -7,82 +7,77 @@
     xmlns:controls="clr-namespace:PlanAhead.Controls"
     Title="{Binding Title}">
 
-    <ScrollView>
+    <ContentPage.ToolbarItems>
 
-        <VerticalStackLayout Padding="20" Spacing="16">
+        <ToolbarItem
+        Text="Delete"
+        Order="Secondary"
+        Command="{Binding DeleteCommand}" />
 
-            <Border
-                Margin="0,0,0,20"
-                Padding="20"
-                HorizontalOptions="Center"
-                Stroke="{AppThemeBinding Light=#D0D0D0,
-                                         Dark=#505050}"
-                StrokeShape="RoundRectangle 12"
-                StrokeThickness="1">
+    </ContentPage.ToolbarItems>
+    
+    <Grid>
+        <ScrollView>
 
-                <Border.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="ChooseIcon_Tapped" />
-                </Border.GestureRecognizers>
+            <VerticalStackLayout Padding="20" Spacing="16">
 
-                <VerticalStackLayout HorizontalOptions="Center" Spacing="10">
+                <Border
+                    Margin="0,0,0,20"
+                    Padding="20"
+                    HorizontalOptions="Center"
+                    Stroke="{AppThemeBinding Light=#D0D0D0,
+                                             Dark=#505050}"
+                    StrokeShape="RoundRectangle 12"
+                    StrokeThickness="1">
 
-                    <controls:ObjectIcon
-                        HorizontalOptions="Center"
-                        IconId="{Binding IconId}"
-                        IconSize="{StaticResource CardIconSize}" />
+                    <VerticalStackLayout HorizontalOptions="Center" Spacing="10">
 
-                    <Label
-                        FontAttributes="Bold"
-                        FontSize="13"
-                        HorizontalOptions="Center"
-                        Text="Change Icon"
-                        TextColor="{DynamicResource SecondaryTextColor}" />
+                        <controls:ObjectIcon
+                            HorizontalOptions="Center"
+                            IconId="{Binding IconId}"
+                            IconSize="{StaticResource CardIconSize}" />
 
-                </VerticalStackLayout>
+                    </VerticalStackLayout>
 
-            </Border>
+                </Border>
 
-            <Label
-                FontAttributes="Bold"
-                FontSize="24"
-                Text="Account View" />
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="24"
+                    Text="Account View" />
 
-            <Label FontAttributes="Bold" Text="Name" />
+                <Label FontAttributes="Bold" Text="Name" />
 
-            <Entry Text="{Binding Name}" />
+                <Label Text="{Binding Name}" />
 
-            <Label FontAttributes="Bold" Text="Description" />
+                <Label FontAttributes="Bold" Text="Description" />
 
-            <Editor
-                AutoSize="TextChanges"
-                HeightRequest="80"
-                Text="{Binding Description}" />
+                <Label Text="{Binding Description}" />
 
-            <Label FontAttributes="Bold" Text="Opening Balance" />
+                <Label FontAttributes="Bold" Text="Opening Balance" />
 
-            <Entry Text="{Binding OpeningBalance}" />
+                <Label Text="{Binding OpeningBalance}" />
 
-            <Label FontAttributes="Bold" Text="Archived" />
+                <Label FontAttributes="Bold" Text="Archived" />
 
-            <CheckBox IsChecked="{Binding Archived}" />
+                <CheckBox IsChecked="{Binding Archived}" />
 
-            <Label FontAttributes="Bold" Text="Notes" />
+                <Label FontAttributes="Bold" Text="Notes" />
 
-            <Editor
-                AutoSize="TextChanges"
-                HeightRequest="120"
-                Text="{Binding Notes}" />
+                <Label Text="{Binding Notes}" />
 
-            <HorizontalStackLayout HorizontalOptions="End" Spacing="10">
+            </VerticalStackLayout>
 
-                <Button Command="{Binding CancelCommand}" Text="Cancel" />
 
-                <Button Command="{Binding SaveCommand}" Text="Save" />
+        </ScrollView>
 
-            </HorizontalStackLayout>
+        <controls:FloatingActionButton
+            Margin="24"
+            Command="{Binding EditCommand}"
+            HorizontalOptions="End"
+            Icon="edit.png"
+            VerticalOptions="End" />
 
-        </VerticalStackLayout>
 
-    </ScrollView>
-
+    </Grid>
 </ContentPage>

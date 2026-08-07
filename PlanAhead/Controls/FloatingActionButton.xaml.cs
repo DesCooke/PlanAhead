@@ -21,16 +21,16 @@ public partial class FloatingActionButton : ContentView
         set => SetValue(CommandProperty, value);
     }
 
-    public static readonly BindableProperty TextProperty =
+    public static readonly BindableProperty IconProperty =
         BindableProperty.Create(
-            nameof(Text),
+            nameof(Icon),
             typeof(string),
             typeof(FloatingActionButton),
-            "+");
+            "add.png");
 
-    public string Text
+    public string Icon
     {
-        get => (string)GetValue(TextProperty);
-        set => SetValue(TextProperty, value);
+        get => (string)GetValue(IconProperty);
+        set => SetValue(IconProperty, value);
     }
 }

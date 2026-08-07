@@ -49,21 +49,34 @@ public partial class AccountEditViewModel : BaseViewModel
     {
         _accountService = accountService;
         _navigationContext = navigationContext;
-
-        Title = "New Account";
     }
 
     public async Task InitialiseAsync()
     {
-        var account = _navigationContext.Get<Account>();
+        if (!_navigationContext.Has<Guid>())
+        {
+            //
+            // New Account
+            //
+            Title = "New Account";
 
+            return;
+        }
+        
+        Id = _navigationContext.Get<Guid>();
+
+        var account = await _accountService.GetByIdAsync(Id);
         if (account == null)
         {
             //
             // New Account
             //
+            Title = "New Account";
+
             return;
         }
+
+        Title = "Change Account";
 
         //
         // Existing Account

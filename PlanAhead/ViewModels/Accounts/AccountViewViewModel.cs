@@ -1,9 +1,10 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.Models.Domain;
 using PlanAhead.Core.Models.Enums;
 using PlanAhead.Interfaces;
-using PlanAhead.Core.Models.Domain;
+using PlanAhead.Views.Accounts;
 
 namespace PlanAhead.ViewModels.Accounts;
 
@@ -50,28 +51,7 @@ public partial class AccountViewViewModel : BaseViewModel
         _accountService = accountService;
         _navigationContext = navigationContext;
 
-        Title = "New Account";
-    }
-
-    public async Task InitialiseAsync()
-    {
-        var account = _navigationContext.Get<Account>();
-
-        if (account == null)
-        {
-            //
-            // New Account
-            //
-            return;
-        }
-
-        //
-        // Existing Account
-        //
-
-        Load(account);
-
-        _navigationContext.Clear();
+        Title = "Account Details";
     }
 
     private void Load(Account account)
@@ -133,10 +113,51 @@ public partial class AccountViewViewModel : BaseViewModel
         {
             await Dialogs.ShowErrorAsync(ex.Message);
         }
+    
     }
+
+    [RelayCommand]
+    public async Task LoadAsync()
+    {
+        if(Id == Guid.Empty){
+            Id = _navigationContext.Get<Guid>();
+            _navigationContext.Clear();
+        }
+
+        var account = await _accountService.GetByIdAsync(Id);
+
+        if (account != null)
+            Load(account);
+    }
+
+    [RelayCommand]
+    private async Task EditAsync()
+    {
+        _navigationContext.Set(Id);
+
+        await Navigation.NavigateToAsync<AccountEditPage>();
+    }
+
     [RelayCommand]
     private Task CancelAsync()
     {
         return Navigation.GoBackAsync();
     }
+
+    [RelayCommand]
+    private async Task DeleteAsync()
+    {
+        var delete =
+            await Dialogs.ConfirmAsync(
+                "Delete Account",
+                $"Delete '{Name}'?");
+
+        if (!delete)
+            return;
+
+        await _accountService.DeleteAsync(Id);
+
+        await Navigation.GoBackAsync();
+    }
+
 }

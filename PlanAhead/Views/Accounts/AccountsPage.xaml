@@ -85,20 +85,6 @@
 
                                     </Grid>
                                 </Grid>
-
-
-
-                                <!--  Actions  -->
-                                <controls:CardActionsButton
-                                    Grid.Row="0"
-                                    Grid.RowSpan="3"
-                                    Grid.Column="1"
-                                    CommandParameter="{Binding}"
-                                    DeleteCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteCommand}"
-                                    EditCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditCommand}"
-                                    HorizontalOptions="End"
-                                    VerticalOptions="Center" />
-
                             </Grid>
 
                         </controls:Card>
@@ -119,6 +105,7 @@
         <controls:FloatingActionButton
             Margin="24"
             Command="{Binding AddCommand}"
+            Icon="add.png"
             HorizontalOptions="End"
             VerticalOptions="End" />
 

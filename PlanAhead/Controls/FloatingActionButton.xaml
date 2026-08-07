@@ -7,24 +7,24 @@
     x:Name="Root">
 
     <Border
-        BackgroundColor="{AppThemeBinding Light=#1976D2,
-                                          Dark=#2196F3}"
-        HeightRequest="64"
+        WidthRequest="56"
+        HeightRequest="56"
         HorizontalOptions="End"
-        StrokeShape="RoundRectangle 32"
-        StrokeThickness="0"
         VerticalOptions="End"
-        WidthRequest="64">
+        BackgroundColor="{AppThemeBinding Light=#1976D2, Dark=#2196F3}"
+        StrokeThickness="0"
+        StrokeShape="RoundRectangle 28">
 
-        <Button
+        <ImageButton
             BackgroundColor="Transparent"
-            BorderWidth="0"
-            Command="{Binding Command, Source={x:Reference Root}}"
-            CornerRadius="32"
-            FontAttributes="Bold"
-            FontSize="28"
-            Text="{Binding Text, Source={x:Reference Root}}"
-            TextColor="White" />
+            CornerRadius="28"
+            Command="{Binding Source={x:Reference Root}, Path=Command}"
+            HeightRequest="56"
+            HorizontalOptions="Fill"
+            Padding="16"
+            Source="{Binding Source={x:Reference Root}, Path=Icon}"
+            VerticalOptions="Fill"
+            WidthRequest="56" />
 
     </Border>
 
