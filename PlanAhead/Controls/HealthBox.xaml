@@ -5,24 +5,29 @@
     x:Name="Root">
 
     <Border
-        Padding="10,4"
-        BackgroundColor="{Binding Source={x:Reference Root}, Path=HealthBackground}"
-        StrokeShape="RoundRectangle 16"
-        StrokeThickness="0">
+        Margin="0,0,0,20"
+        Padding="20"
+        HorizontalOptions="Start"
+        Stroke="{AppThemeBinding Light=#D0D0D0,
+                                 Dark=#505050}"
+        StrokeShape="RoundRectangle 12"
+        StrokeThickness="1">
 
-        <HorizontalStackLayout Spacing="6">
+        <VerticalStackLayout Spacing="10">
 
-            <BoxView
-                WidthRequest="10"
-                HeightRequest="10"
-                CornerRadius="5"
-                Color="{Binding Source={x:Reference Root}, Path=HealthColour}" />
+            <HorizontalStackLayout Spacing="6">
 
-            <Label
-                FontAttributes="Bold"
-                Text="{Binding Source={x:Reference Root}, Path=HealthText}" />
+                <BoxView
+                    CornerRadius="5"
+                    HeightRequest="10"
+                    WidthRequest="10"
+                    Color="{Binding Source={x:Reference Root}, Path=HealthColour}" />
 
-        </HorizontalStackLayout>
+                <Label FontAttributes="Bold" Text="{Binding Source={x:Reference Root}, Path=HealthText}" />
+
+            </HorizontalStackLayout>
+
+        </VerticalStackLayout>
 
     </Border>
 

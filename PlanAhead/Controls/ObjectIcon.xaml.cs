@@ -32,11 +32,38 @@ public partial class ObjectIcon : ContentView
             typeof(ObjectIcon),
             28.0);
 
+    public double ButtonSize
+    {
+        get => (double)GetValue(ButtonSizeProperty);
+        set => SetValue(ButtonSizeProperty, value);
+    }
+
+    public static readonly BindableProperty ButtonSizeProperty =
+        BindableProperty.Create(
+            nameof(ButtonSize),
+            typeof(double),
+            typeof(ObjectIcon),
+            60.0);
+
+    public int ButtonPadding
+    {
+        get => (int)GetValue(ButtonPaddingProperty);
+        set => SetValue(ButtonPaddingProperty, value);
+    }
+
+    public static readonly BindableProperty ButtonPaddingProperty =
+        BindableProperty.Create(
+            nameof(ButtonPadding),
+            typeof(int),
+            typeof(ObjectIcon),
+            16);
+
     public double IconSize
     {
         get => (double)GetValue(IconSizeProperty);
         set => SetValue(IconSizeProperty, value);
     }
+
 
     private static void OnIconIdChanged(
         BindableObject bindable,

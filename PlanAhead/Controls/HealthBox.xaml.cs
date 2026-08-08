@@ -79,19 +79,19 @@ public partial class HealthBox : ContentView
             case AccountHealth.Green:
                 HealthText = "Healthy";
                 HealthColour = Colors.Green;
-                HealthBackground = Colors.LightGreen;
+                HealthBackground = Colors.White;
                 break;
 
             case AccountHealth.Amber:
                 HealthText = "Warning";
                 HealthColour = Colors.Orange;
-                HealthBackground = Colors.LightYellow;
+                HealthBackground = Colors.White;
                 break;
 
             case AccountHealth.Red:
                 HealthText = "Critical";
                 HealthColour = Colors.Red;
-                HealthBackground = Colors.MistyRose;
+                HealthBackground = Colors.White;
                 break;
         }
     }

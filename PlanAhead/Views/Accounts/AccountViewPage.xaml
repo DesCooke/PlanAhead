@@ -21,77 +21,44 @@
 
     </ContentPage.ToolbarItems>
 
+
     <Grid>
+
         <ScrollView>
 
-            <VerticalStackLayout Padding="20" Spacing="16">
+            <Grid Padding="20" RowDefinitions="Auto,*">
 
-                <Border
-                    Margin="0,0,0,20"
-                    Padding="20"
+                <!--  Centre the icon  -->
+                <controls:ObjectIcon
+                    Grid.Row="0"
+                    ButtonPadding="{StaticResource CardPadding}"
+                    ButtonSize="{StaticResource CardButtonSize}"
                     HorizontalOptions="Center"
-                    Stroke="{AppThemeBinding Light=#D0D0D0,
-                                             Dark=#505050}"
-                    StrokeShape="RoundRectangle 12"
-                    StrokeThickness="1">
+                    IconId="{Binding IconId}"
+                    IconSize="{StaticResource CardIconSize}"
+                    VerticalOptions="Center" />
 
-                    <VerticalStackLayout HorizontalOptions="Center" Spacing="10">
+                <!--  Everything else aligned left  -->
+                <VerticalStackLayout
+                    Grid.Row="1"
+                    HorizontalOptions="Fill"
+                    Spacing="16">
 
-                        <controls:ObjectIcon
-                            HorizontalOptions="Center"
-                            IconId="{Binding IconId}"
-                            IconSize="{StaticResource CardIconSize}" />
+                    <controls:HealthBox Health="{Binding Health}" />
 
-                    </VerticalStackLayout>
+                    <controls:TextFieldBox TextLabel="Name" TextContent="{Binding Name}"/>
 
-                </Border>
+                    <controls:TextFieldBox TextLabel="Description" TextContent="{Binding Description}"/>
 
-                <Border
-                    Margin="0,0,0,20"
-                    Padding="20"
-                    HorizontalOptions="Start"
-                    Stroke="{AppThemeBinding Light=#D0D0D0,
-                                             Dark=#505050}"
-                    StrokeShape="RoundRectangle 12"
-                    StrokeThickness="1">
+                    <controls:TextFieldBox TextLabel="Opening Balance" TextContent="{Binding OpeningBalanceDisplay}"/>
 
-                    <VerticalStackLayout HorizontalOptions="Center" Spacing="10">
+                    <controls:CheckboxBox TextLabel="Archived" Checkbox="{Binding Archived}"/>
 
-                        <controls:HealthBox
-                            HorizontalOptions="Center"
-                            Health="{Binding Health}" />
+                    <controls:TextFieldBox TextLabel="Notes" TextContent="{Binding Notes}"/>
 
-                    </VerticalStackLayout>
+                </VerticalStackLayout>
 
-                </Border>
-
-                <Label
-                    FontAttributes="Bold"
-                    FontSize="24"
-                    Text="Account View" />
-
-                <Label FontAttributes="Bold" Text="Name" />
-
-                <Label Text="{Binding Name}" />
-
-                <Label FontAttributes="Bold" Text="Description" />
-
-                <Label Text="{Binding Description}" />
-
-                <Label FontAttributes="Bold" Text="Opening Balance" />
-
-                <Label Text="{Binding OpeningBalanceDisplay}" />
-
-                <Label FontAttributes="Bold" Text="Archived" />
-
-                <CheckBox IsChecked="{Binding Archived}" />
-
-                <Label FontAttributes="Bold" Text="Notes" />
-
-                <Label Text="{Binding Notes}" />
-
-            </VerticalStackLayout>
-
+            </Grid>
 
         </ScrollView>
 
@@ -102,6 +69,6 @@
             Icon="edit.png"
             VerticalOptions="End" />
 
-
     </Grid>
+
 </ContentPage>
