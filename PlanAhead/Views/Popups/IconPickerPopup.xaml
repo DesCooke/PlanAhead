@@ -33,21 +33,26 @@
 
                     <DataTemplate>
 
-                        <Border
-                            Margin="4"
-                            Padding="8"
-                            HeightRequest="{StaticResource IconTileWidth}"
-                            StrokeThickness="1"
-                            WidthRequest="{StaticResource IconTileWidth}">
+                        <Grid
+                            Margin="0,0,0,20"
+                            Padding="20"
+                            HorizontalOptions="Center">
 
-                            <Border.GestureRecognizers>
+                            <Grid.GestureRecognizers>
                                 <TapGestureRecognizer CommandParameter="{Binding}" Tapped="IconTapped" />
-                            </Border.GestureRecognizers>
+                            </Grid.GestureRecognizers>
 
 
                             <VerticalStackLayout HorizontalOptions="Center" Spacing="6">
 
-                                <controls:ObjectIcon IconId="{Binding Id}" IconSize="{StaticResource PickerIconSize}" />
+                                <controls:ObjectIcon
+                                    Grid.Row="0"
+                                    ButtonPadding="{StaticResource ListPadding}"
+                                    ButtonSize="{StaticResource ListButtonSize}"
+                                    HorizontalOptions="Center"
+                                    IconId="{Binding Id}"
+                                    IconSize="{StaticResource ListIconSize}"
+                                    VerticalOptions="Center" />
 
                                 <Label
                                     FontSize="12"
@@ -60,7 +65,7 @@
 
                             </VerticalStackLayout>
 
-                        </Border>
+                        </Grid>
 
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

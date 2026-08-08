@@ -15,16 +15,26 @@
         StrokeShape="RoundRectangle 12"
         StrokeThickness="1">
 
-        <VerticalStackLayout HorizontalOptions="Fill" Spacing="10">
+        <Grid
+            ColumnDefinitions="Auto,Auto"
+            ColumnSpacing="10"
+            VerticalOptions="Center">
 
-            <Label FontAttributes="Bold" Text="{Binding Source={x:Reference Self}, Path=TextLabel}" />
+            <Label
+                Grid.Column="0"
+                FontAttributes="Bold"
+                Text="{Binding Source={x:Reference Self}, Path=TextLabel}"
+                VerticalOptions="Center" />
 
-            <CheckBox IsChecked="{Binding Source={x:Reference Self}, Path=Checkbox}" />
+            <CheckBox
+                Grid.Column="1"
+                Margin="0,-4,0,0"
+                IsChecked="{Binding Source={x:Reference Self}, Path=Checkbox}"
+                VerticalOptions="Center" />
 
-        </VerticalStackLayout>
+        </Grid>
 
     </Border>
-
 
 
 

@@ -90,11 +90,9 @@ public partial class AccountsViewModel : BaseViewModel
     [RelayCommand]
     private async Task EditAsync(Account account)
     {
-        _navigationContext.Set(account);
+        _navigationContext.Set(account.Id);
 
         await Navigation.NavigateToAsync<AccountEditPage>();
-
-        SelectedAccount = null;
     }
 
 }

@@ -27,9 +27,13 @@
                 <VerticalStackLayout HorizontalOptions="Center" Spacing="10">
 
                     <controls:ObjectIcon
+                        Grid.Row="0"
+                        ButtonPadding="{StaticResource CardPadding}"
+                        ButtonSize="{StaticResource CardButtonSize}"
                         HorizontalOptions="Center"
                         IconId="{Binding IconId}"
-                        IconSize="{StaticResource CardIconSize}" />
+                        IconSize="{StaticResource CardIconSize}"
+                        VerticalOptions="Center" />
 
                     <Label
                         FontAttributes="Bold"

@@ -46,15 +46,15 @@
 
                     <controls:HealthBox Health="{Binding Health}" />
 
-                    <controls:TextFieldBox TextLabel="Name" TextContent="{Binding Name}"/>
+                    <controls:TextFieldBox TextContent="{Binding Name}" TextLabel="Name" />
 
-                    <controls:TextFieldBox TextLabel="Description" TextContent="{Binding Description}"/>
+                    <controls:TextFieldBox TextContent="{Binding Description}" TextLabel="Description" />
 
-                    <controls:TextFieldBox TextLabel="Opening Balance" TextContent="{Binding OpeningBalanceDisplay}"/>
+                    <controls:TextFieldBox TextContent="{Binding OpeningBalanceDisplay}" TextLabel="Opening Balance" />
 
-                    <controls:CheckboxBox TextLabel="Archived" Checkbox="{Binding Archived}"/>
+                    <controls:CheckboxBox Checkbox="{Binding Archived}" TextLabel="Archived" />
 
-                    <controls:TextFieldBox TextLabel="Notes" TextContent="{Binding Notes}"/>
+                    <controls:TextFieldBox TextContent="{Binding Notes}" TextLabel="Notes" />
 
                 </VerticalStackLayout>
 

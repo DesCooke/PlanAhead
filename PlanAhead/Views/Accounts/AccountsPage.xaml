@@ -63,8 +63,12 @@
                                     </HorizontalStackLayout.GestureRecognizers>
 
                                     <controls:ObjectIcon
+                                        Grid.Row="0"
+                                        ButtonPadding="{StaticResource ListPadding}"
+                                        ButtonSize="{StaticResource ListButtonSize}"
+                                        HorizontalOptions="Center"
                                         IconId="{Binding IconId}"
-                                        IconSize="40"
+                                        IconSize="{StaticResource ListIconSize}"
                                         VerticalOptions="Center" />
 
                                     <VerticalStackLayout Spacing="3" VerticalOptions="Center">
