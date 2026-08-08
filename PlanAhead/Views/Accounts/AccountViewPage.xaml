@@ -47,22 +47,21 @@
                 </Border>
 
                 <Border
-                    Padding="10,4"
-                    BackgroundColor="{Binding HealthBackground}"
-                    StrokeShape="RoundRectangle 16"
-                    StrokeThickness="0">
+                    Margin="0,0,0,20"
+                    Padding="20"
+                    HorizontalOptions="Start"
+                    Stroke="{AppThemeBinding Light=#D0D0D0,
+                                             Dark=#505050}"
+                    StrokeShape="RoundRectangle 12"
+                    StrokeThickness="1">
 
-                    <HorizontalStackLayout Spacing="6">
+                    <VerticalStackLayout HorizontalOptions="Center" Spacing="10">
 
-                        <BoxView
-                            CornerRadius="5"
-                            HeightRequest="10"
-                            WidthRequest="10"
-                            Color="{Binding HealthColour}" />
+                        <controls:HealthBox
+                            HorizontalOptions="Center"
+                            Health="{Binding Health}" />
 
-                        <Label FontAttributes="Bold" Text="{Binding HealthText}" />
-
-                    </HorizontalStackLayout>
+                    </VerticalStackLayout>
 
                 </Border>
 

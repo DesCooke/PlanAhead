@@ -47,12 +47,6 @@ public partial class AccountViewViewModel : BaseViewModel
     [ObservableProperty]
     public AccountHealth health = AccountHealth.Green;
 
-    [ObservableProperty]
-    public string healthText = "Healthy";
-
-    [ObservableProperty]
-    public Color healthColour = Colors.Green;
-
     public AccountViewViewModel(
         IAccountService accountService,
         INavigationService navigation,
@@ -85,23 +79,6 @@ public partial class AccountViewViewModel : BaseViewModel
                     < 500 => AccountHealth.Amber,
                     _ => AccountHealth.Green
                 };
-
-        HealthText =
-            Health switch
-            {
-                AccountHealth.Green => "Healthy",
-                AccountHealth.Amber => "Warning",
-                _ => "Critical"
-            };
-    
-        HealthColour =
-            Health switch
-            {
-                AccountHealth.Green => Colors.Green,
-                AccountHealth.Amber => Colors.Yellow,
-                _ => Colors.Red
-            };
-
 
     }
 
