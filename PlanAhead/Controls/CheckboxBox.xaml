@@ -6,36 +6,20 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Name="Self">
 
-    <Border
-        Margin="0,0,0,0"
-        Padding="{Binding Source={x:Reference Self}, Path=ButtonPadding}"
-        HorizontalOptions="Fill"
-        Stroke="{AppThemeBinding Light=#D0D0D0,
-                                 Dark=#505050}"
-        StrokeShape="RoundRectangle 12"
-        StrokeThickness="1">
+    <HorizontalStackLayout Padding="20" Spacing="16">
 
-        <Grid
-            ColumnDefinitions="Auto,Auto"
-            ColumnSpacing="10"
-            VerticalOptions="Center">
+        <Label
+            Grid.Column="0"
+            FontAttributes="Bold"
+            Text="{Binding Source={x:Reference Self}, Path=TextLabel}"
+            VerticalOptions="Center" />
 
-            <Label
-                Grid.Column="0"
-                FontAttributes="Bold"
-                Text="{Binding Source={x:Reference Self}, Path=TextLabel}"
-                VerticalOptions="Center" />
+        <CheckBox
+            Grid.Column="1"
+            Margin="0,-4,0,0"
+            IsChecked="{Binding Source={x:Reference Self}, Path=Checkbox}"
+            VerticalOptions="Center" />
 
-            <CheckBox
-                Grid.Column="1"
-                Margin="0,-4,0,0"
-                IsChecked="{Binding Source={x:Reference Self}, Path=Checkbox}"
-                VerticalOptions="Center" />
-
-        </Grid>
-
-    </Border>
-
-
+    </HorizontalStackLayout>
 
 </ContentView>

@@ -2,24 +2,24 @@
 
 <ResourceDictionary xmlns="http://schemas.microsoft.com/dotnet/2021/maui" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <!-- 
-      Card Icon - use this for header of a view page  
-      CardIconSize - the size of the icon
-      CardButtonSize - the size of the rounded box round the icon
-      CardPadding - the padding between the box and icon
-      CardCornerRadius - how round is the box edge
+    <!--
+        Card Icon - use this for header of a view page
+        CardIconSize - the size of the icon
+        CardButtonSize - the size of the rounded box round the icon
+        CardPadding - the padding between the box and icon
+        CardCornerRadius - how round is the box edge
     -->
     <x:Double x:Key="CardIconSize">36</x:Double>
     <x:Double x:Key="CardButtonSize">70</x:Double>
     <x:Int32 x:Key="CardPadding">16</x:Int32>
     <x:Double x:Key="CardCornerRadius">8</x:Double>
 
-    <!-- 
-      List Icon - use this for an icon in a list view and icon picker
-      ListIconSize - the size of the icon
-      ListButtonSize - the size of the rounded box round the icon
-      ListPadding - the padding between the box and icon
-      ListCornerRadius - how round is the box edge
+    <!--
+        List Icon - use this for an icon in a list view and icon picker
+        ListIconSize - the size of the icon
+        ListButtonSize - the size of the rounded box round the icon
+        ListPadding - the padding between the box and icon
+        ListCornerRadius - how round is the box edge
     -->
     <x:Double x:Key="ListIconSize">27</x:Double>
     <x:Double x:Key="ListButtonSize">52</x:Double>
@@ -28,7 +28,7 @@
 
     <x:Double x:Key="PickerIconSize">48</x:Double>
 
-    <!-- size of the icon plus the rounded border -->
+    <!--  size of the icon plus the rounded border  -->
 
 
     <x:Double x:Key="IconTileWidth">88</x:Double>

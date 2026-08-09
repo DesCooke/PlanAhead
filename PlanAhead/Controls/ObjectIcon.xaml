@@ -8,16 +8,9 @@
     HeightRequest="{Binding Source={x:Reference Self}, Path=ButtonSize}"
     WidthRequest="{Binding Source={x:Reference Self}, Path=ButtonSize}">
 
-    <Border
-        Margin="0,0,0,0"
-        Padding="{Binding Source={x:Reference Self}, Path=ButtonPadding}"
-        HorizontalOptions="Start"
-        Stroke="{AppThemeBinding Light=#D0D0D0,
-                                 Dark=#505050}"
-        StrokeShape="RoundRectangle 12"
-        StrokeThickness="1">
+    <Border Style="{StaticResource CardBorderStyle}">
 
-        <VerticalStackLayout HorizontalOptions="Start" Spacing="10">
+        <VerticalStackLayout VerticalOptions = "Center" HorizontalOptions="Center" Spacing="10">
 
             <Image
                 x:Name="IconImage"

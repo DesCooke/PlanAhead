@@ -4,14 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Name="Root">
 
-    <Border
-        Margin="0,0,0,20"
-        Padding="20"
-        HorizontalOptions="Start"
-        Stroke="{AppThemeBinding Light=#D0D0D0,
-                                 Dark=#505050}"
-        StrokeShape="RoundRectangle 12"
-        StrokeThickness="1">
+    <Grid>
 
         <VerticalStackLayout Spacing="10">
 
@@ -29,6 +22,6 @@
 
         </VerticalStackLayout>
 
-    </Border>
+    </Grid>
 
 </ContentView>

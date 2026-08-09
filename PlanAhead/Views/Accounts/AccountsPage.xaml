@@ -49,9 +49,9 @@
 
                         </SwipeView.RightItems>
 
-                        <controls:Card Padding="20">
+                        <Border Style="{StaticResource CardBorderStyle}">
 
-                            <HorizontalStackLayout Padding="4" Spacing="16">
+                           <HorizontalStackLayout Padding="4" Spacing="16">
 
                                 <!--  Tappable Account Area  -->
                                 <HorizontalStackLayout HorizontalOptions="FillAndExpand" Spacing="16">
@@ -94,7 +94,7 @@
 
                             </HorizontalStackLayout>
 
-                        </controls:Card>
+                        </Border>
 
                     </SwipeView>
 

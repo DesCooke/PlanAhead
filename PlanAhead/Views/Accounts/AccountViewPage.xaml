@@ -26,42 +26,43 @@
 
         <ScrollView>
 
-            <Grid Padding="20" RowDefinitions="Auto,*">
+            <VerticalStackLayout Padding="20" Spacing="16">
 
-                <!--  Centre the icon  -->
-                <controls:ObjectIcon
-                    Grid.Row="0"
-                    ButtonPadding="{StaticResource CardPadding}"
-                    ButtonSize="{StaticResource CardButtonSize}"
-                    HorizontalOptions="Center"
-                    IconId="{Binding IconId}"
-                    IconSize="{StaticResource CardIconSize}"
-                    VerticalOptions="Center" />
+                <!--  Icon  -->
+                <controls:ObjectIconCard HorizontalOptions="Center" IconId="{Binding IconId}" />
 
-                <!--  Everything else aligned left  -->
-                <VerticalStackLayout
-                    Grid.Row="1"
-                    HorizontalOptions="Fill"
-                    Spacing="16">
+                <!--  Account details  -->
+                <Border  Style="{StaticResource CardBorderStyle}">
 
-                    <controls:HealthBox Health="{Binding Health}" />
+                    <VerticalStackLayout Spacing="16">
 
-                    <controls:TextFieldBox TextContent="{Binding Name}" TextLabel="Name" />
+                        <!--  Health  -->
+                        <controls:HealthBox Health="{Binding Health}" />
 
-                    <controls:TextFieldBox TextContent="{Binding Description}" TextLabel="Description" />
+                        <!--  Name  -->
+                        <controls:TextFieldBox TextContent="{Binding Name}" TextLabel="Name" />
 
-                    <controls:TextFieldBox TextContent="{Binding OpeningBalanceDisplay}" TextLabel="Opening Balance" />
+                        <!--  Description  -->
+                        <controls:TextFieldBox TextContent="{Binding Description}" TextLabel="Description" />
 
-                    <controls:CheckboxBox Checkbox="{Binding Archived}" TextLabel="Archived" />
+                        <!--  Opening Balance  -->
+                        <controls:TextFieldBox TextContent="{Binding OpeningBalanceDisplay}" TextLabel="Opening Balance" />
 
-                    <controls:TextFieldBox TextContent="{Binding Notes}" TextLabel="Notes" />
+                        <!--  Archived  -->
+                        <controls:CheckboxBox Checkbox="{Binding Archived}" TextLabel="Archived" />
 
-                </VerticalStackLayout>
+                        <!--  Notes  -->
+                        <controls:TextFieldBox TextContent="{Binding Notes}" TextLabel="Notes" />
 
-            </Grid>
+                    </VerticalStackLayout>
+
+                </Border>
+
+            </VerticalStackLayout>
 
         </ScrollView>
 
+        <!--  Floating Edit Button  -->
         <controls:FloatingActionButton
             Margin="24"
             Command="{Binding EditCommand}"
