@@ -35,7 +35,7 @@
 
                         </SwipeView.RightItems>
 
-                        <Border  Style="{StaticResource CardBorderStyle}">
+                        <Border Style="{StaticResource CardBorderStyle}">
 
                             <Grid
                                 ColumnDefinitions="auto,*,auto"

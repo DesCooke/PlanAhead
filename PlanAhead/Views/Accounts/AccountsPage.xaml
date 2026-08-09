@@ -51,7 +51,7 @@
 
                         <Border Style="{StaticResource CardBorderStyle}">
 
-                           <HorizontalStackLayout Padding="4" Spacing="16">
+                            <HorizontalStackLayout Padding="4" Spacing="16">
 
                                 <!--  Tappable Account Area  -->
                                 <HorizontalStackLayout HorizontalOptions="FillAndExpand" Spacing="16">
@@ -109,12 +109,10 @@
             IsVisible="{Binding HasNoAccounts}"
             Message="Tap the + button to create your first account." />
 
+        <!--  Floating Add Button  -->
         <controls:FloatingActionButton
-            Margin="24"
             Command="{Binding AddCommand}"
-            HorizontalOptions="End"
-            Icon="add.png"
-            VerticalOptions="End" />
+            Icon="add.png" />
 
     </Grid>
 

@@ -8,24 +8,15 @@
     HeightRequest="{Binding Source={x:Reference Self}, Path=ButtonSize}"
     WidthRequest="{Binding Source={x:Reference Self}, Path=ButtonSize}">
 
-    <Border Style="{StaticResource CardBorderStyle}">
+    <Border Padding="0" Style="{StaticResource CardBorderStyle}">
 
-        <VerticalStackLayout
+        <Image
+            x:Name="IconImage"
+            Aspect="AspectFit"
+            HeightRequest="{Binding Source={x:Reference Self}, Path=IconSize}"
             HorizontalOptions="Center"
-            Spacing="10"
-            VerticalOptions="Center">
-
-            <Image
-                x:Name="IconImage"
-                Aspect="AspectFit"
-                HeightRequest="{Binding Source={x:Reference Self}, Path=IconSize}"
-                WidthRequest="{Binding Source={x:Reference Self}, Path=IconSize}" />
-
-        </VerticalStackLayout>
+            VerticalOptions="Center"
+            WidthRequest="{Binding Source={x:Reference Self}, Path=IconSize}" />
 
     </Border>
-
-
-
-
 </ContentView>

@@ -64,11 +64,8 @@
 
         <!--  Floating Edit Button  -->
         <controls:FloatingActionButton
-            Margin="24"
             Command="{Binding EditCommand}"
-            HorizontalOptions="End"
-            Icon="edit.png"
-            VerticalOptions="End" />
+            Icon="edit.png" />
 
     </Grid>
 
