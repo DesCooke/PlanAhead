@@ -10,7 +10,10 @@
 
     <Border Style="{StaticResource CardBorderStyle}">
 
-        <VerticalStackLayout VerticalOptions = "Center" HorizontalOptions="Center" Spacing="10">
+        <VerticalStackLayout
+            HorizontalOptions="Center"
+            Spacing="10"
+            VerticalOptions="Center">
 
             <Image
                 x:Name="IconImage"

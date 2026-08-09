@@ -35,7 +35,7 @@
 
                         </SwipeView.RightItems>
 
-                        <controls:Card Padding="16">
+                        <Border  Style="{StaticResource CardBorderStyle}">
 
                             <Grid
                                 ColumnDefinitions="auto,*,auto"
@@ -89,7 +89,7 @@
 
                             </Grid>
 
-                        </controls:Card>
+                        </Border>
                     </SwipeView>
 
 
