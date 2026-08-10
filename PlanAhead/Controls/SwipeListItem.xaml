@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<ContentView
+    x:Class="PlanAhead.Controls.SwipeListItem"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:PlanAhead.Controls"
+    x:Name="Root">
+
+    <SwipeView>
+
+        <!--  Edit  -->
+        <SwipeView.LeftItems>
+
+            <SwipeItems Mode="Reveal">
+
+                <SwipeItem
+                    BackgroundColor="LightSkyBlue"
+                    Command="{Binding Source={x:Reference Root}, Path=EditCommand}"
+                    CommandParameter="{Binding Source={x:Reference Root}, Path=EditCommandParameter}"
+                    IsVisible="{Binding Source={x:Reference Root}, Path=HasEditCommand}"
+                    Text="Edit" />
+
+            </SwipeItems>
+
+        </SwipeView.LeftItems>
+
+
+        <!--  Delete  -->
+        <SwipeView.RightItems>
+
+            <SwipeItems Mode="Reveal">
+
+                <SwipeItem
+                    BackgroundColor="#F44336"
+                    Command="{Binding Source={x:Reference Root}, Path=DeleteCommand}"
+                    CommandParameter="{Binding Source={x:Reference Root}, Path=DeleteCommandParameter}"
+                    IsVisible="{Binding Source={x:Reference Root}, Path=HasDeleteCommand}"
+                    Text="Delete" />
+
+            </SwipeItems>
+
+        </SwipeView.RightItems>
+
+
+        <!--  List item  -->
+        <Border
+            Padding="20"
+            Stroke="{AppThemeBinding Light=#D0D0D0,
+                                     Dark=#505050}"
+            StrokeShape="RoundRectangle 8"
+            StrokeThickness="1">
+
+            <HorizontalStackLayout Spacing="16" VerticalOptions="Fill">
+
+                <HorizontalStackLayout.GestureRecognizers>
+
+                    <TapGestureRecognizer Command="{Binding Source={x:Reference Root}, Path=OpenCommand}" CommandParameter="{Binding Source={x:Reference Root}, Path=OpenCommandParameter}" />
+
+                </HorizontalStackLayout.GestureRecognizers>
+
+                <!--  Icon  -->
+                <controls:ObjectIcon
+                    ButtonPadding="{StaticResource ListPadding}"
+                    ButtonSize="{StaticResource ListButtonSize}"
+                    IconId="{Binding Source={x:Reference Root}, Path=IconId}"
+                    IconSize="{StaticResource ListIconSize}"
+                    IsVisible="{Binding Source={x:Reference Root}, Path=HasIcon}"
+                    VerticalOptions="Center" />
+
+
+                <!--  Text  -->
+                <VerticalStackLayout
+                    HorizontalOptions="FillAndExpand"
+                    Spacing="3"
+                    VerticalOptions="Center">
+
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="20"
+                        IsVisible="{Binding Source={x:Reference Root}, Path=HasTitle}"
+                        Text="{Binding Source={x:Reference Root}, Path=Title}" />
+
+                    <Label
+                        FontSize="13"
+                        IsVisible="{Binding Source={x:Reference Root}, Path=HasSubtitle}"
+                        Opacity="0.65"
+                        Text="{Binding Source={x:Reference Root}, Path=Subtitle}" />
+
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="16"
+                        IsVisible="{Binding Source={x:Reference Root}, Path=HasDetail}"
+                        Text="{Binding Source={x:Reference Root}, Path=Detail}" />
+
+                </VerticalStackLayout>
+
+            </HorizontalStackLayout>
+
+        </Border>
+
+    </SwipeView>
+
+</ContentView>

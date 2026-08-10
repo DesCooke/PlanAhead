@@ -110,6 +110,9 @@
 	  <MauiXaml Update="Controls\ObjectIconCard.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Controls\SwipeListItem.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Controls\TextFieldBox.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

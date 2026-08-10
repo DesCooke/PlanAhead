@@ -19,84 +19,18 @@
 
                 <DataTemplate>
 
-                    <SwipeView>
 
-                        <SwipeView.LeftItems>
-
-                            <SwipeItems Mode="Reveal">
-
-                                <SwipeItem
-                                    BackgroundColor="LightSkyBlue"
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditCommand}"
-                                    CommandParameter="{Binding}"
-                                    Text="Edit" />
-
-                            </SwipeItems>
-
-                        </SwipeView.LeftItems>
-
-                        <SwipeView.RightItems>
-
-                            <SwipeItems Mode="Reveal">
-
-                                <SwipeItem
-                                    BackgroundColor="#F44336"
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteCommand}"
-                                    CommandParameter="{Binding}"
-                                    Text="Delete" />
-
-                            </SwipeItems>
-
-                        </SwipeView.RightItems>
-
-                        <Border Style="{StaticResource CardBorderStyle}">
-
-                            <HorizontalStackLayout Padding="4" Spacing="16">
-
-                                <!--  Tappable Account Area  -->
-                                <HorizontalStackLayout HorizontalOptions="FillAndExpand" Spacing="16">
-
-                                    <HorizontalStackLayout.GestureRecognizers>
-
-                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.OpenCommand}" CommandParameter="{Binding}" />
-
-                                    </HorizontalStackLayout.GestureRecognizers>
-
-                                    <controls:ObjectIcon
-                                        Grid.Row="0"
-                                        ButtonPadding="{StaticResource ListPadding}"
-                                        ButtonSize="{StaticResource ListButtonSize}"
-                                        HorizontalOptions="Center"
-                                        IconId="{Binding IconId}"
-                                        IconSize="{StaticResource ListIconSize}"
-                                        VerticalOptions="Center" />
-
-                                    <VerticalStackLayout Spacing="3" VerticalOptions="Center">
-
-                                        <Label
-                                            FontAttributes="Bold"
-                                            FontSize="20"
-                                            Text="{Binding Name}" />
-
-                                        <Label
-                                            FontSize="13"
-                                            Opacity="0.65"
-                                            Text="{Binding Description}" />
-
-                                        <Label
-                                            FontAttributes="Bold"
-                                            FontSize="16"
-                                            Text="{Binding OpeningBalanceDisplay}" />
-
-                                    </VerticalStackLayout>
-
-                                </HorizontalStackLayout>
-
-                            </HorizontalStackLayout>
-
-                        </Border>
-
-                    </SwipeView>
+                    <controls:SwipeListItem
+                        Title="{Binding Name}"
+                        DeleteCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteCommand}"
+                        DeleteCommandParameter="{Binding}"
+                        Detail="{Binding OpeningBalanceDisplay}"
+                        EditCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditCommand}"
+                        EditCommandParameter="{Binding}"
+                        IconId="{Binding IconId}"
+                        OpenCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.OpenCommand}"
+                        OpenCommandParameter="{Binding}"
+                        Subtitle="{Binding Description}" />
 
                 </DataTemplate>
             </CollectionView.ItemTemplate>
@@ -110,9 +44,7 @@
             Message="Tap the + button to create your first account." />
 
         <!--  Floating Add Button  -->
-        <controls:FloatingActionButton
-            Command="{Binding AddCommand}"
-            Icon="add.png" />
+        <controls:FloatingActionButton Command="{Binding AddCommand}" Icon="add.png" />
 
     </Grid>
 
