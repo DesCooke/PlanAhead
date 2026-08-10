@@ -19,7 +19,6 @@
 
                 <DataTemplate>
 
-
                     <controls:SwipeListItem
                         Title="{Binding Name}"
                         DeleteCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteCommand}"
