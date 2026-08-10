@@ -11,80 +11,44 @@
 
         <VerticalStackLayout Padding="20" Spacing="16">
 
-            <Border
-                Margin="0,0,0,20"
-                Padding="20"
-                HorizontalOptions="Center"
-                Stroke="{AppThemeBinding Light=#D0D0D0,
-                                         Dark=#505050}"
-                StrokeShape="RoundRectangle 12"
-                StrokeThickness="1">
+            <controls:ObjectIconEdit Command="{Binding ChooseIconCommand}" IconId="{Binding IconId}" />
 
-                <Border.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="ChooseIcon_Tapped" />
-                </Border.GestureRecognizers>
+            <!--  Account details  -->
+            <Border Style="{StaticResource CardBorderStyle}">
 
-                <VerticalStackLayout HorizontalOptions="Center" Spacing="10">
+                <VerticalStackLayout Padding="20" Spacing="16">
 
-                    <controls:ObjectIcon
-                        Grid.Row="0"
-                        ButtonPadding="{StaticResource CardPadding}"
-                        ButtonSize="{StaticResource CardButtonSize}"
-                        HorizontalOptions="Center"
-                        IconId="{Binding IconId}"
-                        IconSize="{StaticResource CardIconSize}"
-                        VerticalOptions="Center" />
+                    <controls:FloatingEntry Label="Name" Text="{Binding Name}" />
 
-                    <Label
-                        FontAttributes="Bold"
-                        FontSize="13"
-                        HorizontalOptions="Center"
-                        Text="Change Icon"
-                        TextColor="{DynamicResource SecondaryTextColor}" />
+                    <controls:FloatingEditor
+                        Label="Description"
+                        MaximumHeight="300"
+                        MinimumHeight="120"
+                        Text="{Binding Description}" />
+
+                    <controls:FloatingEntry Label="Opening Balance" Text="{Binding OpeningBalance}" />
+
+                    <Label FontAttributes="Bold" Text="Archived" />
+
+                    <CheckBox IsChecked="{Binding Archived}" />
+
+                    <controls:FloatingEditor
+                        Label="Notes"
+                        MaximumHeight="300"
+                        MinimumHeight="120"
+                        Text="{Binding Notes}" />
+
+                    <HorizontalStackLayout HorizontalOptions="End" Spacing="10">
+
+                        <Button Command="{Binding CancelCommand}" Text="Cancel" />
+
+                        <Button Command="{Binding SaveCommand}" Text="Save" />
+
+                    </HorizontalStackLayout>
 
                 </VerticalStackLayout>
 
             </Border>
-
-            <Label
-                FontAttributes="Bold"
-                FontSize="24"
-                Text="Account Details" />
-
-            <Label FontAttributes="Bold" Text="Name" />
-
-            <Entry Text="{Binding Name}" />
-
-            <Label FontAttributes="Bold" Text="Description" />
-
-            <Editor
-                AutoSize="TextChanges"
-                HeightRequest="80"
-                Text="{Binding Description}" />
-
-            <Label FontAttributes="Bold" Text="Opening Balance" />
-
-            <Entry Keyboard="Numeric" Text="{Binding OpeningBalance}" />
-
-            <Label FontAttributes="Bold" Text="Archived" />
-
-            <CheckBox IsChecked="{Binding Archived}" />
-
-            <Label FontAttributes="Bold" Text="Notes" />
-
-            <Editor
-                AutoSize="TextChanges"
-                HeightRequest="120"
-                Text="{Binding Notes}" />
-
-            <HorizontalStackLayout HorizontalOptions="End" Spacing="10">
-
-                <Button Command="{Binding CancelCommand}" Text="Cancel" />
-
-                <Button Command="{Binding SaveCommand}" Text="Save" />
-
-            </HorizontalStackLayout>
-
         </VerticalStackLayout>
 
     </ScrollView>

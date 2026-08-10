@@ -23,16 +23,6 @@ public partial class AccountEditPage : ContentPage
         BindingContext = viewModel;
     }
 
-    private async void ChooseIcon_Clicked(object sender, EventArgs e)
-    {
-        var icon = await _dialogService.PickIconAsync(_viewModel.IconId);
-
-        if (icon != null)
-        {
-            _viewModel.IconId = icon;
-        }
-    }
-
     protected override async void OnAppearing()
     {
         base.OnAppearing();
@@ -40,11 +30,4 @@ public partial class AccountEditPage : ContentPage
         await _viewModel.InitialiseAsync();
     }
 
-    private async void ChooseIcon_Tapped(object sender, TappedEventArgs e)
-    {
-        var iconId = await _dialogService.PickIconAsync(_viewModel.IconId);
-
-        if (iconId != null)
-            _viewModel.IconId = iconId;
-    }
 }

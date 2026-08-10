@@ -1,9 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.Models.Domain;
 using PlanAhead.Core.Models.Enums;
 using PlanAhead.Interfaces;
-using PlanAhead.Core.Models.Domain;
+using PlanAhead.Services;
 
 namespace PlanAhead.ViewModels.Accounts;
 
@@ -11,6 +12,7 @@ public partial class AccountEditViewModel : BaseViewModel
 {
     private readonly IAccountService _accountService;
     private readonly INavigationContext _navigationContext;
+    private readonly IDialogService _dialogService;
 
     public IEnumerable<Frequency> Frequencies =>
         Enum.GetValues<Frequency>();
@@ -44,11 +46,13 @@ public partial class AccountEditViewModel : BaseViewModel
         IAccountService accountService,
         INavigationService navigation,
         INavigationContext navigationContext,
+        IDialogService dialogService,
         IDialogService dialogs)
         : base(navigation, dialogs)
     {
         _accountService = accountService;
         _navigationContext = navigationContext;
+        _dialogService = dialogService;
     }
 
     public async Task InitialiseAsync()
@@ -151,5 +155,14 @@ public partial class AccountEditViewModel : BaseViewModel
     private Task CancelAsync()
     {
         return Navigation.GoBackAsync();
+    }
+
+    [RelayCommand]
+    private async Task ChooseIconAsync()
+    {
+        var iconId = await _dialogService.PickIconAsync(IconId);
+
+        if (iconId != null)
+            IconId = iconId;
     }
 }

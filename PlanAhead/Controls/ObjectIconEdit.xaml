@@ -1,0 +1,41 @@
+<ContentView
+    x:Class="PlanAhead.Controls.ObjectIconEdit"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:PlanAhead.Controls"
+    x:Name="Self">
+
+    <ContentView.GestureRecognizers>
+        <TapGestureRecognizer Command="{Binding Source={x:Reference Self}, Path=Command}" CommandParameter="{Binding Source={x:Reference Self}, Path=CommandParameter}" />
+    </ContentView.GestureRecognizers>
+
+    <Border
+        Padding="{Binding Source={x:Reference Self}, Path=CardPadding}"
+        HorizontalOptions="Center"
+        Stroke="{AppThemeBinding Light=#D0D0D0,
+                                 Dark=#505050}"
+        StrokeShape="RoundRectangle 12"
+        StrokeThickness="1">
+
+        <VerticalStackLayout HorizontalOptions="Center" Spacing="10">
+
+            <controls:ObjectIcon
+                ButtonPadding="{Binding Source={x:Reference Self}, Path=ButtonPadding}"
+                ButtonSize="{Binding Source={x:Reference Self}, Path=ButtonSize}"
+                HorizontalOptions="Center"
+                IconId="{Binding Source={x:Reference Self}, Path=IconId}"
+                IconSize="{Binding Source={x:Reference Self}, Path=IconSize}"
+                VerticalOptions="Center" />
+
+            <Label
+                FontAttributes="Bold"
+                FontSize="13"
+                HorizontalOptions="Center"
+                Text="{Binding Source={x:Reference Self}, Path=Text}"
+                TextColor="{DynamicResource SecondaryTextColor}" />
+
+        </VerticalStackLayout>
+
+    </Border>
+
+</ContentView>
