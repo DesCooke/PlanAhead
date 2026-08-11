@@ -101,6 +101,9 @@
 	  <MauiXaml Update="Controls\EmptyState.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Controls\FloatingCheckbox.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Controls\FloatingEditor.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

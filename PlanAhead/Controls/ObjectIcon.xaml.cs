@@ -1,3 +1,4 @@
+using PlanAhead.Core.Models.Enums;
 using PlanAhead.Resources.Icons;
 
 namespace PlanAhead.Controls;
@@ -9,6 +10,53 @@ public partial class ObjectIcon : ContentView
         InitializeComponent();
 
         UpdateImageSource();
+    }
+
+    public static readonly BindableProperty StatusProperty =
+        BindableProperty.Create(
+            nameof(Status),
+            typeof(Status),
+            typeof(ObjectIcon),
+            Status.NotSet,
+            propertyChanged: OnStatusChanged);
+
+    public Status Status
+    {
+        get => (Status)GetValue(StatusProperty);
+        set => SetValue(StatusProperty, value);
+    }
+
+    public bool HasStatus =>
+        Status != Status.NotSet;
+
+    private static void OnStatusChanged(
+        BindableObject bindable,
+        object oldValue,
+        object newValue)
+    {
+        var control = (ObjectIcon)bindable;
+
+        control.HealthColor = newValue switch
+        {
+            Status.Green => Colors.Green,
+            Status.Amber => Colors.Orange,
+            Status.Red => Colors.Red,
+            _ => Colors.Transparent
+        };
+
+        control.OnPropertyChanged(nameof(HasStatus));
+    }
+    public static readonly BindableProperty HealthColorProperty =
+        BindableProperty.Create(
+            nameof(HealthColor),
+            typeof(Color),
+            typeof(ObjectIcon),
+            Colors.Green);
+
+    public Color HealthColor
+    {
+        get => (Color)GetValue(HealthColorProperty);
+        private set => SetValue(HealthColorProperty, value);
     }
 
     public static readonly BindableProperty IconIdProperty =
@@ -31,6 +79,7 @@ public partial class ObjectIcon : ContentView
             typeof(double),
             typeof(ObjectIcon),
             28.0);
+
 
     public double ButtonSize
     {

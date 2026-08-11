@@ -11,6 +11,7 @@
             <HorizontalStackLayout Spacing="6">
 
                 <BoxView
+                    BackgroundColor="Transparent"
                     CornerRadius="5"
                     HeightRequest="10"
                     WidthRequest="10"

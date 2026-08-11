@@ -12,14 +12,14 @@ public partial class HealthBox : ContentView
     public static readonly BindableProperty HealthProperty =
         BindableProperty.Create(
             nameof(Health),
-            typeof(AccountHealth),
+            typeof(Status),
             typeof(HealthBox),
-            AccountHealth.Green,
+            Status.Green,
             propertyChanged: OnHealthChanged);
 
-    public AccountHealth Health
+    public Status Health
     {
-        get => (AccountHealth)GetValue(HealthProperty);
+        get => (Status)GetValue(HealthProperty);
         set => SetValue(HealthProperty, value);
     }
 
@@ -49,18 +49,6 @@ public partial class HealthBox : ContentView
         set => SetValue(HealthColourProperty, value);
     }
 
-    public static readonly BindableProperty HealthBackgroundProperty =
-        BindableProperty.Create(
-            nameof(HealthBackground),
-            typeof(Color),
-            typeof(HealthBox),
-            Colors.Gray);
-
-    public Color HealthBackground
-    {
-        get => (Color)GetValue(HealthBackgroundProperty);
-        set => SetValue(HealthBackgroundProperty, value);
-    }
 
     private static void OnHealthChanged(
         BindableObject bindable,
@@ -76,22 +64,19 @@ public partial class HealthBox : ContentView
     {
         switch (Health)
         {
-            case AccountHealth.Green:
+            case Status.Green:
                 HealthText = "Healthy";
                 HealthColour = Colors.Green;
-                HealthBackground = Colors.White;
                 break;
 
-            case AccountHealth.Amber:
+            case Status.Amber:
                 HealthText = "Warning";
                 HealthColour = Colors.Orange;
-                HealthBackground = Colors.White;
                 break;
 
-            case AccountHealth.Red:
+            case Status.Red:
                 HealthText = "Critical";
                 HealthColour = Colors.Red;
-                HealthBackground = Colors.White;
                 break;
         }
     }

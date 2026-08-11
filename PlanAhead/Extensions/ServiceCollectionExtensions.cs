@@ -1,4 +1,6 @@
 ﻿
+using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.Services.Accounts;
 using PlanAhead.Data.Database;
 using PlanAhead.Infrastructure.Data.Database;
 using PlanAhead.Infrastructure.Repositories;
@@ -30,6 +32,7 @@ namespace PlanAhead.Extensions
             services.AddTransient<IDialogService, DialogService>();
             services.AddTransient<IconPickerViewModel>();
             services.AddTransient<IconPickerPopup>();
+            services.AddTransient<IAccountHealthService, AccountHealthService>();
 
             // Repositories
             services.AddTransient<AccountRepository>();

@@ -1,4 +1,5 @@
 ﻿using PlanAhead.Core.Models.Base;
+using PlanAhead.Core.Models.Enums;
 
 namespace PlanAhead.Core.Models.Domain;
 
@@ -18,5 +19,6 @@ public class Account : BaseEntity
     public bool Archived { get; set; }
 
     public string IconId { get; set; } = "Bank";
+
 
 }

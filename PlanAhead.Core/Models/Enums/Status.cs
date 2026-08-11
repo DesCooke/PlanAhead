@@ -4,8 +4,9 @@ using System.Text;
 
 namespace PlanAhead.Core.Models.Enums
 {
-    public enum AccountHealth
+    public enum Status
     {
+        NotSet,
         Green,
         Amber,
         Red

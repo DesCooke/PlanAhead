@@ -45,7 +45,7 @@ public partial class AccountViewViewModel : BaseViewModel
     private string iconId = string.Empty;
 
     [ObservableProperty]
-    public AccountHealth health = AccountHealth.Green;
+    public Status health = Status.Green;
 
     public AccountViewViewModel(
         IAccountService accountService,
@@ -75,9 +75,9 @@ public partial class AccountViewViewModel : BaseViewModel
         Health =
                 OpeningBalance switch
                 {
-                    < 0 => AccountHealth.Red,
-                    < 500 => AccountHealth.Amber,
-                    _ => AccountHealth.Green
+                    < 0 => Status.Red,
+                    < 500 => Status.Amber,
+                    _ => Status.Green
                 };
 
     }

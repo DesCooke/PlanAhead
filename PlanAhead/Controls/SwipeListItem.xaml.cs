@@ -1,3 +1,4 @@
+using PlanAhead.Core.Models.Enums;
 using System.Windows.Input;
 
 namespace PlanAhead.Controls;
@@ -33,6 +34,34 @@ public partial class SwipeListItem : ContentView
         !string.IsNullOrWhiteSpace(IconId);
 
 
+    // ------------------------------------------------------------
+    // Status
+    // ------------------------------------------------------------
+
+    public static readonly BindableProperty StatusProperty =
+        BindableProperty.Create(
+            nameof(Status),
+            typeof(Status),
+            typeof(SwipeListItem),
+            Status.NotSet,
+            propertyChanged: OnStatusChanged);
+
+    public Status Status
+    {
+        get => (Status)GetValue(StatusProperty);
+        set => SetValue(StatusProperty, value);
+    }
+
+    private static void OnStatusChanged(
+        BindableObject bindable,
+        object oldValue,
+        object newValue)
+    {
+        var control = (SwipeListItem)bindable;
+
+        System.Diagnostics.Debug.WriteLine(
+            $"SwipeListItem Status: {oldValue} -> {newValue}");
+    }
     // ------------------------------------------------------------
     // Title
     // ------------------------------------------------------------

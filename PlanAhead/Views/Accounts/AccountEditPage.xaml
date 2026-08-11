@@ -28,9 +28,9 @@
 
                     <controls:FloatingEntry Label="Opening Balance" Text="{Binding OpeningBalance}" />
 
-                    <Label FontAttributes="Bold" Text="Archived" />
-
-                    <CheckBox IsChecked="{Binding Archived}" />
+                    <controls:FloatingCheckbox
+                        Label="Archived"
+                        IsChecked="{Binding Archived}" />
 
                     <controls:FloatingEditor
                         Label="Notes"

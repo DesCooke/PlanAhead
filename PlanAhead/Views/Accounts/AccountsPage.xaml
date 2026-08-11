@@ -29,6 +29,7 @@
                         IconId="{Binding IconId}"
                         OpenCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.OpenCommand}"
                         OpenCommandParameter="{Binding}"
+                        Status="{Binding Status}"
                         Subtitle="{Binding Description}" />
 
                 </DataTemplate>

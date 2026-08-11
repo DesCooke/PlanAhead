@@ -66,6 +66,7 @@
                     IconId="{Binding Source={x:Reference Root}, Path=IconId}"
                     IconSize="{StaticResource ListIconSize}"
                     IsVisible="{Binding Source={x:Reference Root}, Path=HasIcon}"
+                    Status="{Binding Source={x:Reference Root}, Path=Status}"
                     VerticalOptions="Center" />
 
 

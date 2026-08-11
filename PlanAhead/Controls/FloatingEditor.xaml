@@ -2,13 +2,13 @@
 
 <ContentView
     x:Class="PlanAhead.Controls.FloatingEditor"
-    x:Name="Self"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Name="Self">
 
     <Grid>
 
-        <!-- Main input border -->
+        <!--  Main input border  -->
         <Border
             x:Name="InputBorder"
             Padding="12,12"
@@ -23,31 +23,31 @@
                 x:Name="EditorControl"
                 AutoSize="TextChanges"
                 BackgroundColor="Transparent"
+                Focused="Editor_Focused"
                 FontSize="15"
-                MinimumHeightRequest="{Binding Source={x:Reference Self}, Path=MinimumHeight}"
                 MaximumHeightRequest="{Binding Source={x:Reference Self}, Path=MaximumHeight}"
+                MinimumHeightRequest="{Binding Source={x:Reference Self}, Path=MinimumHeight}"
                 Text="{Binding Source={x:Reference Self}, Path=Text, Mode=TwoWay}"
                 TextColor="{DynamicResource PrimaryTextColor}"
-                VerticalOptions="Fill"
-                Focused="Editor_Focused"
-                Unfocused="Editor_Unfocused" />
+                Unfocused="Editor_Unfocused"
+                VerticalOptions="Fill" />
 
         </Border>
 
 
-        <!-- Hint shown inside empty editor -->
+        <!--  Hint shown inside empty editor  -->
         <Label
             x:Name="HintLabel"
             Margin="16,12"
             FontSize="15"
+            HorizontalOptions="Start"
+            InputTransparent="True"
             Text="{Binding Source={x:Reference Self}, Path=Label}"
             TextColor="{DynamicResource Gray200}"
-            HorizontalOptions="Start"
-            VerticalOptions="Start"
-            InputTransparent="True" />
+            VerticalOptions="Start" />
 
 
-        <!-- Floating label -->
+        <!--  Floating label  -->
         <Border
             x:Name="FloatingLabelBorder"
             Margin="10,0,0,0"
@@ -55,10 +55,10 @@
             BackgroundColor="{AppThemeBinding Light=White,
                                               Dark=#202020}"
             HorizontalOptions="Start"
+            InputTransparent="True"
             Opacity="0"
             TranslationY="0"
-            VerticalOptions="Start"
-            InputTransparent="True">
+            VerticalOptions="Start">
 
             <Label
                 x:Name="FloatingLabel"

@@ -16,7 +16,7 @@ public partial class FloatingEntry : ContentView
 
         CardPadding = new Thickness(20);
 
-        UpdatePasswordButton();
+//        UpdatePasswordButton();
         UpdateFloatingLabel();
     }
 
@@ -162,7 +162,7 @@ public partial class FloatingEntry : ContentView
     {
         var control = (FloatingEntry)bindable;
 
-        control.UpdatePasswordButton();
+        //control.UpdatePasswordButton();
     }
 
 
@@ -241,7 +241,7 @@ public partial class FloatingEntry : ContentView
     // ============================================================
     // Password
     // ============================================================
-
+    /*
     private void PasswordButton_Clicked(
         object sender,
         EventArgs e)
@@ -275,4 +275,5 @@ public partial class FloatingEntry : ContentView
 
         PasswordButton.Text = "Show";
     }
+    */
 }

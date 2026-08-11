@@ -14,25 +14,28 @@ public partial class AccountsViewModel : BaseViewModel
 {
     private readonly IAccountService _accountService;
     private readonly INavigationContext _navigationContext;
+    private readonly IAccountHealthService _accountHealthService;
 
-    public ObservableCollection<Account> Accounts{ get; } = new();
+    public ObservableCollection<AccountListItem> Accounts { get; } = new();
 
     public bool HasAccounts => Accounts.Any();
     public bool HasNoAccounts => !HasAccounts;
 
 
     [ObservableProperty]
-    private Account? selectedAccount;
+    private AccountListItem? selectedAccountListItem;
 
     public AccountsViewModel(
         IAccountService accountService,
         INavigationService navigation,
         INavigationContext navigationContext,
+        IAccountHealthService accountHealthService,
         IDialogService dialogs)
         : base(navigation, dialogs)
     {
         _accountService = accountService;
         _navigationContext = navigationContext;
+        _accountHealthService = accountHealthService;
     }
 
     [RelayCommand]
@@ -43,8 +46,17 @@ public partial class AccountsViewModel : BaseViewModel
             var accounts = await _accountService.GetAllAsync();
 
             Accounts.Clear();
+
             foreach (var account in accounts)
-                Accounts.Add(account);
+            {
+                var status = await _accountHealthService.GetStatusAsync(account);
+
+                Accounts.Add(new AccountListItem
+                {
+                    Account = account,
+                    Status = status
+                });
+            }
 
             RefreshUi(
                 nameof(HasAccounts),
@@ -56,17 +68,17 @@ public partial class AccountsViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private async Task DeleteAsync(Account account)
+    private async Task DeleteAsync(AccountListItem accountListItem)
     {
         var delete =
             await Dialogs.ConfirmAsync(
                 "Delete Account",
-                $"Delete '{account.Name}'?");
+                $"Delete '{accountListItem.Account.Name}'?");
 
         if (!delete)
             return;
 
-        await _accountService.DeleteAsync(account.Id);
+        await _accountService.DeleteAsync(accountListItem.Account.Id);
 
         await LoadAsync();
     }
@@ -78,19 +90,18 @@ public partial class AccountsViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private async Task OpenAsync(Account account)
+    private async Task OpenAsync(AccountListItem accountListItem)
     {
-        _navigationContext.Set(account.Id);
+        _navigationContext.Set(accountListItem.Account.Id);
 
         await Navigation.NavigateToAsync<AccountViewPage>();
 
-        SelectedAccount = null;
     }
 
     [RelayCommand]
-    private async Task EditAsync(Account account)
+    private async Task EditAsync(AccountListItem accountListItem)
     {
-        _navigationContext.Set(account.Id);
+        _navigationContext.Set(accountListItem.Account.Id);
 
         await Navigation.NavigateToAsync<AccountEditPage>();
     }
