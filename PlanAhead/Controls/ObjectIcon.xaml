@@ -8,13 +8,11 @@
     HeightRequest="{Binding Source={x:Reference Self}, Path=ButtonSize}"
     WidthRequest="{Binding Source={x:Reference Self}, Path=ButtonSize}">
 
-    <Border
-        Padding="0"
-        Style="{StaticResource CardBorderStyle}">
+    <Border Padding="0" Style="{StaticResource CardBorderStyle}">
 
         <Grid>
 
-            <!-- Icon -->
+            <!--  Icon  -->
             <Image
                 x:Name="IconImage"
                 Aspect="AspectFit"
@@ -23,7 +21,7 @@
                 VerticalOptions="Center"
                 WidthRequest="{Binding Source={x:Reference Self}, Path=IconSize}" />
 
-            <!-- Status indicator -->
+            <!--  Status indicator  -->
             <BoxView
                 BackgroundColor="{Binding Source={x:Reference Self}, Path=HealthColor}"
                 CornerRadius="4,0,0,4"

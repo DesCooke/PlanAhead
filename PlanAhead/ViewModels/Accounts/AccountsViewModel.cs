@@ -1,12 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.Models.Domain;
 using PlanAhead.Core.Services.Accounts;
+using PlanAhead.Core.Services.Funds;
 using PlanAhead.Interfaces;
 using PlanAhead.Services;
 using PlanAhead.Views.Accounts;
 using System.Collections.ObjectModel;
-using PlanAhead.Core.Models.Domain;
 
 namespace PlanAhead.ViewModels.Accounts;
     
@@ -38,10 +39,15 @@ public partial class AccountsViewModel : BaseViewModel
         _accountHealthService = accountHealthService;
     }
 
+    public async Task InitialiseAsync()
+    {
+        await LoadAsync();
+    }
+
     [RelayCommand]
     private async Task LoadAsync()
     {
-        await ExecuteBusyAsync(async () =>
+        try
         {
             var accounts = await _accountService.GetAllAsync();
 
@@ -62,10 +68,16 @@ public partial class AccountsViewModel : BaseViewModel
                 nameof(HasAccounts),
                 nameof(HasNoAccounts),
                 nameof(Title));
-        });
 
-        Title = $"Accounts ({Accounts.Count})";
+            Title = $"Accounts ({Accounts.Count})";
+        }
+        catch (Exception ex)
+        {
+            await Dialogs.ShowErrorAsync("FundsViewModal.cs:LoadAsync:Exception:" + ex.ToString());
+        }
+
     }
+
 
     [RelayCommand]
     private async Task DeleteAsync(AccountListItem accountListItem)
@@ -80,7 +92,7 @@ public partial class AccountsViewModel : BaseViewModel
 
         await _accountService.DeleteAsync(accountListItem.Account.Id);
 
-        await LoadAsync();
+        await InitialiseAsync();
     }
 
     [RelayCommand]

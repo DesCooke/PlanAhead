@@ -22,7 +22,7 @@ public partial class AccountsPage : ContentPage
     {
         base.OnAppearing();
 
-        await _viewModel.LoadCommand.ExecuteAsync(null);
+        await _viewModel.InitialiseAsync();
     }
 
 

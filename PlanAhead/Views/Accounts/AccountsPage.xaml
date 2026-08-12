@@ -7,7 +7,7 @@
     xmlns:controls="clr-namespace:PlanAhead.Controls"
     Title="{Binding Title}">
 
-    <Grid>
+    <Grid Margin="16,16,16,16">
 
         <CollectionView
             IsVisible="{Binding HasAccounts}"
@@ -15,22 +15,27 @@
             SelectedItem="{Binding SelectedAccount}"
             SelectionMode="None">
 
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout ItemSpacing="8" Orientation="Vertical" />
+            </CollectionView.ItemsLayout>
+
             <CollectionView.ItemTemplate>
 
                 <DataTemplate>
 
                     <controls:SwipeListItem
+                        IconId="{Binding IconId}"
                         Title="{Binding Name}"
+                        Subtitle="{Binding Description}"
+                        Detail="{Binding OpeningBalanceDisplay}"
+                        Status="{Binding Status}"
+                        
                         DeleteCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteCommand}"
                         DeleteCommandParameter="{Binding}"
-                        Detail="{Binding OpeningBalanceDisplay}"
                         EditCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditCommand}"
                         EditCommandParameter="{Binding}"
-                        IconId="{Binding IconId}"
                         OpenCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.OpenCommand}"
-                        OpenCommandParameter="{Binding}"
-                        Status="{Binding Status}"
-                        Subtitle="{Binding Description}" />
+                        OpenCommandParameter="{Binding}" />
 
                 </DataTemplate>
             </CollectionView.ItemTemplate>

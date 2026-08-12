@@ -5,6 +5,7 @@ using PlanAhead.Core.Models.Domain;
 using PlanAhead.Core.Models.Enums;
 using PlanAhead.Interfaces;
 using PlanAhead.Views.Accounts;
+using PlanAhead.Views.Funds;
 
 namespace PlanAhead.ViewModels.Accounts;
 
@@ -175,6 +176,30 @@ public partial class AccountViewViewModel : BaseViewModel
         await _accountService.DeleteAsync(Id);
 
         await Navigation.GoBackAsync();
+    }
+
+    [RelayCommand]
+    private async Task GoToPlansAsync()
+    {
+        var hey =
+            await Dialogs.ConfirmAsync(
+                "Hello World",
+                $"Hello");
+    }
+
+    [RelayCommand]
+    private async Task GoToFundsAsync()
+    {
+        try
+        {
+            _navigationContext.Set(Id);
+
+            await Navigation.NavigateToAsync<FundsPage>();
+        }
+        catch (Exception ex)
+        {
+            await Dialogs.ShowErrorAsync("AccountViewViewModel.cs:GoToFundsAsync:Exception:" + ex.ToString());
+        }
     }
 
 }

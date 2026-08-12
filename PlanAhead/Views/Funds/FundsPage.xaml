@@ -7,7 +7,7 @@
     xmlns:controls="clr-namespace:PlanAhead.Controls"
     Title="{Binding Title}">
 
-    <Grid>
+    <Grid Margin="16,16,16,16">
 
         <CollectionView
             IsVisible="{Binding HasFunds}"
@@ -15,83 +15,28 @@
             SelectedItem="{Binding SelectedFund}"
             SelectionMode="None">
 
+            <CollectionView.ItemsLayout>
+                <LinearItemsLayout ItemSpacing="8" Orientation="Vertical" />
+            </CollectionView.ItemsLayout>
+
             <CollectionView.ItemTemplate>
 
                 <DataTemplate>
 
-                    <SwipeView>
+                    <controls:SwipeListItem
+                        IconId="{Binding IconId}"
 
-                        <SwipeView.RightItems>
-
-                            <SwipeItems Mode="Reveal">
-
-                                <SwipeItem
-                                    BackgroundColor="Red"
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteCommand}"
-                                    CommandParameter="{Binding}"
-                                    Text="Delete" />
-
-                            </SwipeItems>
-
-                        </SwipeView.RightItems>
-
-                        <Border Style="{StaticResource CardBorderStyle}">
-
-                            <Grid
-                                ColumnDefinitions="auto,*,auto"
-                                ColumnSpacing="12"
-                                RowDefinitions="Auto,Auto,Auto"
-                                RowSpacing="4">
-
-                                <controls:ObjectIcon
-                                    Grid.Row="0"
-                                    Grid.RowSpan="3"
-                                    Grid.Column="0"
-                                    IconId="{Binding IconId}"
-                                    IconSize="{StaticResource ListIconSize}" />
-
-                                <!--  Fund Name  -->
-                                <Label
-                                    Grid.Row="0"
-                                    Grid.Column="1"
-                                    FontAttributes="Bold"
-                                    FontSize="18"
-                                    LineBreakMode="TailTruncation"
-                                    Text="{Binding Name}" />
-
-                                <!--  Frequency  -->
-                                <Label
-                                    Grid.Row="1"
-                                    Grid.Column="1"
-                                    FontSize="13"
-                                    Opacity="0.6"
-                                    Text="{Binding Frequency}" />
-
-                                <!--  Description  -->
-                                <Label
-                                    Grid.Row="2"
-                                    Grid.Column="1"
-                                    FontSize="13"
-                                    LineBreakMode="TailTruncation"
-                                    MaxLines="2"
-                                    Text="{Binding Description}" />
-
-                                <!--  Actions  -->
-                                <controls:CardActionsButton
-                                    Grid.Row="0"
-                                    Grid.RowSpan="3"
-                                    Grid.Column="2"
-                                    CommandParameter="{Binding}"
-                                    DeleteCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteCommand}"
-                                    EditCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditCommand}"
-                                    HorizontalOptions="End"
-                                    VerticalOptions="Center" />
-
-                            </Grid>
-
-                        </Border>
-                    </SwipeView>
-
+                        Title="{Binding Name}"
+                        Subtitle="{Binding Description}"
+                        Detail="{Binding Frequency}"
+                        Status="{Binding Status}"
+                        
+                        DeleteCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteCommand}"
+                        DeleteCommandParameter="{Binding}"
+                        EditCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditCommand}"
+                        EditCommandParameter="{Binding}"
+                        OpenCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditCommand}"
+                        OpenCommandParameter="{Binding}" />
 
                 </DataTemplate>
 

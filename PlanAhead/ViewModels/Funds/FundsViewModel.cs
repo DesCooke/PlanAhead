@@ -1,9 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.Services.Accounts;
 using PlanAhead.Interfaces;
-using PlanAhead.Views.Funds;
 using PlanAhead.Services;
+using PlanAhead.ViewModels.Accounts;
+using PlanAhead.Views.Funds;
 using System.Collections.ObjectModel;
 
 namespace PlanAhead.ViewModels.Funds;
@@ -19,6 +21,8 @@ public partial class FundsViewModel : BaseViewModel
     public bool HasFunds => Funds.Any();
     public bool HasNoFunds => !HasFunds;
 
+    [ObservableProperty]
+    private Guid accountId;
 
     [ObservableProperty]
     private Fund? selectedFund;
@@ -36,12 +40,26 @@ public partial class FundsViewModel : BaseViewModel
         _navigationContext = navigationContext;
     }
 
-    [RelayCommand]
-    private async Task LoadAsync()
+    public async Task InitialiseAsync()
     {
-        await ExecuteBusyAsync(async () =>
+            if (_navigationContext.Has<Guid>())
+            {
+                AccountId = _navigationContext.Get<Guid>();
+                _navigationContext.Clear();
+            }
+
+            if (AccountId != Guid.Empty)
+            {
+                await LoadAsync(AccountId);
+            }
+    }
+
+    [RelayCommand]
+    private async Task LoadAsync(Guid accountId)
+    {
+        try
         {
-            var funds = await _fundService.GetAllAsync();
+            var funds = await _fundService.GetByAccountIdAsync(accountId);
 
             Funds.Clear();
             foreach (var fund in funds)
@@ -51,9 +69,14 @@ public partial class FundsViewModel : BaseViewModel
                 nameof(HasFunds),
                 nameof(HasNoFunds),
                 nameof(Title));
-        });
 
-        Title = $"Funds ({Funds.Count})";
+            Title = $"Funds ({Funds.Count})";
+        }
+        catch (Exception ex)
+        {
+            await Dialogs.ShowErrorAsync("FundsViewModal.cs:LoadAsync:Exception:" + ex.ToString());
+        }
+
     }
 
     [RelayCommand]
@@ -69,12 +92,13 @@ public partial class FundsViewModel : BaseViewModel
 
         await _fundService.DeleteAsync(fund.Id);
 
-        await LoadAsync();
+        await LoadAsync(AccountId);
     }
 
     [RelayCommand]
     private async Task AddAsync()
     {
+        _navigationContext.Set(AccountId);
         await Navigation.NavigateToAsync<FundEditPage>();
     }
 

@@ -11,7 +11,10 @@
 
         <VerticalStackLayout Padding="20" Spacing="16">
 
-            <controls:ObjectIconEdit Command="{Binding ChooseIconCommand}" IconId="{Binding IconId}" />
+            <controls:ObjectIconEdit
+                Command="{Binding ChooseIconCommand}"
+                IconId="{Binding IconId}"
+                Text="Change Icon" />
 
             <!--  Account details  -->
             <Border Style="{StaticResource CardBorderStyle}">
@@ -28,9 +31,7 @@
 
                     <controls:FloatingEntry Label="Opening Balance" Text="{Binding OpeningBalance}" />
 
-                    <controls:FloatingCheckbox
-                        Label="Archived"
-                        IsChecked="{Binding Archived}" />
+                    <controls:FloatingCheckbox IsChecked="{Binding Archived}" Label="Archived" />
 
                     <controls:FloatingEditor
                         Label="Notes"

@@ -1,3 +1,4 @@
+using PlanAhead.Services;
 using PlanAhead.ViewModels.Funds;
 
 namespace PlanAhead.Views.Funds;
@@ -8,19 +9,18 @@ public partial class FundsPage : ContentPage
 
     public FundsPage(FundsViewModel viewModel)
     {
-        InitializeComponent();
+            InitializeComponent();
 
-        _viewModel = viewModel;
+            _viewModel = viewModel;
 
-        BindingContext = viewModel;
+            BindingContext = viewModel;
     }
 
     protected override async void OnAppearing()
     {
         base.OnAppearing();
 
-        await _viewModel.LoadCommand.ExecuteAsync(null);
+        await _viewModel.InitialiseAsync();
     }
-
 
 }

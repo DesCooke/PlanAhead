@@ -26,7 +26,7 @@
 
         <ScrollView>
 
-            <VerticalStackLayout Padding="20" Spacing="16">
+            <VerticalStackLayout Padding="16" Spacing="8">
 
                 <!--  Icon  -->
                 <controls:ObjectIconCard HorizontalOptions="Center" IconId="{Binding IconId}" />
@@ -34,7 +34,7 @@
                 <!--  Account details  -->
                 <Border Style="{StaticResource CardBorderStyle}">
 
-                    <VerticalStackLayout Spacing="16">
+                    <VerticalStackLayout Spacing="8">
 
                         <!--  Health  -->
                         <controls:HealthBox Health="{Binding Health}" />
@@ -56,6 +56,63 @@
 
                     </VerticalStackLayout>
 
+                </Border>
+
+                <Border Style="{StaticResource CardBorderStyle}">
+                    <FlexLayout
+                        Margin="-4"
+                        AlignItems="Start"
+                        Direction="Row"
+                        JustifyContent="Start"
+                        Wrap="Wrap">
+
+                        <controls:ObjectIconEdit
+                            Margin="4"
+                            Command="{Binding GoToFundsCommand}"
+                            IconId="Fund"
+                            Text="Funds" />
+                        <controls:ObjectIconEdit
+                            Margin="4"
+                            Command="{Binding GoToPlansCommand}"
+                            IconId="Plane"
+                            Text="Plans" />
+                        <controls:ObjectIconEdit
+                            Margin="4"
+                            Command="{Binding GoToPlansCommand}"
+                            IconId="Plane"
+                            Text="Plans" />
+                        <controls:ObjectIconEdit
+                            Margin="4"
+                            Command="{Binding GoToPlansCommand}"
+                            IconId="Plane"
+                            Text="Plans" />
+                        <controls:ObjectIconEdit
+                            Margin="4"
+                            Command="{Binding GoToPlansCommand}"
+                            IconId="Plane"
+                            Text="Plans" />
+                        <controls:ObjectIconEdit
+                            Margin="4"
+                            Command="{Binding GoToPlansCommand}"
+                            IconId="Plane"
+                            Text="Plans" />
+                        <controls:ObjectIconEdit
+                            Margin="4"
+                            Command="{Binding GoToPlansCommand}"
+                            IconId="Plane"
+                            Text="Plans" />
+                        <controls:ObjectIconEdit
+                            Margin="4"
+                            Command="{Binding GoToPlansCommand}"
+                            IconId="Plane"
+                            Text="Plans" />
+                        <controls:ObjectIconEdit
+                            Margin="4"
+                            Command="{Binding GoToPlansCommand}"
+                            IconId="Plane"
+                            Text="Plans" />
+
+                    </FlexLayout>
                 </Border>
 
             </VerticalStackLayout>

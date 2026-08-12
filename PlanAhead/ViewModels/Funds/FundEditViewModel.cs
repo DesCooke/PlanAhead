@@ -54,21 +54,22 @@ public partial class FundEditViewModel : BaseViewModel
 
     public async Task InitialiseAsync()
     {
-        var fund = _navigationContext.Get<Fund>();
-
-        if (fund == null)
+        Fund? fund = null;
+        if (_navigationContext.Has<Fund>())
         {
-            //
-            // New fund
-            //
-            return;
+            // Fund being passed in - it is a modify
+            fund = _navigationContext.Get<Fund>();
+            if(fund!=null)
+                Load(fund);
         }
-
-        //
-        // Existing fund
-        //
-
-        Load(fund);
+        else
+        {
+            if (_navigationContext.Has<Guid>())
+            {
+                // Guid passed in - the accountId - must be an add
+                AccountId = _navigationContext.Get<Guid>();
+            }
+        }
 
         _navigationContext.Clear();
     }
