@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="PlanAhead.Views.Funds.FundViewPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:PlanAhead.Controls"
+    Title="{Binding Title}">
+
+    <ContentPage.ToolbarItems>
+
+        <ToolbarItem
+            Command="{Binding EditCommand}"
+            Order="Secondary"
+            Text="Edit" />
+
+        <ToolbarItem
+            Command="{Binding DeleteCommand}"
+            Order="Secondary"
+            Text="Delete" />
+
+    </ContentPage.ToolbarItems>
+
+
+    <Grid Margin="16,16,16,16">
+
+        <ScrollView>
+
+            <VerticalStackLayout Padding="16" Spacing="8">
+
+                <!--  Icon  -->
+                <controls:ObjectIconCard HorizontalOptions="Center" IconId="{Binding IconId}" />
+
+                <!--  Account details  -->
+                <Border Style="{StaticResource CardBorderStyle}">
+
+                    <VerticalStackLayout Spacing="8">
+
+                        <!--  Name  -->
+                        <controls:TextFieldBox TextContent="{Binding Name}" TextLabel="Name" />
+
+                        <!--  Description  -->
+                        <controls:TextFieldBox TextContent="{Binding Description}" TextLabel="Description" />
+
+                        <!--  Opening Balance  -->
+                        <controls:TextFieldBox TextContent="{Binding Frequency}" TextLabel="Frequency" />
+
+                        <!--  Notes  -->
+                        <controls:TextFieldBox TextContent="{Binding Notes}" TextLabel="Notes" />
+
+                    </VerticalStackLayout>
+
+                </Border>
+
+            </VerticalStackLayout>
+
+        </ScrollView>
+
+        <!--  Floating Edit Button  -->
+        <controls:FloatingActionButton Command="{Binding EditCommand}" Icon="edit.png" />
+
+    </Grid>
+
+</ContentPage>

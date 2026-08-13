@@ -59,6 +59,9 @@ namespace PlanAhead.Extensions
             services.AddTransient<FundsPage>();
             services.AddTransient<FundsViewModel>();
 
+            services.AddTransient<FundViewPage>();
+            services.AddTransient<FundViewViewModel>();
+
             return services;
         }
     }

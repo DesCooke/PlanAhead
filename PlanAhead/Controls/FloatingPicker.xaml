@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<ContentView
+    x:Class="PlanAhead.Controls.FloatingPicker"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Name="Self">
+
+    <Grid>
+
+
+        <!--  Main input border  -->
+        <Border
+            x:Name="InputBorder"
+            Padding="12,6"
+            BackgroundColor="{AppThemeBinding Light=White,
+                                              Dark=#202020}"
+            Stroke="{AppThemeBinding Light=#D0D0D0,
+                                     Dark=#505050}"
+            StrokeShape="RoundRectangle 8"
+            StrokeThickness="1">
+
+            <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+
+                <Picker
+                    ItemsSource="{Binding Source={x:Reference Self}, Path=ItemsSource}"
+                    SelectedItem="{Binding Source={x:Reference Self}, Path=SelectedItem, Mode=TwoWay}" />
+
+            </Grid>
+
+        </Border>
+
+
+        <!--  Floating label  -->
+        <Border
+            x:Name="FloatingLabelBorder"
+            Margin="10,0,0,0"
+            Padding="4,0"
+            BackgroundColor="{AppThemeBinding Light=White,
+                                              Dark=#202020}"
+            HorizontalOptions="Start"
+            InputTransparent="True"
+            Opacity="1"
+            TranslationY="0"
+            VerticalOptions="Start">
+
+            <Label
+                x:Name="FloatingLabel"
+                FontSize="12"
+                Text="{Binding Source={x:Reference Self}, Path=Label}"
+                TextColor="{DynamicResource Gray200}" />
+
+        </Border>
+
+    </Grid>
+
+</ContentView>

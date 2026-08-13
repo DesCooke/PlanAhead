@@ -22,7 +22,7 @@
     </ContentPage.ToolbarItems>
 
 
-    <Grid>
+    <Grid Margin="16,16,16,16">
 
         <ScrollView>
 

@@ -10,7 +10,7 @@ namespace PlanAhead.Navigation
 
         public const string AccountDetail = "account-detail";
 
-        public const string Accountview = "account-view";
+        public const string AccountView = "account-view";
 
         public const string FundDetail = "fund-detail";
 
@@ -19,5 +19,6 @@ namespace PlanAhead.Navigation
         public const string Dashboard = "dashboard";
 
         public const string FundEdit = "fund-edit";
+        public const string FundView = "fund-view";
     }
 }

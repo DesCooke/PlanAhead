@@ -21,8 +21,4 @@
         <ShellContent Title="Accounts" ContentTemplate="{DataTemplate accounts:AccountsPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Funds">
-        <ShellContent Title="Funds" ContentTemplate="{DataTemplate funds:FundsPage}" />
-    </FlyoutItem>
-
 </Shell>

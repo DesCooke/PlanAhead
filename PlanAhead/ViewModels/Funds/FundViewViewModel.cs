@@ -4,10 +4,12 @@ using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Core.Models.Enums;
 using PlanAhead.Core.Services.Accounts;
 using PlanAhead.Interfaces;
+using PlanAhead.Views.Accounts;
+using PlanAhead.Views.Funds;
 
 namespace PlanAhead.ViewModels.Funds;
 
-public partial class FundEditViewModel : BaseViewModel
+public partial class FundViewViewModel : BaseViewModel
 {
     private readonly IFundService _fundService;
     private readonly INavigationContext _navigationContext;
@@ -37,7 +39,7 @@ public partial class FundEditViewModel : BaseViewModel
     [ObservableProperty]
     private string iconId = string.Empty;
 
-    public FundEditViewModel(
+    public FundViewViewModel(
         IFundService fundService,
         IAccountService accountService,
         INavigationService navigation,
@@ -48,51 +50,16 @@ public partial class FundEditViewModel : BaseViewModel
         _fundService = fundService;
         _navigationContext = navigationContext;
 
-        Title = "New Fund";
-    }
-
-    public async Task InitialiseAsync()
-    {
-        if (!_navigationContext.Has<Guid>())
-        {
-            //
-            // New Fund
-            //
-            Title = "New Fund";
-
-            return;
-        }
-
-        Id = _navigationContext.Get<Guid>();
-
-        var fund = await _fundService.GetByIdAsync(Id);
-        if (fund == null)
-        {
-            //
-            // New Fund
-            //
-            Title = "New Fund";
-
-            return;
-        }
-
-        Title = "Change Fund";
-
-        //
-        // Existing Fund
-        //
-
-        Load(fund);
-
-        _navigationContext.Clear();
+        Title = "Fund Details";
     }
 
     private void Load(Fund fund)
     {
         Id = fund.Id;
-        Name = fund.Name;
         AccountId = fund.AccountId;
+        Name = fund.Name;
         Description = fund.Description;
+        Frequency = fund.Frequency;
         Notes = fund.Notes;
         IconId = fund.IconId;
     }
@@ -102,59 +69,57 @@ public partial class FundEditViewModel : BaseViewModel
         return new Fund
         {
             Id = Id,
-
             AccountId = AccountId,
-
             Name = Name.Trim(),
-
             Description = Description.Trim(),
-
             Frequency = Frequency,
-
             Notes = Notes.Trim(),
-
             IconId = IconId.Trim()
         };
     }
 
-    string? Validate() 
+    [RelayCommand]
+    public async Task LoadAsync()
     {
-        if (string.IsNullOrWhiteSpace(Name))
-            return("Please enter a fund name.");
+        if (Id == Guid.Empty)
+        {
+            Id = _navigationContext.Get<Guid>();
+            _navigationContext.Clear();
+        }
 
-        return null;
+        var fund = await _fundService.GetByIdAsync(Id);
+
+        if (fund != null)
+            Load(fund);
     }
 
     [RelayCommand]
-    private async Task SaveAsync()
+    private async Task EditAsync()
     {
-        var error = Validate();
-        if (error!=null)
-        {
-            await Dialogs.ShowMessageAsync(
-                "Validation",
-                error);
+        _navigationContext.Set(Id);
 
-            return;
-        }
-
-        try
-        {
-            if (Id == Guid.Empty)
-                await _fundService.AddAsync(Build());
-            else
-                await _fundService.UpdateAsync(Build());
-
-            await Navigation.GoBackAsync();
-        }
-        catch (Exception ex)
-        {
-            await Dialogs.ShowErrorAsync(ex.Message);
-        }
+        await Navigation.NavigateToAsync<FundEditPage>();
     }
+
     [RelayCommand]
     private Task CancelAsync()
     {
         return Navigation.GoBackAsync();
+    }
+
+    [RelayCommand]
+    private async Task DeleteAsync()
+    {
+        var delete =
+            await Dialogs.ConfirmAsync(
+                "Delete Fund",
+                $"Delete '{Name}'?");
+
+        if (!delete)
+            return;
+
+        await _fundService.DeleteAsync(Id);
+
+        await Navigation.GoBackAsync();
     }
 }

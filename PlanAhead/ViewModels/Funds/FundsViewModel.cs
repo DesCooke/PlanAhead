@@ -5,6 +5,7 @@ using PlanAhead.Core.Services.Accounts;
 using PlanAhead.Interfaces;
 using PlanAhead.Services;
 using PlanAhead.ViewModels.Accounts;
+using PlanAhead.Views.Accounts;
 using PlanAhead.Views.Funds;
 using System.Collections.ObjectModel;
 
@@ -108,6 +109,15 @@ public partial class FundsViewModel : BaseViewModel
             return;
 
         EditCommand.Execute(value);
+    }
+
+    [RelayCommand]
+    private async Task OpenAsync(Fund fund)
+    {
+        _navigationContext.Set(fund.Id);
+
+        await Navigation.NavigateToAsync<FundViewPage>();
+
     }
 
     [RelayCommand]

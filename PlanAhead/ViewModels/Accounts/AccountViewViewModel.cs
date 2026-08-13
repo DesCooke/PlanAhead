@@ -97,42 +97,6 @@ public partial class AccountViewViewModel : BaseViewModel
         };
     }
 
-    string? Validate()
-    {
-        if (string.IsNullOrWhiteSpace(Name))
-            return ("Please enter a account name.");
-
-        return null;
-    }
-
-    [RelayCommand]
-    private async Task SaveAsync()
-    {
-        var error = Validate();
-        if (error != null)
-        {
-            await Dialogs.ShowMessageAsync(
-                "Validation",
-                error);
-
-            return;
-        }
-
-        try
-        {
-            if (Id == Guid.Empty)
-                await _accountService.AddAsync(Build());
-            else
-                await _accountService.UpdateAsync(Build());
-
-            await Navigation.GoBackAsync();
-        }
-        catch (Exception ex)
-        {
-            await Dialogs.ShowErrorAsync(ex.Message);
-        }
-    
-    }
 
     [RelayCommand]
     public async Task LoadAsync()

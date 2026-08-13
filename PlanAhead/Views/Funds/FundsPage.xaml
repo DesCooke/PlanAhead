@@ -24,19 +24,17 @@
                 <DataTemplate>
 
                     <controls:SwipeListItem
-                        IconId="{Binding IconId}"
-
                         Title="{Binding Name}"
-                        Subtitle="{Binding Description}"
-                        Detail="{Binding Frequency}"
-                        Status="{Binding Status}"
-                        
                         DeleteCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteCommand}"
                         DeleteCommandParameter="{Binding}"
+                        Detail="{Binding Frequency}"
                         EditCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditCommand}"
                         EditCommandParameter="{Binding}"
-                        OpenCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.EditCommand}"
-                        OpenCommandParameter="{Binding}" />
+                        IconId="{Binding IconId}"
+                        OpenCommand="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.OpenCommand}"
+                        OpenCommandParameter="{Binding}"
+                        Status="{Binding Status}"
+                        Subtitle="{Binding Description}" />
 
                 </DataTemplate>
 
@@ -50,11 +48,8 @@
             IsVisible="{Binding HasNoFunds}"
             Message="Tap the + button to create your first fund." />
 
-        <controls:FloatingActionButton
-            Margin="24"
-            Command="{Binding AddCommand}"
-            HorizontalOptions="End"
-            VerticalOptions="End" />
+        <!--  Floating Edit Button  -->
+        <controls:FloatingActionButton Command="{Binding AddCommand}" Icon="add.png" />
 
     </Grid>
 

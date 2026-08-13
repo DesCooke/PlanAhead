@@ -39,5 +39,6 @@ public static class RouteRegistry
         Register<AccountEditPage>("account-edit");
         Register<FundEditPage>("fund-edit");
         Register<FundsPage>("funds");
+        Register<FundViewPage>("fund-view");
     }
 }
