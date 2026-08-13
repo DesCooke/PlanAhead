@@ -18,7 +18,7 @@ public class DialogService
         string title,
         string message)
     {
-        return Shell.Current.DisplayAlert(
+        return Shell.Current.DisplayAlertAsync(
             title,
             message,
             "OK");
@@ -27,7 +27,7 @@ public class DialogService
     public Task ShowErrorAsync(
         string message)
     {
-        return Shell.Current.DisplayAlert(
+        return Shell.Current.DisplayAlertAsync(
             "Error",
             message,
             "OK");
@@ -37,7 +37,7 @@ public class DialogService
         string title,
         string message)
     {
-        return Shell.Current.DisplayAlert(
+        return Shell.Current.DisplayAlertAsync(
             title,
             message,
             "Yes",

@@ -92,9 +92,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Controls\CardActionsButton.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
 	  <MauiXaml Update="Controls\CheckboxBox.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

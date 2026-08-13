@@ -3,7 +3,6 @@ namespace PlanAhead.Controls;
 public partial class FloatingEntry : ContentView
 {
     private bool _isEntryFocused;
-    private bool _showPassword;
 
 
     public FloatingEntry()
@@ -16,7 +15,6 @@ public partial class FloatingEntry : ContentView
 
         CardPadding = new Thickness(20);
 
-//        UpdatePasswordButton();
         UpdateFloatingLabel();
     }
 
@@ -79,26 +77,6 @@ public partial class FloatingEntry : ContentView
 
 
     // ============================================================
-    // Password
-    // ============================================================
-
-    public static readonly BindableProperty IsPasswordProperty =
-        BindableProperty.Create(
-            nameof(IsPassword),
-            typeof(bool),
-            typeof(FloatingEntry),
-            false,
-            propertyChanged: OnIsPasswordChanged);
-
-
-    public bool IsPassword
-    {
-        get => (bool)GetValue(IsPasswordProperty);
-        set => SetValue(IsPasswordProperty, value);
-    }
-
-
-    // ============================================================
     // Keyboard
     // ============================================================
 
@@ -148,21 +126,6 @@ public partial class FloatingEntry : ContentView
         var control = (FloatingEntry)bindable;
 
         control.UpdateFloatingLabel();
-    }
-
-
-    // ============================================================
-    // Password changed
-    // ============================================================
-
-    private static void OnIsPasswordChanged(
-        BindableObject bindable,
-        object oldValue,
-        object newValue)
-    {
-        var control = (FloatingEntry)bindable;
-
-        //control.UpdatePasswordButton();
     }
 
 
@@ -238,42 +201,4 @@ public partial class FloatingEntry : ContentView
         }
     }
 
-    // ============================================================
-    // Password
-    // ============================================================
-    /*
-    private void PasswordButton_Clicked(
-        object sender,
-        EventArgs e)
-    {
-        _showPassword = !_showPassword;
-
-        EntryControl.IsPassword = !_showPassword;
-
-        PasswordButton.Text =
-            _showPassword ? "Hide" : "Show";
-    }
-
-
-    private void UpdatePasswordButton()
-    {
-        if (PasswordButton == null)
-            return;
-
-        PasswordButton.IsVisible = IsPassword;
-
-        if (!IsPassword)
-        {
-            _showPassword = false;
-            EntryControl.IsPassword = false;
-        }
-        else
-        {
-            _showPassword = false;
-            EntryControl.IsPassword = true;
-        }
-
-        PasswordButton.Text = "Show";
-    }
-    */
 }
