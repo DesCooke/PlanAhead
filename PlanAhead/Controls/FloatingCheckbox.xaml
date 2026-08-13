@@ -27,9 +27,9 @@
                     Grid.Column="0"
                     BackgroundColor="Transparent"
                     Focused="Entry_Focused"
+                    HorizontalOptions="Start"
                     IsChecked="{Binding Source={x:Reference Self}, Path=IsChecked, Mode=TwoWay}"
                     Unfocused="Entry_Unfocused"
-                    HorizontalOptions="Start"
                     VerticalOptions="Center" />
             </Grid>
 

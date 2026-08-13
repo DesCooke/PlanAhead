@@ -23,7 +23,7 @@
 
             <Button Command="{Binding ShowAccountCountCommand}" Text="Show Account Count" />
 
-            <Button Command="{Binding DeleteAllAccountsCommand}" Text="Delete All Accounts" />
+            <Button Command="{Binding DeleteAllCommand}" Text="Clear All - Start as New Install" />
 
             <Button Command="{Binding ShowAllAccountsCommand}" Text="Show All Accounts" />
 

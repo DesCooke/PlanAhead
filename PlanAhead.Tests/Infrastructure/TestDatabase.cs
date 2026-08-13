@@ -1,4 +1,4 @@
-﻿using PlanAhead.Infrastructure.Data.Database;
+﻿using PlanAhead.Infrastructure.Database.SQLite;
 
 public sealed class TestDatabase : IDisposable
 {

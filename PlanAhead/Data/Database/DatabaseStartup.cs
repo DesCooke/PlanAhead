@@ -1,12 +1,12 @@
-﻿using PlanAhead.Infrastructure.Data.Database;
+﻿using PlanAhead.Infrastructure.Database.SQLite;
 
 namespace PlanAhead.Data.Database;
 
-public class ApplicationStartupService
+public class DatabaseStartup
 {
     private readonly SQLiteContext _context;
 
-    public ApplicationStartupService(SQLiteContext context)
+    public DatabaseStartup(SQLiteContext context)
     {
         _context = context;
     }

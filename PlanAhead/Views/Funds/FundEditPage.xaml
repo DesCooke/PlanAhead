@@ -29,10 +29,10 @@
                         MinimumHeight="120"
                         Text="{Binding Description}" />
 
-                    
+
                     <controls:FloatingPicker
-                        Label="Frequency"
                         ItemsSource="{Binding Frequencies}"
+                        Label="Frequency"
                         SelectedItem="{Binding Frequency}" />
 
                     <controls:FloatingEditor

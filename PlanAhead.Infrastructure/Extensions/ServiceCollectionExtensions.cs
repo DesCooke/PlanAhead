@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using PlanAhead.Core.Interfaces.Repositories;
-using PlanAhead.Infrastructure.Data.Database;
+using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Infrastructure.Authentication;
+using PlanAhead.Infrastructure.Database.SQLite;
 using PlanAhead.Infrastructure.Repositories;
 
 namespace PlanAhead.Infrastructure.Extensions;
@@ -18,6 +20,9 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IFundRepository, FundRepository>();
 
         services.AddSingleton<IFundingRuleRepository, FundingRuleRepository>();
+
+        services.AddSingleton<IAuthenticationService, AuthenticationService>();
+
 
         // Later...
         // services.AddSingleton<ILedgerEntryRepository, LedgerEntryRepository>();

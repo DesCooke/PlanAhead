@@ -6,6 +6,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:accounts="clr-namespace:PlanAhead.Views.Accounts"
     xmlns:funds="clr-namespace:PlanAhead.Views.Funds"
+    xmlns:startup="clr-namespace:PlanAhead.Views.Startup"
     xmlns:views="clr-namespace:PlanAhead.Views">
 
     <FlyoutItem Title="Dashboard">
@@ -16,8 +17,11 @@
         <ShellContent Title="Developer Tools" ContentTemplate="{DataTemplate views:DeveloperToolsPage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Accounts">
+    <FlyoutItem Title="Change Sync Settings">
+        <ShellContent Title="Change Sync Settings" ContentTemplate="{DataTemplate startup:WelcomePage}" />
+    </FlyoutItem>
 
+    <FlyoutItem Title="Accounts">
         <ShellContent Title="Accounts" ContentTemplate="{DataTemplate accounts:AccountsPage}" />
     </FlyoutItem>
 

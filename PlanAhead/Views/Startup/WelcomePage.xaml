@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="PlanAhead.Views.Startup.WelcomePage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:PlanAhead.Controls"
+    Title="Welcome">
+
+    <VerticalStackLayout
+        Padding="30"
+        Spacing="20"
+        VerticalOptions="Center">
+
+        <Label
+            FontAttributes="Bold"
+            FontSize="30"
+            HorizontalOptions="Center"
+            Text="Welcome to PlanAhead" />
+
+        <controls:LargeOptionButton
+            Title="Offline Only"
+            Detail="Pick this option if you only want to use this application on this device with no syncing online."
+            IconId="Plane"
+            OpenCommand="{Binding OfflineCommand}" />
+
+        <controls:LargeOptionButton
+            Title="Sync Online - manually"
+            Detail="Pick this option if you want to synchronise online only when you pick the option yourself."
+            IconId="Plane"
+            OpenCommand="{Binding OnlineManualCommand}" />
+
+        <controls:LargeOptionButton
+            Title="Sync Online - auto"
+            Detail="Pick this option if you want to synchronise online automatically - you also get the option to only sync when on wifi."
+            IconId="Plane"
+            OpenCommand="{Binding OnlineAutoCommand}" />
+    </VerticalStackLayout>
+
+</ContentPage>

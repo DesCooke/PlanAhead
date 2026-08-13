@@ -53,16 +53,18 @@ public partial class DeveloperToolsViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private async Task DeleteAllAccounts()
+    private async Task DeleteAll()
     {
-        var accounts = await _repository.GetAllAsync();
-
-        foreach (var account in accounts)
-            await _repository.DeleteAsync(account);
-
+        var path = Path.Combine(
+            FileSystem.AppDataDirectory,
+            "PlanAhead.db");
+        File.Delete(path);
+        Preferences.Default.Clear();
         await Dialogs.ShowMessageAsync(
-                "Developer","All accounts deleted.");
+                "Set as New Install", $"Database and Preferences removed. Next run will be as a New Install");
+
     }
+
     [RelayCommand]
     private async Task ShowAccountCount()
     {

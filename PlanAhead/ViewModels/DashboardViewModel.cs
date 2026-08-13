@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PlanAhead.Core.Constants;
+using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Infrastructure.Repositories;
 using PlanAhead.Interfaces;
 
@@ -19,13 +20,21 @@ public partial class DashboardViewModel : BaseViewModel
     private string version =
         $"Version {AppConstants.Version}";
 
+    [ObservableProperty]
+    private string syncMethod =
+        "<Sync Method>";
+
     private readonly AccountRepository _repository;
+    private readonly IApplicationSettingsService _settings;
 
     public DashboardViewModel(AccountRepository repository,
         INavigationService navigation,
-        IDialogService dialogs): base (navigation, dialogs)
+        IDialogService dialogs, 
+        IApplicationSettingsService settings): base (navigation, dialogs)
     {
         _repository = repository;
+        _settings = settings;
+        syncMethod = settings.SyncMode.ToString();
     }
 
     [RelayCommand]

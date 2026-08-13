@@ -21,6 +21,8 @@
 
         <Label HorizontalOptions="Center" Text="{Binding Version}" />
 
+        <Label HorizontalOptions="Center" Text="{Binding SyncMethod}" />
+
     </VerticalStackLayout>
 
 </ContentPage>

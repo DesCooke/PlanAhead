@@ -1,6 +1,7 @@
 ﻿using PlanAhead.Views;
 using PlanAhead.Views.Accounts;
 using PlanAhead.Views.Funds;
+using PlanAhead.Views.Startup;
 
 namespace PlanAhead.Navigation;
 
@@ -40,5 +41,6 @@ public static class RouteRegistry
         Register<FundEditPage>("fund-edit");
         Register<FundsPage>("funds");
         Register<FundViewPage>("fund-view");
+        Register<WelcomePage>("welcome");
     }
 }

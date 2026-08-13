@@ -2,8 +2,9 @@
 using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Core.Services.Accounts;
 using PlanAhead.Data.Database;
-using PlanAhead.Infrastructure.Data.Database;
+using PlanAhead.Infrastructure.Authentication;
 using PlanAhead.Infrastructure.Repositories;
+using PlanAhead.Infrastructure.Services;
 using PlanAhead.Interfaces;
 using PlanAhead.Services;
 using PlanAhead.ViewModels;
@@ -14,6 +15,7 @@ using PlanAhead.Views;
 using PlanAhead.Views.Accounts;
 using PlanAhead.Views.Funds;
 using PlanAhead.Views.Popups;
+using PlanAhead.Views.Startup;
 
 namespace PlanAhead.Extensions
 {
@@ -23,10 +25,17 @@ namespace PlanAhead.Extensions
             this IServiceCollection services)
         {
             // System
-            services.AddSingleton<ApplicationStartupService>();
+            services.AddSingleton<DatabaseStartup>();
             services.AddSingleton<AppShell>();
             services.AddSingleton<INavigationService, NavigationService>();
             services.AddSingleton<INavigationContext, NavigationContext>();
+            services.AddSingleton<ISupabaseClientProvider, SupabaseClientProvider>();
+            services.AddSingleton<IApplicationSettingsService,
+                      ApplicationSettingsService>();
+            services.AddSingleton<IApplicationStartupService, ApplicationStartupService>();
+            services.AddSingleton<AppShell>();
+
+            services.AddSingleton<IApplicationStartupService, ApplicationStartupService>();
 
             // Services 
             services.AddTransient<IDialogService, DialogService>();
@@ -61,6 +70,9 @@ namespace PlanAhead.Extensions
 
             services.AddTransient<FundViewPage>();
             services.AddTransient<FundViewViewModel>();
+
+            services.AddTransient<WelcomePage>();
+            services.AddTransient<WelcomeViewModel>();
 
             return services;
         }

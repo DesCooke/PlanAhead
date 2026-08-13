@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using PlanAhead.Core.Interfaces.Services;
 
 namespace PlanAhead
 {
@@ -7,11 +8,16 @@ namespace PlanAhead
         public App()
         {
             InitializeComponent();
+
+            MainPage = new ContentPage();   // temporary blank page
         }
 
-        protected override Window CreateWindow(IActivationState? activationState)
+        protected override async void OnStart()
         {
-            return new Window(new AppShell());
+            var startup =
+                Handler.MauiContext.Services.GetRequiredService<IApplicationStartupService>();
+
+            MainPage = await startup.GetStartupPageAsync();
         }
     }
 }

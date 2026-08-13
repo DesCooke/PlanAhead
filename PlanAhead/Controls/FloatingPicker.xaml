@@ -22,9 +22,7 @@
 
             <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
 
-                <Picker
-                    ItemsSource="{Binding Source={x:Reference Self}, Path=ItemsSource}"
-                    SelectedItem="{Binding Source={x:Reference Self}, Path=SelectedItem, Mode=TwoWay}" />
+                <Picker ItemsSource="{Binding Source={x:Reference Self}, Path=ItemsSource}" SelectedItem="{Binding Source={x:Reference Self}, Path=SelectedItem, Mode=TwoWay}" />
 
             </Grid>
 
