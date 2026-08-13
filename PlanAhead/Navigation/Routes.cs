@@ -20,5 +20,6 @@ namespace PlanAhead.Navigation
 
         public const string FundEdit = "fund-edit";
         public const string FundView = "fund-view";
+        public const string Login = "login";
     }
 }

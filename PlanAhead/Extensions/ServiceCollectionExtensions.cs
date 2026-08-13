@@ -74,6 +74,9 @@ namespace PlanAhead.Extensions
             services.AddTransient<WelcomePage>();
             services.AddTransient<WelcomeViewModel>();
 
+            services.AddTransient<LoginPage>();
+            services.AddTransient<LoginViewModel>();
+
             return services;
         }
     }

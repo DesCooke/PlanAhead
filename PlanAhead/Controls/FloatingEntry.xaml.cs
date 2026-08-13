@@ -171,6 +171,22 @@ public partial class FloatingEntry : ContentView
                 : Color.FromArgb("#505050");
     }
 
+    // ============================================================
+    // IsPassword
+    // ============================================================
+
+    public static readonly BindableProperty IsPasswordProperty =
+        BindableProperty.Create(
+            nameof(IsPassword),
+            typeof(bool),
+            typeof(FloatingEntry),
+            false);
+
+    public bool IsPassword
+    {
+        get => (bool)GetValue(IsPasswordProperty);
+        set => SetValue(IsPasswordProperty, value);
+    }
 
     // ============================================================
     // Floating label

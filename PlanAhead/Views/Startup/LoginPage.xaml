@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="PlanAhead.Views.Startup.LoginPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:PlanAhead.Controls"
+    Title="Sign In">
+
+    <ScrollView>
+
+        <VerticalStackLayout
+            Padding="30"
+            Spacing="24">
+
+            <Label
+                FontSize="32"
+                FontAttributes="Bold"
+                HorizontalOptions="Center"
+                Text="PlanAhead" />
+
+            <Label
+                HorizontalTextAlignment="Center"
+                Opacity="0.7"
+                Text="Sign in to synchronise your data across devices." />
+
+            <controls:FloatingEntry
+                Label="Email"
+                Keyboard="Email"
+                Placeholder="name@example.com"
+                Text="{Binding Email}" />
+
+            <controls:FloatingEntry
+                Label="Password"
+                IsPassword="True"
+                Placeholder="Password"
+                Text="{Binding Password}" />
+
+            <Button
+                Command="{Binding LoginCommand}"
+                Text="Sign In" />
+
+            <Button
+                Command="{Binding RegisterCommand}"
+                Text="Create Account" />
+
+            <BoxView HeightRequest="1" />
+
+            <Button
+                Command="{Binding OfflineOnlyCommand}"
+                Text="Just Start in Offline Only Mode"
+                IsEnabled="True" />
+
+            <Button
+                Command="{Binding GoogleCommand}"
+                Text="Continue with Google"
+                IsEnabled="False" />
+
+            <Button
+                Command="{Binding CancelCommand}"
+                Text="Back"
+                BackgroundColor="Transparent"
+                TextColor="{AppThemeBinding Light=Black,Dark=White}" />
+
+        </VerticalStackLayout>
+
+    </ScrollView>
+
+</ContentPage>

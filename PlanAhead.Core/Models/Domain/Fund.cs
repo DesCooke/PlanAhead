@@ -1,7 +1,7 @@
 ﻿using PlanAhead.Core.Models.Base;
 using PlanAhead.Core.Models.Enums;
 
-public class Fund : BaseEntity
+public class Fund : SyncEntity
 {
     public Guid AccountId { get; set; }
 

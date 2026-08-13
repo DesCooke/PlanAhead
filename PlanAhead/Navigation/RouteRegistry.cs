@@ -42,5 +42,6 @@ public static class RouteRegistry
         Register<FundsPage>("funds");
         Register<FundViewPage>("fund-view");
         Register<WelcomePage>("welcome");
+        Register<LoginPage>("login");
     }
 }

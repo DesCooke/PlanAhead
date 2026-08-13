@@ -3,7 +3,7 @@ using PlanAhead.Core.Models.Enums;
 
 namespace PlanAhead.Core.Models.Domain;
 
-public class Account : BaseEntity
+public class Account : SyncEntity
 {
     public string Name { get; set; } = "";
     public string Description { get; set; } = "";

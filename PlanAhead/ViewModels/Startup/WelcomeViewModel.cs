@@ -9,6 +9,7 @@ using PlanAhead.ViewModels.Accounts;
 using PlanAhead.Views;
 using PlanAhead.Views.Accounts;
 using PlanAhead.Views.Funds;
+using PlanAhead.Views.Startup;
 using System.Collections.ObjectModel;
 
 namespace PlanAhead.ViewModels.Funds;
@@ -44,7 +45,7 @@ public partial class WelcomeViewModel : BaseViewModel
         _settings.SyncMode = SyncMode.SupabaseManual;
         _settings.IsFirstRun = false;
 
-        Application.Current!.MainPage = new AppShell();
+        await Navigation.NavigateToAsync<LoginPage>();
     }
 
     [RelayCommand]
@@ -53,6 +54,6 @@ public partial class WelcomeViewModel : BaseViewModel
         _settings.SyncMode = SyncMode.SupabaseAuto;
         _settings.IsFirstRun = false;
 
-        Application.Current!.MainPage = new AppShell();
+        await Navigation.NavigateToAsync<LoginPage>();
     }
 }

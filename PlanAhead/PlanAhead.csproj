@@ -137,6 +137,9 @@
 	  <MauiXaml Update="Views\Accounts\AccountViewPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\Startup\LoginPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\Funds\FundViewPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
