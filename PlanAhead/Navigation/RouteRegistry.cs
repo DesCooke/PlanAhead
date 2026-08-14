@@ -36,12 +36,14 @@ public static class RouteRegistry
 
     public static void RegisterRoutes()
     {
-        Register<AccountViewPage>("account-view");
-        Register<AccountEditPage>("account-edit");
-        Register<FundEditPage>("fund-edit");
-        Register<FundsPage>("funds");
-        Register<FundViewPage>("fund-view");
-        Register<WelcomePage>("welcome");
-        Register<LoginPage>("login");
+        Register<WelcomePage>("WelcomePage");
+        Register<LoginPage>("LoginPage");
+        Register<DashboardPage>("DashboardPage");
+        Register<AccountEditPage>("AccountEditPage");
+        Register<AccountsPage>("AccountsPage");
+        Register<AccountViewPage>("AccountViewPage");
+        Register<FundEditPage>("FundEditPage");
+        Register<FundsPage>("FundsPage");
+        Register<FundViewPage>("FundViewPage");
     }
 }

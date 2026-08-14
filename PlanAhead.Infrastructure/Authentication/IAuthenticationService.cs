@@ -1,8 +1,8 @@
-﻿namespace PlanAhead.Core.Interfaces.Services;
+﻿namespace PlanAhead.Infrastructure.Authentication;
 
 public interface IAuthenticationService
 {
-    Task<bool> LoginAsync(
+    Task<Supabase.Gotrue.Session> LoginAsync(
         string email,
         string password);
 

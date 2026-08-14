@@ -7,18 +7,9 @@ public class SupabaseClientProvider : ISupabaseClientProvider
     private readonly Client _client;
     private bool _initialised;
 
-    public SupabaseClientProvider()
+    public SupabaseClientProvider(Client client)
     {
-        var options = new SupabaseOptions
-        {
-            AutoRefreshToken = true,
-            AutoConnectRealtime = false
-        };
-
-        _client = new Client(
-            SupabaseSettings.Url,
-            SupabaseSettings.PublishableKey,
-            options);
+        _client = client;
     }
 
     public async Task<Client> GetClientAsync()

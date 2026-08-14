@@ -36,15 +36,14 @@ namespace PlanAhead
                 AutoConnectRealtime = false
             };
 
-            builder.Services.AddSingleton<Client>(_ =>
-            {
-                var client = new Client(
-                    SupabaseSettings.Url,
-                    SupabaseSettings.PublishableKey,
-                    options);
+            var client = new Client(
+                SupabaseSettings.Url,
+                SupabaseSettings.PublishableKey,
+                options);
 
-                return client;
-            });
+            builder.Services.AddSingleton(client);
+            builder.Services.AddSingleton<ISupabaseClientProvider, SupabaseClientProvider>();
+            
 #if DEBUG
             builder.Logging.AddDebug();
 #endif

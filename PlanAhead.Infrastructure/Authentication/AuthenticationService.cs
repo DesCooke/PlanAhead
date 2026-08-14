@@ -1,4 +1,6 @@
 ﻿using PlanAhead.Core.Interfaces.Services;
+using System.Diagnostics;
+
 
 namespace PlanAhead.Infrastructure.Authentication;
 
@@ -12,7 +14,7 @@ public class AuthenticationService : IAuthenticationService
         _provider = provider;
     }
 
-    public async Task<bool> LoginAsync(
+    public async Task<Supabase.Gotrue.Session> LoginAsync(
         string email,
         string password)
     {
@@ -20,7 +22,8 @@ public class AuthenticationService : IAuthenticationService
 
         var response = await client.Auth.SignIn(email, password);
 
-        return response?.User != null;
+
+        return response;
     }
 
     public async Task LogoutAsync()
@@ -44,6 +47,10 @@ public class AuthenticationService : IAuthenticationService
     public async Task<bool> IsLoggedInAsync()
     {
         var client = await _provider.GetClientAsync();
+
+        Debug.WriteLine("===== IsLoggedInAsync =====");
+        Debug.WriteLine($"CurrentUser    : {client.Auth.CurrentUser?.Email}");
+        Debug.WriteLine($"CurrentSession : {client.Auth.CurrentSession != null}");
 
         return client.Auth.CurrentUser != null;
     }

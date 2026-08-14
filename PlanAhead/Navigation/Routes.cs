@@ -6,20 +6,14 @@ namespace PlanAhead.Navigation
 {
     public static class Routes
     {
-        public const string Accounts = "accounts";
-
-        public const string AccountDetail = "account-detail";
-
-        public const string AccountView = "account-view";
-
-        public const string FundDetail = "fund-detail";
-
-        public const string Forecast = "forecast";
-
-        public const string Dashboard = "dashboard";
-
-        public const string FundEdit = "fund-edit";
+        public const string WelcomePage = "WelcomePage";
+        public const string LoginPage = "LoginPage";
+        public const string DashboardPage = "DashboardPagew";
+        public const string AccountEditPage = "AccountEditPage";
+        public const string AccountsPage = "AccountsPage";
+        public const string FundEditPage = "FundEditPage";
+        public const string FundsPage = "FundsPage";
         public const string FundView = "fund-view";
-        public const string Login = "login";
+        public const string FundViewPage = "FundViewPage";
     }
 }

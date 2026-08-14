@@ -33,9 +33,6 @@ namespace PlanAhead.Extensions
             services.AddSingleton<IApplicationSettingsService,
                       ApplicationSettingsService>();
             services.AddSingleton<IApplicationStartupService, ApplicationStartupService>();
-            services.AddSingleton<AppShell>();
-
-            services.AddSingleton<IApplicationStartupService, ApplicationStartupService>();
 
             // Services 
             services.AddTransient<IDialogService, DialogService>();

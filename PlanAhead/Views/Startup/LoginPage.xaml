@@ -8,13 +8,11 @@
 
     <ScrollView>
 
-        <VerticalStackLayout
-            Padding="30"
-            Spacing="24">
+        <VerticalStackLayout Padding="30" Spacing="24">
 
             <Label
-                FontSize="32"
                 FontAttributes="Bold"
+                FontSize="32"
                 HorizontalOptions="Center"
                 Text="PlanAhead" />
 
@@ -24,42 +22,39 @@
                 Text="Sign in to synchronise your data across devices." />
 
             <controls:FloatingEntry
-                Label="Email"
                 Keyboard="Email"
+                Label="Email"
                 Placeholder="name@example.com"
                 Text="{Binding Email}" />
 
             <controls:FloatingEntry
-                Label="Password"
                 IsPassword="True"
+                Label="Password"
                 Placeholder="Password"
                 Text="{Binding Password}" />
 
-            <Button
-                Command="{Binding LoginCommand}"
-                Text="Sign In" />
+            <Button Command="{Binding LoginCommand}" Text="Sign In" />
 
-            <Button
-                Command="{Binding RegisterCommand}"
-                Text="Create Account" />
+            <Button Command="{Binding RegisterCommand}" Text="Create Account" />
 
             <BoxView HeightRequest="1" />
 
             <Button
                 Command="{Binding OfflineOnlyCommand}"
-                Text="Just Start in Offline Only Mode"
-                IsEnabled="True" />
+                IsEnabled="True"
+                Text="Just Start in Offline Only Mode" />
 
             <Button
                 Command="{Binding GoogleCommand}"
-                Text="Continue with Google"
-                IsEnabled="False" />
+                IsEnabled="False"
+                Text="Continue with Google" />
 
             <Button
+                BackgroundColor="Transparent"
                 Command="{Binding CancelCommand}"
                 Text="Back"
-                BackgroundColor="Transparent"
-                TextColor="{AppThemeBinding Light=Black,Dark=White}" />
+                TextColor="{AppThemeBinding Light=Black,
+                                            Dark=White}" />
 
         </VerticalStackLayout>
 

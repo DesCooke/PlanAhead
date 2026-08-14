@@ -6,6 +6,17 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     Title="Dashboard">
 
+    <ContentPage.ToolbarItems>
+
+        <ToolbarItem
+            Command="{Binding LogoutCommand}"
+            IconImageSource="logout.png"
+            Order="Primary"
+            Priority="0"
+            Text="Logout" />
+
+    </ContentPage.ToolbarItems>
+
     <VerticalStackLayout Padding="30" Spacing="20">
 
         <Label
@@ -22,6 +33,8 @@
         <Label HorizontalOptions="Center" Text="{Binding Version}" />
 
         <Label HorizontalOptions="Center" Text="{Binding SyncMethod}" />
+
+        <Label HorizontalOptions="Center" Text="{Binding CurrentSupabaseUser}" />
 
     </VerticalStackLayout>
 

@@ -35,6 +35,18 @@
                     Unfocused="Entry_Unfocused"
                     VerticalOptions="Center" />
 
+                <ImageButton
+                    x:Name="EyeButton"
+                    Grid.Column="1"
+                    Margin="0"
+                    Padding="8"
+                    BackgroundColor="Transparent"
+                    Clicked="EyeButton_Clicked"
+                    HeightRequest="10"
+                    IsVisible="{Binding Source={x:Reference Self}, Path=IsPassword}"
+                    Source="eye_closed.png"
+                    WidthRequest="10" />
+
             </Grid>
 
         </Border>

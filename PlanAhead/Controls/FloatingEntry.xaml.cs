@@ -3,7 +3,20 @@ namespace PlanAhead.Controls;
 public partial class FloatingEntry : ContentView
 {
     private bool _isEntryFocused;
+    private bool _showPassword;
 
+    public bool IsPasswordVisible => _showPassword;
+
+    private void EyeButton_Clicked(object sender, EventArgs e)
+    {
+        _showPassword = !_showPassword;
+
+        EntryControl.IsPassword = !_showPassword;
+
+        EyeButton.Source = _showPassword
+            ? "eye_open.png"
+            : "eye_closed.png";
+    }
 
     public FloatingEntry()
     {
