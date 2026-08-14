@@ -117,7 +117,7 @@ public partial class AccountViewViewModel : BaseViewModel
     {
         _navigationContext.Set(Id);
 
-        await Navigation.NavigateToAsync<AccountEditPage>();
+        await Shell.Current.GoToAsync("AccountEditPage");
     }
 
     [RelayCommand]
@@ -158,7 +158,7 @@ public partial class AccountViewViewModel : BaseViewModel
         {
             _navigationContext.Set(Id);
 
-            await Navigation.NavigateToAsync<FundsPage>();
+            await Shell.Current.GoToAsync("FundsPage");
         }
         catch (Exception ex)
         {

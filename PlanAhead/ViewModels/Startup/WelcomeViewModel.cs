@@ -38,7 +38,7 @@ public partial class WelcomeViewModel : BaseViewModel
         _settings.SyncMode = SyncMode.Offline;
         _settings.IsFirstRun = false;
 
-        Application.Current!.MainPage = new AppShell();
+        await Shell.Current.GoToAsync("//Dashboard");
     }
 
     [RelayCommand]
@@ -47,7 +47,7 @@ public partial class WelcomeViewModel : BaseViewModel
         _settings.SyncMode = SyncMode.SupabaseManual;
         _settings.IsFirstRun = false;
 
-        await Navigation.NavigateToAsync<LoginPage>();
+        await Shell.Current.GoToAsync("//Login");
     }
 
     [RelayCommand]
@@ -56,6 +56,6 @@ public partial class WelcomeViewModel : BaseViewModel
         _settings.SyncMode = SyncMode.SupabaseAuto;
         _settings.IsFirstRun = false;
 
-        await Navigation.NavigateToAsync<LoginPage>();
+        await Shell.Current.GoToAsync("//Login");
     }
 }

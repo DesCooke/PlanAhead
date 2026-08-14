@@ -9,20 +9,44 @@
     xmlns:startup="clr-namespace:PlanAhead.Views.Startup"
     xmlns:views="clr-namespace:PlanAhead.Views">
 
-    <FlyoutItem Title="Dashboard">
-        <ShellContent Title="Dashboard" ContentTemplate="{DataTemplate views:DashboardPage}" />
-    </FlyoutItem>
+    <!-- 
+      Hidden startup pages 
+      These are registered here because we want to set WelcomePage, LoginPage and Dashboard
+      as the root page- so there is no back icon
+      All the rest are declared in AppShell.xaml.cs because these are just 'go to' pages
+    -->
+    <ShellContent
+        Route="Welcome"
+        FlyoutItemIsVisible="False"
+        ContentTemplate="{DataTemplate startup:WelcomePage}" />
 
-    <FlyoutItem Title="Developer">
-        <ShellContent Title="Developer Tools" ContentTemplate="{DataTemplate views:DeveloperToolsPage}" />
-    </FlyoutItem>
+    <ShellContent
+        Route="Login"
+        FlyoutItemIsVisible="False"
+        ContentTemplate="{DataTemplate startup:LoginPage}" />
 
-    <FlyoutItem Title="Change Sync Settings">
-        <ShellContent Title="Change Sync Settings" ContentTemplate="{DataTemplate startup:WelcomePage}" />
-    </FlyoutItem>
+    <!-- Main flyout -->
+    <FlyoutItem Route="Main">
 
-    <FlyoutItem Title="Accounts">
-        <ShellContent Title="Accounts" ContentTemplate="{DataTemplate accounts:AccountsPage}" />
-    </FlyoutItem>
+        <ShellContent
+            Route="Dashboard"
+            Title="Dashboard"
+            ContentTemplate="{DataTemplate views:DashboardPage}" />
 
+        <ShellContent
+            Route="Accounts"
+            Title="Accounts"
+            ContentTemplate="{DataTemplate accounts:AccountsPage}" />
+
+        <ShellContent
+            Route="Developer"
+            Title="Developer Tools"
+            ContentTemplate="{DataTemplate views:DeveloperToolsPage}" />
+
+        <ShellContent
+            Route="SyncSettings"
+            Title="Change Sync Settings"
+            ContentTemplate="{DataTemplate startup:WelcomePage}" />
+
+    </FlyoutItem>
 </Shell>

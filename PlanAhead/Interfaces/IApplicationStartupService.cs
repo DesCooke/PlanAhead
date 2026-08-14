@@ -2,5 +2,5 @@
 
 public interface IApplicationStartupService
 {
-    Task<Page> GetStartupPageAsync();
+    Task NavigateToStartupPageAsync();
 }

@@ -100,7 +100,8 @@ public partial class FundsViewModel : BaseViewModel
     private async Task AddAsync()
     {
         _navigationContext.Set(AccountId);
-        await Navigation.NavigateToAsync<FundEditPage>();
+
+        await Shell.Current.GoToAsync("FundEditPage");
     }
 
     partial void OnSelectedFundChanged(Fund? value)
@@ -116,7 +117,7 @@ public partial class FundsViewModel : BaseViewModel
     {
         _navigationContext.Set(fund.Id);
 
-        await Navigation.NavigateToAsync<FundViewPage>();
+        await Shell.Current.GoToAsync("FundViewPage");
 
     }
 
@@ -125,7 +126,7 @@ public partial class FundsViewModel : BaseViewModel
     {
         _navigationContext.Set(fund);
 
-        await Navigation.NavigateToAsync<FundEditPage>();
+        await Shell.Current.GoToAsync("FundEditPage");
 
         SelectedFund = null;
     }

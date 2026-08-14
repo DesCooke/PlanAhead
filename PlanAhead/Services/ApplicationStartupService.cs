@@ -9,37 +9,34 @@ namespace PlanAhead.Services;
 public class ApplicationStartupService : IApplicationStartupService
 {
     private readonly IApplicationSettingsService _settings;
-    private readonly WelcomePage _welcomePage;
-    private readonly LoginPage _loginPage;
-    private readonly AppShell _appShell;
     private readonly Client _client;
     private readonly IAuthenticationService _authenticationService;
 
     public ApplicationStartupService(
         IApplicationSettingsService settings,
-        WelcomePage welcomePage,
-        LoginPage loginPage,
         Client client,
-        IAuthenticationService  authenticationService,
-        AppShell appShell)
+        IAuthenticationService  authenticationService)
     {
         _settings = settings;
-        _welcomePage = welcomePage;
-        _appShell = appShell;
-        _loginPage = loginPage;
         _client = client;
         _authenticationService = authenticationService; 
     }
 
-    public async Task<Page> GetStartupPageAsync()
+    public async Task NavigateToStartupPageAsync()
     {
         // first run - go to welcome page
         if (_settings.IsFirstRun)
-            return await Task.FromResult<Page>(_welcomePage);
+        {
+            await Shell.Current.GoToAsync("//Welcome");
+            return;
+        }
 
         // if offline only - start the app
-        if(_settings.SyncMode==Core.Models.Enums.SyncMode.Offline)
-            return await Task.FromResult<Page>(_appShell);
+        if (_settings.SyncMode == Core.Models.Enums.SyncMode.Offline)
+        {
+            await Shell.Current.GoToAsync("//Dashboard");
+            return;
+        }
 
         var json = await SecureStorage.Default.GetAsync("supabase-session");
 
@@ -53,11 +50,14 @@ public class ApplicationStartupService : IApplicationStartupService
         }
 
         if (await _authenticationService.IsLoggedInAsync())
-            return await Task.FromResult<Page>(_appShell);
+        {
+            await Shell.Current.GoToAsync("//Dashboard");
+            return;
+        }
 
 
         // go to login page
-        return await Task.FromResult<Page>(_loginPage);
+        await Shell.Current.GoToAsync("//Login");
 
     }
 }

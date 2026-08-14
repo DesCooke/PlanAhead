@@ -44,7 +44,7 @@ public partial class LoginViewModel : BaseViewModel
                 "supabase-session",
                 JsonSerializer.Serialize(response));
 
-            Application.Current!.MainPage = new AppShell();
+            await Shell.Current.GoToAsync("//Dashboard");
         }
         catch (Exception ex)
         {
@@ -81,7 +81,7 @@ public partial class LoginViewModel : BaseViewModel
                 "Registration",
                 "Your account has been created and logged in.");
 
-            Application.Current!.MainPage = new AppShell();
+            await Shell.Current.GoToAsync("//Dashboard");
         }
         catch (Exception ex)
         {
@@ -95,7 +95,7 @@ public partial class LoginViewModel : BaseViewModel
     {
         _settings.SyncMode = PlanAhead.Core.Models.Enums.SyncMode.Offline;
 
-        Application.Current!.MainPage = new AppShell();
+        await Shell.Current.GoToAsync("//Dashboard");
     }
 
     [RelayCommand]

@@ -70,8 +70,7 @@ public partial class DashboardViewModel : BaseViewModel
 
         SecureStorage.Default.Remove("supabase-session");
 
-        Application.Current!.MainPage = await _startupService.GetStartupPageAsync();
-        //await Navigation.NavigateToAsync<LoginPage>();
+        await Shell.Current.GoToAsync("//Login");
     }
 
     [RelayCommand]

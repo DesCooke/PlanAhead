@@ -98,7 +98,7 @@ public partial class FundViewViewModel : BaseViewModel
     {
         _navigationContext.Set(Id);
 
-        await Navigation.NavigateToAsync<FundEditPage>();
+        await Shell.Current.GoToAsync("FundEditPage");
     }
 
     [RelayCommand]
