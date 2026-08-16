@@ -4,6 +4,7 @@
     x:Class="PlanAhead.Views.DashboardPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:PlanAhead.Controls"
     Title="Dashboard">
 
     <ContentPage.ToolbarItems>
@@ -19,6 +20,8 @@
 
     <VerticalStackLayout Padding="30" Spacing="20">
 
+        <controls:SyncStatusBar />
+
         <Label
             FontAttributes="Bold"
             FontSize="32"
@@ -32,9 +35,6 @@
 
         <Label HorizontalOptions="Center" Text="{Binding Version}" />
 
-        <Label HorizontalOptions="Center" Text="{Binding SyncMethod}" />
-
-        <Label HorizontalOptions="Center" Text="{Binding CurrentSupabaseUser}" />
 
     </VerticalStackLayout>
 

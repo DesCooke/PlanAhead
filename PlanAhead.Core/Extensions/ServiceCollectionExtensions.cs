@@ -27,6 +27,8 @@ namespace PlanAhead.Core.Extensions
 
             services.AddSingleton<ILedgerProjectionService, LedgerProjectionService>();
 
+
+
             return services;
         }
     }

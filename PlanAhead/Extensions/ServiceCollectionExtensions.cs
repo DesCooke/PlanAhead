@@ -1,4 +1,5 @@
 ﻿
+using PlanAhead.Controls;
 using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Core.Services.Accounts;
 using PlanAhead.Data.Database;
@@ -33,12 +34,16 @@ namespace PlanAhead.Extensions
             services.AddSingleton<IApplicationSettingsService,
                       ApplicationSettingsService>();
             services.AddSingleton<IApplicationStartupService, ApplicationStartupService>();
+            services.AddSingleton<SyncStatusBarViewModel>();
+            services.AddSingleton<ISecureStorageService, SecureStorageService>();
+            services.AddSingleton<IConnectivityService, ConnectivityService>();
 
             // Services 
             services.AddTransient<IDialogService, DialogService>();
             services.AddTransient<IconPickerViewModel>();
             services.AddTransient<IconPickerPopup>();
             services.AddTransient<IAccountHealthService, AccountHealthService>();
+
 
             // Repositories
             services.AddTransient<AccountRepository>();

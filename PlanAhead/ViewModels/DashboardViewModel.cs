@@ -25,14 +25,6 @@ public partial class DashboardViewModel : BaseViewModel
     private string version =
         $"Version {AppConstants.Version}";
 
-    [ObservableProperty]
-    private string syncMethod =
-        "<Sync Method>";
-
-    [ObservableProperty]
-    private string currentSupabaseUser =
-        "<user>>";
-
     private readonly AccountRepository _repository;
     private readonly IApplicationSettingsService _settings;
     private readonly Client _client;
@@ -52,10 +44,6 @@ public partial class DashboardViewModel : BaseViewModel
         _client = client;
         _authenticationService  = authenticationService;
         _startupService = startupService;
-        syncMethod = settings.SyncMode.ToString();
-        if(_client!=null && _client.Auth!= null && _client.Auth.CurrentUser!=null && _client.Auth.CurrentUser.Email != null)
-            currentSupabaseUser = _client.Auth.CurrentUser.Email;
-
     }
 
     [RelayCommand]

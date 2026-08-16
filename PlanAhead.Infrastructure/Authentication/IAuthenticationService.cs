@@ -15,4 +15,9 @@ public interface IAuthenticationService
     Task<bool> IsLoggedInAsync();
 
     Task<string?> GetCurrentUserIdAsync();
+
+    Task<string?> GetCurrentUserEmailAsync();
+
+    Task<bool> RestoreSessionAsync();
+
 }

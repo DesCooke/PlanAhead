@@ -20,19 +20,19 @@
         <controls:LargeOptionButton
             Title="Offline Only"
             Detail="Pick this option if you only want to use this application on this device with no syncing online."
-            IconId="Plane"
+            IconId="sync_disabled"
             OpenCommand="{Binding OfflineCommand}" />
 
         <controls:LargeOptionButton
             Title="Sync Online - manually"
             Detail="Pick this option if you want to synchronise online only when you pick the option yourself."
-            IconId="Plane"
+            IconId="sync_manual"
             OpenCommand="{Binding OnlineManualCommand}" />
 
         <controls:LargeOptionButton
             Title="Sync Online - auto"
             Detail="Pick this option if you want to synchronise online automatically - you also get the option to only sync when on wifi."
-            IconId="Plane"
+            IconId="sync_auto"
             OpenCommand="{Binding OnlineAutoCommand}" />
     </VerticalStackLayout>
 

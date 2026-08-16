@@ -48,7 +48,13 @@ namespace PlanAhead.Resources.Icons
 
         public static string GetResourceName(string id)
         {
-            return Get(id)?.ResourceName ?? "piggy_bank";
+            if (id==null || id.Length == 0) return "piggy_bank";
+
+            var ret = Get(id);
+
+            if(ret==null) return id;
+
+            return ret.ResourceName;
         }
     }
 }
