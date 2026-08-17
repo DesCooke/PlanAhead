@@ -35,7 +35,7 @@ namespace PlanAhead
         {
             base.OnAppearing();
 
-            await _startup.NavigateToStartupPageAsync();
+            await GoToAsync("//Splash");
         }
     }
 }
