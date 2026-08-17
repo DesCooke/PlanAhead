@@ -89,6 +89,9 @@
     <Compile Update="Controls\TextFieldBox.xaml.cs">
         <DependentUpon>TextFieldBox.xaml</DependentUpon>
     </Compile>
+    <Compile Update="Views\SettingsPage.xaml.cs">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
+    </Compile>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -138,6 +141,9 @@
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\Accounts\AccountViewPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\SettingsPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\Startup\LoginPage.xaml">

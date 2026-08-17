@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using PlanAhead.Core.Constants;
 using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Infrastructure.Authentication;
@@ -9,6 +10,7 @@ using PlanAhead.Services;
 using PlanAhead.Views;
 using PlanAhead.Views.Startup;
 using Supabase;
+using PlanAhead.Core.Messaging;
 
 namespace PlanAhead.ViewModels;
 
@@ -68,5 +70,11 @@ public partial class DashboardViewModel : BaseViewModel
 
         System.Diagnostics.Debug.WriteLine(
             $"Number of accounts = {accounts.Count}");
+    }
+
+
+    public async Task RefreshAsync()
+    {
+        WeakReferenceMessenger.Default.Send(new SyncStatusChangedMessage());
     }
 }

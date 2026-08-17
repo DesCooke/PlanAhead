@@ -43,13 +43,6 @@ public partial class DeveloperToolsViewModel : BaseViewModel
             return;
         }
 
-//        var text = string.Join(
-  //          Environment.NewLine,
-    //        accounts.Select(a =>
-      //          $"{a.Name}   {a.Balance:C}"));
-
-        //await Dialogs.ShowMessageAsync(
-          //      "Accounts",$"{text}");
     }
 
     [RelayCommand]

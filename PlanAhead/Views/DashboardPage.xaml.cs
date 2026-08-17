@@ -11,4 +11,11 @@ public partial class DashboardPage : ContentPage
         BindingContext = viewModel;
     }
 
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+
+        if (BindingContext is DashboardViewModel vm)
+            await vm.RefreshAsync();
+    }
 }

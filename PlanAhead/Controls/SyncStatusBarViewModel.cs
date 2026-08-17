@@ -1,11 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
 using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Core.Models.Enums;
 using PlanAhead.Infrastructure.Authentication;
+using PlanAhead.Core.Messaging;
 
 namespace PlanAhead.Controls;
 
-public partial class SyncStatusBarViewModel : ObservableObject
+public partial class SyncStatusBarViewModel : ObservableRecipient, IRecipient<SyncStatusChangedMessage>
 {
     private readonly IApplicationSettingsService _settings;
     private readonly IAuthenticationService _authentication;
@@ -36,31 +38,16 @@ public partial class SyncStatusBarViewModel : ObservableObject
         _authentication = authentication;
         _connectivity = connectivityService;
 
+        IsActive = true;
+
         _ = RefreshAsync();
     }
-/*
-    public string SyncText =>
-        _settings.SyncMode switch
-        {
-            SyncMode.Offline => "Offline",
-            SyncMode.SupabaseManual => "Manual Sync",
-            SyncMode.SupabaseAuto => "Auto Sync",
-            _ => "Unknown"
-        };
 
-    public string SyncIcon => 
-        _settings.SyncMode switch
+    public async void Receive(SyncStatusChangedMessage message)
     {
-        SyncMode.Offline => "sync_disabled.png",
-        SyncMode.SupabaseManual => "sync_manual.png",
-        SyncMode.SupabaseAuto => "sync_auto.png",
-        _ => ""
-    };
+        await RefreshAsync();
+    }
 
-
-    public bool IsOnline =>
-        _settings.SyncMode != SyncMode.Offline;
-*/
     public async Task RefreshAsync()
     {
         if (!_connectivity.IsOnline) {

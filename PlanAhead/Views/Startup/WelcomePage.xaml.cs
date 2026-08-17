@@ -16,9 +16,4 @@ public partial class WelcomePage : ContentPage
         BindingContext = viewModel;
     }
 
-    protected override async void OnAppearing()
-    {
-        base.OnAppearing();
-    }
-
 }

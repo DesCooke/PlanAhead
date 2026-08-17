@@ -9,49 +9,44 @@
     xmlns:startup="clr-namespace:PlanAhead.Views.Startup"
     xmlns:views="clr-namespace:PlanAhead.Views">
 
-    <!-- 
-      Hidden startup pages 
-      These are registered here because we want to set WelcomePage, LoginPage and Dashboard
-      as the root page- so there is no back icon
-      All the rest are declared in AppShell.xaml.cs because these are just 'go to' pages
+    <!--
+        Hidden startup pages
+        These are registered here because we want to set WelcomePage, LoginPage and Dashboard
+        as the root page- so there is no back icon
+        All the rest are declared in AppShell.xaml.cs because these are just 'go to' pages
     -->
     <ShellContent
-        Route="Splash"
+        ContentTemplate="{DataTemplate startup:SplashPage}"
         FlyoutItemIsVisible="False"
-        ContentTemplate="{DataTemplate startup:SplashPage}" />
+        Route="Splash" />
 
     <ShellContent
-        Route="Welcome"
+        ContentTemplate="{DataTemplate startup:WelcomePage}"
         FlyoutItemIsVisible="False"
-        ContentTemplate="{DataTemplate startup:WelcomePage}" />
+        Route="Welcome" />
 
     <ShellContent
-        Route="Login"
+        ContentTemplate="{DataTemplate startup:LoginPage}"
         FlyoutItemIsVisible="False"
-        ContentTemplate="{DataTemplate startup:LoginPage}" />
+        Route="Login" />
 
-    <!-- Main flyout -->
+    <!--  Main flyout  -->
     <FlyoutItem Route="Main">
 
         <ShellContent
-            Route="Dashboard"
             Title="Dashboard"
-            ContentTemplate="{DataTemplate views:DashboardPage}" />
+            ContentTemplate="{DataTemplate views:DashboardPage}"
+            Route="Dashboard" />
 
         <ShellContent
-            Route="Accounts"
             Title="Accounts"
-            ContentTemplate="{DataTemplate accounts:AccountsPage}" />
+            ContentTemplate="{DataTemplate accounts:AccountsPage}"
+            Route="Accounts" />
 
         <ShellContent
-            Route="Developer"
-            Title="Developer Tools"
-            ContentTemplate="{DataTemplate views:DeveloperToolsPage}" />
-
-        <ShellContent
-            Route="SyncSettings"
-            Title="Change Sync Settings"
-            ContentTemplate="{DataTemplate startup:WelcomePage}" />
+            Title="Settings"
+            ContentTemplate="{DataTemplate views:SettingsPage}"
+            Route="Settings" />
 
     </FlyoutItem>
 </Shell>
