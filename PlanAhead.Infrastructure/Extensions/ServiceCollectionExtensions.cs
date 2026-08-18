@@ -2,8 +2,10 @@
 using PlanAhead.Core.Interfaces.Repositories;
 using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Infrastructure.Authentication;
-using PlanAhead.Infrastructure.Database.SQLite;
+using PlanAhead.Infrastructure.DB;
+using PlanAhead.Infrastructure.DB.SQLite;
 using PlanAhead.Infrastructure.Repositories;
+using PlanAhead.Infrastructure.Sync;
 
 namespace PlanAhead.Infrastructure.Extensions;
 
@@ -23,9 +25,10 @@ public static class ServiceCollectionExtensions
 
         services.AddSingleton<IAuthenticationService, AuthenticationService>();
 
+        services.AddSingleton<ISyncService, SyncService>();
 
-        // Later...
-        // services.AddSingleton<ILedgerEntryRepository, LedgerEntryRepository>();
+        services.AddSingleton<IEntitySynchroniser, AccountSynchroniser>();
+        services.AddSingleton<IEntitySynchroniser, FundSynchroniser>();
 
         return services;
     }

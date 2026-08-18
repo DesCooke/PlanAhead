@@ -15,6 +15,13 @@ public class ApplicationSettingsService
         get => Preferences.Default.Get("FirstRun", true);
         set => Preferences.Default.Set("FirstRun", value);
     }
+
+    public DateTime LastSyncUtc
+    {
+        get => Preferences.Default.Get("LastSyncUtc", DateTime.Now);
+        set => Preferences.Default.Set("LastSyncUtc", DateTime.Now);
+    }
+
     public SyncMode SyncMode
     {
         get

@@ -11,6 +11,7 @@ using PlanAhead.Views;
 using PlanAhead.Views.Startup;
 using Supabase;
 using PlanAhead.Core.Messaging;
+using PlanAhead.Infrastructure.Sync;
 
 namespace PlanAhead.ViewModels;
 
@@ -32,6 +33,7 @@ public partial class DashboardViewModel : BaseViewModel
     private readonly Client _client;
     private readonly IAuthenticationService _authenticationService;
     private readonly IApplicationStartupService _startupService;
+    private readonly ISyncService _syncService;
 
     public DashboardViewModel(AccountRepository repository,
         INavigationService navigation,
@@ -39,28 +41,34 @@ public partial class DashboardViewModel : BaseViewModel
         Client client,
         IAuthenticationService authenticationService,
         IApplicationStartupService startupService,
-        IApplicationSettingsService settings): base (navigation, dialogs)
+        IApplicationSettingsService settings, 
+        ISyncService syncService): base (navigation, dialogs)
     {
         _repository = repository;
         _settings = settings;
         _client = client;
         _authenticationService  = authenticationService;
+     
         _startupService = startupService;
+        _syncService = syncService;
     }
 
     [RelayCommand]
-    private async Task LogoutAsync()
+    private async Task SyncAsync()
     {
-        if (!await Dialogs.ConfirmAsync(
-                "Logout",
-                "Are you sure you want to logout?"))
-            return;
-        
-        await _authenticationService.LogoutAsync();
-
-        SecureStorage.Default.Remove("supabase-session");
-
-        await Shell.Current.GoToAsync("//Login");
+        try
+        {
+            var userIdString = await _authenticationService.GetCurrentUserIdAsync();
+            if (userIdString != null)
+            {
+                var userId = Guid.Parse(userIdString);
+                if(userId != Guid.Empty)
+                    await _syncService.SyncAsync(userId);
+            }
+        }
+        catch (Exception ex) {
+            Dialogs.ShowErrorAsync(ex.Message);
+        }
     }
 
     [RelayCommand]

@@ -37,6 +37,7 @@ namespace PlanAhead.Extensions
             services.AddSingleton<SyncStatusBarViewModel>();
             services.AddSingleton<ISecureStorageService, SecureStorageService>();
             services.AddSingleton<IConnectivityService, ConnectivityService>();
+            services.AddSingleton<INetworkService, NetworkService>();
 
             // Services 
             services.AddTransient<IDialogService, DialogService>();

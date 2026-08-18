@@ -1,6 +1,6 @@
 ﻿using PlanAhead.Core.Interfaces.Repositories;
 using PlanAhead.Core.Models.Domain;
-using PlanAhead.Infrastructure.Database.SQLite;
+using PlanAhead.Infrastructure.DB.SQLite;
 using SQLite;
 
 namespace PlanAhead.Infrastructure.Repositories;

@@ -10,11 +10,10 @@
     <ContentPage.ToolbarItems>
 
         <ToolbarItem
-            Command="{Binding LogoutCommand}"
-            IconImageSource="logout.png"
+            Command="{Binding SyncCommand}"
+            IconImageSource="refresh.png"
             Order="Primary"
-            Priority="0"
-            Text="Logout" />
+            Priority="0" />
 
     </ContentPage.ToolbarItems>
 

@@ -1,4 +1,5 @@
-﻿using PlanAhead.Infrastructure.Database.SQLite;
+﻿using PlanAhead.Core.Models.Sync;
+using PlanAhead.Infrastructure.DB.SQLite;
 
 namespace PlanAhead.Data.Database;
 
@@ -13,6 +14,5 @@ public class DatabaseStartup
 
     public async Task InitialiseAsync()
     {
-        await _context.GetConnectionAsync();
     }
 }

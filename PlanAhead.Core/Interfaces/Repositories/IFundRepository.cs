@@ -18,5 +18,9 @@ namespace PlanAhead.Core.Interfaces.Repositories
         Task DeleteAsync(Fund fund);
 
         Task<List<Fund>> GetAllAsync();
+        Task<List<Fund>> GetPendingSyncAsync();
+
+        Task MarkSyncedAsync(Guid id);
+
     }
 }

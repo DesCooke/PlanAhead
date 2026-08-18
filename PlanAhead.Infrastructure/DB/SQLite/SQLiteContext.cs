@@ -1,6 +1,6 @@
 ﻿using SQLite;
 
-namespace PlanAhead.Infrastructure.Database.SQLite;
+namespace PlanAhead.Infrastructure.DB.SQLite;
 
 public sealed class SQLiteContext
 {

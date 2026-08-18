@@ -23,7 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Database\Supabase\" />
+    <Folder Include="DB\Supabase\" />
   </ItemGroup>
 
 </Project>

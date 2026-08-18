@@ -18,5 +18,11 @@ namespace PlanAhead.Core.Interfaces.Repositories
         Task<List<Account>> GetAllAsync();
 
         Task<List<Account>> GetActiveAsync();
+
+        Task UpsertAsync(Account account);
+
+        Task<List<Account>> GetPendingSyncAsync();
+
+        Task MarkSyncedAsync(Guid id);
     }
 }

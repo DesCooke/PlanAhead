@@ -17,6 +17,11 @@
 
             <Button Command="{Binding ChangeSignInCommand}" Text="Change Signin Method" />
 
+            <Button
+                Command="{Binding LogoutCommand}"
+                IsVisible="{Binding IsLoggedIn}"
+                Text="Logout" />
+
         </VerticalStackLayout>
 
     </ScrollView>

@@ -5,6 +5,8 @@ public interface IApplicationSettingsService
 {
     bool IsFirstRun { get; set; }
 
+    DateTime LastSyncUtc { get; set; }
+
     SyncMode SyncMode { get; set; }
 
     void MarkFirstRunComplete();

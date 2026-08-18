@@ -12,6 +12,7 @@ public abstract class BaseEntity
     public DateTime UpdatedUtc { get; set; }
 
     public bool Deleted { get; set; }
+    public DateTime DeletedUtc { get; set; }
 
     public bool NeedsSync { get; set; }
 }

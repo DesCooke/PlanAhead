@@ -1,19 +1,49 @@
-﻿using PlanAhead.Core.Models.Domain;
+﻿using PlanAhead.Core.Interfaces.Repositories;
+using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.Models.Domain;
+using PlanAhead.Core.Models.Enums;
+using PlanAhead.Core.Models.Sync;
+using PlanAhead.Infrastructure.DB.SQLite;
 using SQLite;
-using PlanAhead.Core.Interfaces.Repositories;
-using PlanAhead.Infrastructure.Database.SQLite;
+using Supabase.Postgrest.Models;
 
 namespace PlanAhead.Infrastructure.Repositories;
 
 public class AccountRepository: IAccountRepository
 {
     private readonly SQLiteContext _context;
+    private readonly IApplicationSettingsService _settings;
 
-    public AccountRepository(SQLiteContext context)
+
+    public AccountRepository(SQLiteContext context,
+        IApplicationSettingsService settings
+        )
     {
         _context = context;
+        _settings = settings;
     }
 
+    public async Task<List<Account>> GetPendingSyncAsync()
+    {
+        var db = await _context.GetConnectionAsync();
+
+        return await db.Table<Account>()
+            .Where(a => a.NeedsSync)
+            .ToListAsync();
+    }
+
+    public async Task MarkSyncedAsync(Guid id)
+    {
+        var db = await _context.GetConnectionAsync();
+
+        var account = await GetByIdAsync(id);
+        if (account != null)
+        {
+            account.NeedsSync = false;
+
+            await db.UpdateAsync(account);
+        }
+    }
     public async Task<List<Account>> GetAllAsync()
     {
         var db = await Database();
@@ -22,6 +52,13 @@ public class AccountRepository: IAccountRepository
             .Where(a => !a.Deleted)
             .OrderBy(a => a.DisplayOrder)
             .ToListAsync();
+    }
+
+    public async Task UpsertAsync(Account account)
+    {
+        var db = await Database();
+
+        await db.InsertOrReplaceAsync(account);
     }
 
     private async Task<SQLiteAsyncConnection> Database()
@@ -66,6 +103,7 @@ public class AccountRepository: IAccountRepository
         account.DisplayOrder = await db.Table<Account>().CountAsync() + 1;
 
         await db.InsertAsync(account);
+
     }
 
     public async Task UpdateAsync(Account account)
@@ -77,6 +115,7 @@ public class AccountRepository: IAccountRepository
         account.NeedsSync = true;
 
         await db.UpdateAsync(account);
+
     }
 
     public async Task DeleteAsync(Account account)
@@ -84,5 +123,6 @@ public class AccountRepository: IAccountRepository
         account.Deleted = true;
 
         await UpdateAsync(account);
+
     }
 }

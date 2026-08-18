@@ -1,6 +1,6 @@
 ﻿using PlanAhead.Core.Interfaces.Repositories;
 using PlanAhead.Core.Models.Domain;
-using PlanAhead.Infrastructure.Database.SQLite;
+using PlanAhead.Infrastructure.DB.SQLite;
 using SQLite;
 
 namespace PlanAhead.Infrastructure.Repositories;
@@ -79,6 +79,29 @@ public class FundRepository : IFundRepository
         await db.UpdateAsync(fund);
     }
 
+    public async Task<List<Fund>> GetPendingSyncAsync()
+    {
+        var db = await Database();
+
+        return await db.Table<Fund>()
+            .Where(a => a.NeedsSync)
+            .ToListAsync();
+    }
+
+    public async Task MarkSyncedAsync(Guid id)
+    {
+        var db = await Database();
+        if (db != null)
+        {
+            var fund = await GetByIdAsync(id);
+            if (fund != null)
+            {
+                fund.NeedsSync = false;
+
+                await db.UpdateAsync(fund);
+            }
+        }
+    }
     public async Task DeleteAsync(Fund fund)
     {
         fund.Deleted = true;

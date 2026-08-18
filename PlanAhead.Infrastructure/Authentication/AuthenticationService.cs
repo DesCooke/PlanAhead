@@ -1,10 +1,11 @@
 ﻿using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Infrastructure.Authentication;
+using PlanAhead.Infrastructure.Sync;
+using Supabase;
 using Supabase.Gotrue;
 using System.Diagnostics;
 using System.Text.Json;
-
-using PlanAhead.Infrastructure.Authentication;
-using Supabase;
+using static System.Collections.Specialized.BitVector32;
 
 
 namespace PlanAhead.Infrastructure.Authentication;
@@ -13,24 +14,39 @@ public class AuthenticationService : IAuthenticationService
 {
     private readonly ISupabaseClientProvider _provider;
     private readonly ISecureStorageService _secureStorageService;
+    private readonly ISyncService _syncService;
 
     public AuthenticationService(
-        ISupabaseClientProvider provider, ISecureStorageService secureStorageService)
+        ISupabaseClientProvider provider, ISecureStorageService secureStorageService, 
+        ISyncService syncService)
     {
         _provider = provider;
         _secureStorageService = secureStorageService;
+        _syncService = syncService;
     }
 
-    public async Task<Supabase.Gotrue.Session> LoginAsync(
+    public async Task<Supabase.Gotrue.Session?> LoginAsync(
         string email,
         string password)
     {
         var client = await _provider.GetClientAsync();
 
-        var response = await client.Auth.SignIn(email, password);
+        var session = await client.Auth.SignIn(email, password);
 
+        if (session != null)
+        {
+            await _secureStorageService.SetAsync(
+                "supabase-session",
+                JsonSerializer.Serialize(session));
+        }
 
-        return response;
+        return session;
+    }
+
+    public async Task<User?> GetCurrentUserAsync()
+    {
+        var client = await _provider.GetClientAsync();
+        return client.Auth.CurrentUser;
     }
 
     public async Task LogoutAsync()
@@ -38,6 +54,8 @@ public class AuthenticationService : IAuthenticationService
         var client = await _provider.GetClientAsync();
 
         await client.Auth.SignOut();
+
+        _secureStorageService.Remove("supabase-session");
     }
 
     public async Task<bool> RegisterAsync(
@@ -46,9 +64,16 @@ public class AuthenticationService : IAuthenticationService
     {
         var client = await _provider.GetClientAsync();
 
-        var response = await client.Auth.SignUp(email, password);
+        var session = await client.Auth.SignUp(email, password);
 
-        return response?.User != null;
+        if (session != null)
+        {
+            await _secureStorageService.SetAsync(
+                "supabase-session",
+                JsonSerializer.Serialize(session));
+        }
+
+        return session?.User != null;
     }
 
     public async Task<bool> IsLoggedInAsync()
@@ -85,7 +110,7 @@ public class AuthenticationService : IAuthenticationService
 
         var session = JsonSerializer.Deserialize<Session>(json);
 
-        if (session == null)
+        if (session == null || session.AccessToken==null || session.RefreshToken==null)
             return false;
 
         var client = await _provider.GetClientAsync();
@@ -100,13 +125,21 @@ public class AuthenticationService : IAuthenticationService
                 "supabase-session",
                 JsonSerializer.Serialize(newSession));
 
-            return true;
+            var userIdString = client.Auth.CurrentUser?.Id;
+            if (userIdString != null)
+            {
+                var userId = Guid.Parse(userIdString);
+                if(userId!=Guid.Empty)
+                    await _syncService.SyncAsync(userId);
+            }
         }
-        catch
+        catch (Exception ex)
         {
+            Debug.WriteLine(ex);
             _secureStorageService.Remove("supabase-session");
             return false;
         }
+        return true;
     }
 
 }
