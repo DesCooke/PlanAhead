@@ -35,17 +35,26 @@ public abstract partial class BaseViewModel : ObservableObject
 
     protected async Task ExecuteBusyAsync(Func<Task> action)
     {
-        if (IsBusy)
-            return;
-
         try
         {
-            IsBusy = true;
-            await action();
+            if (IsBusy)
+                return;
+
+            try
+            {
+                IsBusy = true;
+                await action();
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
-        finally
+        catch (Exception ex)
         {
-            IsBusy = false;
+            var msg = $"Error in BaseViewModel:ExecuteBusyAsync:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
         }
+
     }
 }

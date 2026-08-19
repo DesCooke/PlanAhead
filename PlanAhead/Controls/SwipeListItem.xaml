@@ -51,13 +51,12 @@
             StrokeShape="RoundRectangle 8"
             StrokeThickness="1">
 
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Command="{Binding Source={x:Reference Root}, Path=OpenCommand}" CommandParameter="{Binding Source={x:Reference Root}, Path=OpenCommandParameter}" />
+            </Border.GestureRecognizers>
+
+
             <HorizontalStackLayout Spacing="16" VerticalOptions="Fill">
-
-                <HorizontalStackLayout.GestureRecognizers>
-
-                    <TapGestureRecognizer Command="{Binding Source={x:Reference Root}, Path=OpenCommand}" CommandParameter="{Binding Source={x:Reference Root}, Path=OpenCommandParameter}" />
-
-                </HorizontalStackLayout.GestureRecognizers>
 
                 <!--  Icon  -->
                 <controls:ObjectIcon

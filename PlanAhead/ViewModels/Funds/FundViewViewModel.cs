@@ -81,45 +81,80 @@ public partial class FundViewViewModel : BaseViewModel
     [RelayCommand]
     public async Task LoadAsync()
     {
-        if (Id == Guid.Empty)
+        try
         {
-            Id = _navigationContext.Get<Guid>();
-            _navigationContext.Clear();
+            if (Id == Guid.Empty)
+            {
+                Id = _navigationContext.Get<Guid>();
+                _navigationContext.Clear();
+            }
+
+            var fund = await _fundService.GetByIdAsync(Id);
+
+            if (fund != null)
+                Load(fund);
         }
-
-        var fund = await _fundService.GetByIdAsync(Id);
-
-        if (fund != null)
-            Load(fund);
+        catch (Exception ex)
+        {
+            var msg = $"Error in FundViewViewModel:LoadAsync:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
+        }
     }
 
     [RelayCommand]
     private async Task EditAsync()
     {
-        _navigationContext.Set(Id);
+        try
+        {
+            _navigationContext.Set(Id);
 
-        await Shell.Current.GoToAsync("FundEditPage");
+            await Shell.Current.GoToAsync("FundEditPage");
+        }
+        catch (Exception ex)
+        {
+            var msg = $"Error in FundViewViewModel:EditAsync:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
+        }
+
     }
 
     [RelayCommand]
     private Task CancelAsync()
     {
-        return Navigation.GoBackAsync();
+        try
+        {
+            return Navigation.GoBackAsync();
+        }
+        catch (Exception ex)
+        {
+            var msg = $"Error in FundViewViewModel:CancelAsync:{ex.Message}";
+            Dialogs.ShowErrorAsync(msg);
+        }
+        return Task.CompletedTask;
     }
 
     [RelayCommand]
     private async Task DeleteAsync()
     {
-        var delete =
-            await Dialogs.ConfirmAsync(
-                "Delete Fund",
-                $"Delete '{Name}'?");
+        try
+        {
+            var delete =
+                await Dialogs.ConfirmAsync(
+                    "Delete Fund",
+                    $"Delete '{Name}'?");
 
-        if (!delete)
-            return;
+            if (!delete)
+                return;
 
-        await _fundService.DeleteAsync(Id);
+            await _fundService.DeleteAsync(Id);
 
-        await Navigation.GoBackAsync();
+            await Navigation.GoBackAsync();
+        }
+        catch (Exception ex)
+        {
+            var msg = $"Error in FundViewViewModel:DeleteAsync:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
+        }
+
     }
 }

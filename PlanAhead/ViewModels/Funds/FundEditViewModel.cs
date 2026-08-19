@@ -53,38 +53,47 @@ public partial class FundEditViewModel : BaseViewModel
 
     public async Task InitialiseAsync()
     {
-        if (!_navigationContext.Has<Guid>())
+        try
         {
-            //
-            // New Fund
-            //
-            Title = "New Fund";
+            if (!_navigationContext.Has<Guid>())
+            {
+                //
+                // New Fund
+                //
+                Title = "New Fund";
 
-            return;
+                return;
+            }
+
+            Id = _navigationContext.Get<Guid>();
+
+            var fund = await _fundService.GetByIdAsync(Id);
+            if (fund == null)
+            {
+                //
+                // New Fund
+                //
+                Title = "New Fund";
+
+                return;
+            }
+
+            Title = "Change Fund";
+
+            //
+            // Existing Fund
+            //
+
+            Load(fund);
+
+            _navigationContext.Clear();
+        }
+        catch (Exception ex)
+        {
+            var msg = $"Error in FundEditViewModel:InitialiseAsync:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
         }
 
-        Id = _navigationContext.Get<Guid>();
-
-        var fund = await _fundService.GetByIdAsync(Id);
-        if (fund == null)
-        {
-            //
-            // New Fund
-            //
-            Title = "New Fund";
-
-            return;
-        }
-
-        Title = "Change Fund";
-
-        //
-        // Existing Fund
-        //
-
-        Load(fund);
-
-        _navigationContext.Clear();
     }
 
     private void Load(Fund fund)
@@ -128,18 +137,18 @@ public partial class FundEditViewModel : BaseViewModel
     [RelayCommand]
     private async Task SaveAsync()
     {
-        var error = Validate();
-        if (error!=null)
-        {
-            await Dialogs.ShowMessageAsync(
-                "Validation",
-                error);
-
-            return;
-        }
-
         try
         {
+            var error = Validate();
+            if (error != null)
+            {
+                await Dialogs.ShowMessageAsync(
+                    "Validation",
+                    error);
+
+                return;
+            }
+
             if (Id == Guid.Empty)
                 await _fundService.AddAsync(Build());
             else
@@ -149,12 +158,24 @@ public partial class FundEditViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            await Dialogs.ShowErrorAsync(ex.Message);
+            var msg = $"Error in FundEditViewModel:SaveAsync:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
         }
     }
+
     [RelayCommand]
     private Task CancelAsync()
     {
-        return Navigation.GoBackAsync();
+        try
+        {
+            return Navigation.GoBackAsync();
+        }
+        catch (Exception ex)
+        {
+            var msg = $"Error in FundEditViewModel:CancelAsync:{ex.Message}";
+            Dialogs.ShowErrorAsync(msg);
+        }
+        return Task.CompletedTask;
+            
     }
 }

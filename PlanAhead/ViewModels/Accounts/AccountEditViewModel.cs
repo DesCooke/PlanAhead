@@ -57,38 +57,47 @@ public partial class AccountEditViewModel : BaseViewModel
 
     public async Task InitialiseAsync()
     {
-        if (!_navigationContext.Has<Guid>())
+        try
         {
-            //
-            // New Account
-            //
-            Title = "New Account";
+            if (!_navigationContext.Has<Guid>())
+            {
+                //
+                // New Account
+                //
+                Title = "New Account";
 
-            return;
+                return;
+            }
+
+            Id = _navigationContext.Get<Guid>();
+
+            var account = await _accountService.GetByIdAsync(Id);
+            if (account == null)
+            {
+                //
+                // New Account
+                //
+                Title = "New Account";
+
+                return;
+            }
+
+            Title = "Change Account";
+
+            //
+            // Existing Account
+            //
+
+            Load(account);
+
+            _navigationContext.Clear();
         }
-        
-        Id = _navigationContext.Get<Guid>();
-
-        var account = await _accountService.GetByIdAsync(Id);
-        if (account == null)
+        catch (Exception ex)
         {
-            //
-            // New Account
-            //
-            Title = "New Account";
-
-            return;
+            var msg = $"Error in AccountEditViewModel:InitialiseAsync:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
         }
 
-        Title = "Change Account";
-
-        //
-        // Existing Account
-        //
-
-        Load(account);
-
-        _navigationContext.Clear();
     }
 
     private void Load(Account account)
@@ -127,18 +136,18 @@ public partial class AccountEditViewModel : BaseViewModel
     [RelayCommand]
     private async Task SaveAsync()
     {
-        var error = Validate();
-        if (error != null)
-        {
-            await Dialogs.ShowMessageAsync(
-                "Validation",
-                error);
-
-            return;
-        }
-
         try
         {
+            var error = Validate();
+            if (error != null)
+            {
+                await Dialogs.ShowMessageAsync(
+                    "Validation",
+                    error);
+
+                return;
+            }
+
             if (Id == Guid.Empty)
                 await _accountService.AddAsync(Build());
             else
@@ -148,21 +157,41 @@ public partial class AccountEditViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            await Dialogs.ShowErrorAsync(ex.Message);
+            var msg = $"Error in AccountEditViewModel:SaveAsync:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
         }
     }
+
     [RelayCommand]
     private Task CancelAsync()
     {
-        return Navigation.GoBackAsync();
+        try
+        {
+            return Navigation.GoBackAsync();
+        }
+        catch (Exception ex)
+        {
+            var msg = $"Error in AccountEditViewModel:CancelAsync:{ex.Message}";
+            Dialogs.ShowErrorAsync(msg);
+        }
+        return Task.CompletedTask;
     }
 
     [RelayCommand]
     private async Task ChooseIconAsync()
     {
-        var iconId = await _dialogService.PickIconAsync(IconId);
+        try
+        {
+            var iconId = await _dialogService.PickIconAsync(IconId);
 
-        if (iconId != null)
-            IconId = iconId;
+            if (iconId != null)
+                IconId = iconId;
+        }
+        catch (Exception ex)
+        {
+            var msg = $"Error in AccountEditViewModel:ChooseIconAsync:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
+        }
+
     }
 }

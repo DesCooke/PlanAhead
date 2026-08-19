@@ -17,30 +17,24 @@ public partial class DeveloperToolsViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private async Task CreateTestAccount()
-    {
-//        await _repository.AddAsync(new Account
-  //      {
-    //        Name = $"Current Account {DateTime.Now:HHmmss}",
-      //      Balance = 1000m,
-        //    DisplayOrder = 1
-//        });
-
-        await Dialogs.ShowMessageAsync(
-                "Developer", "Test account created.");
-    }
-
-    [RelayCommand]
     private async Task ShowAllAccounts()
     {
-        var accounts = await _repository.GetAllAsync();
-
-        if (accounts.Count == 0)
+        try
         {
-            await Dialogs.ShowMessageAsync(
-                "Accounts","No accounts found.");
+            var accounts = await _repository.GetAllAsync();
 
-            return;
+            if (accounts.Count == 0)
+            {
+                await Dialogs.ShowMessageAsync(
+                    "Accounts", "No accounts found.");
+
+                return;
+            }
+        }
+        catch (Exception ex)
+        {
+            var msg = $"Error in DeveloperToolsViewModel:ShowAllAccounts:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
         }
 
     }
@@ -48,33 +42,60 @@ public partial class DeveloperToolsViewModel : BaseViewModel
     [RelayCommand]
     private async Task DeleteAll()
     {
-        var path = Path.Combine(
-            FileSystem.AppDataDirectory,
-            "PlanAhead.db");
-        File.Delete(path);
-        Preferences.Default.Clear();
-        await Dialogs.ShowMessageAsync(
-                "Set as New Install", $"Database and Preferences removed. Next run will be as a New Install");
+        try
+        {
+            var path = Path.Combine(
+                FileSystem.AppDataDirectory,
+                "PlanAhead.db");
+            File.Delete(path);
+            Preferences.Default.Clear();
+            await Dialogs.ShowMessageAsync(
+                    "Set as New Install", $"Database and Preferences removed. Next run will be as a New Install");
+        }
+        catch (Exception ex)
+        {
+            var msg = $"Error in DeveloperToolsViewModel:DeleteAll:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
+        }
+
 
     }
 
     [RelayCommand]
     private async Task ShowAccountCount()
     {
-        var accounts = await _repository.GetAllAsync();
+        try
+        {
+            var accounts = await _repository.GetAllAsync();
 
-        await Dialogs.ShowMessageAsync(
-                "Accounts",$"There are {accounts.Count} accounts.");
+            await Dialogs.ShowMessageAsync(
+                    "Accounts", $"There are {accounts.Count} accounts.");
+        }
+        catch (Exception ex)
+        {
+            var msg = $"Error in DeveloperToolsViewModel:ShowAccountCount:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
+        }
+
     }
 
     [RelayCommand]
     private async Task ShowDatabasePath()
     {
-        var path = Path.Combine(
-            FileSystem.AppDataDirectory,
-            "PlanAhead.db");
+        try
+        {
+            var path = Path.Combine(
+                FileSystem.AppDataDirectory,
+                "PlanAhead.db");
 
-        await Dialogs.ShowMessageAsync(
-                "Database",$"{path}");
+            await Dialogs.ShowMessageAsync(
+                    "Database", $"{path}");
+        }
+        catch (Exception ex)
+        {
+            var msg = $"Error in DeveloperToolsViewModel:ShowDatabasePath:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
+        }
+
     }
 }

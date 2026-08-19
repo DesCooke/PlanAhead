@@ -1,0 +1,10 @@
+﻿create or replace function clear_my_data()
+returns void
+language plpgsql
+security invoker
+as $$
+begin
+    delete from funds        where user_id = auth.uid();
+    delete from accounts     where user_id = auth.uid();
+end;
+$$;

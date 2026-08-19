@@ -24,7 +24,7 @@ public abstract class EntitySynchroniser<TEntity>
         CancellationToken cancellationToken = default);
 
     protected async Task UploadRecordAsync<TRecord>(TRecord record)
-        where TRecord : Supabase.Postgrest.Models.BaseModel, new()
+        where TRecord : BaseModel, new()
     {
         await Supabase
             .From<TRecord>()
@@ -33,7 +33,7 @@ public abstract class EntitySynchroniser<TEntity>
 
 
     protected async Task DeleteRecordAsync<TRecord>(TRecord record)
-        where TRecord : Supabase.Postgrest.Models.BaseModel, new()
+        where TRecord : BaseModel, new()
     {
         await Supabase
             .From<TRecord>()

@@ -35,27 +35,53 @@ public partial class WelcomeViewModel : BaseViewModel
     [RelayCommand]
     private async Task OfflineAsync()
     {
-        _settings.SyncMode = SyncMode.Offline;
-        _settings.IsFirstRun = false;
+        try
+        {
+            _settings.SyncMode = SyncMode.Offline;
+            _settings.IsFirstRun = false;
 
-        await Shell.Current.GoToAsync("//Dashboard");
+            await Shell.Current.GoToAsync("//Dashboard");
+        }
+        catch (Exception ex)
+        {
+            var msg = $"Error in WelcomeViewModel:OfflineAsync:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
+        }
+
     }
 
     [RelayCommand]
     private async Task OnlineManualAsync()
     {
-        _settings.SyncMode = SyncMode.SupabaseManual;
-        _settings.IsFirstRun = false;
+        try
+        {
+            _settings.SyncMode = SyncMode.SupabaseManual;
+            _settings.IsFirstRun = false;
 
-        await Shell.Current.GoToAsync("//Login");
+            await Shell.Current.GoToAsync("//Login");
+        }
+        catch (Exception ex)
+        {
+            var msg = $"Error in WelcomeViewModel:OnlineManualAsync:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
+        }
     }
 
     [RelayCommand]
     private async Task OnlineAutoAsync()
     {
-        _settings.SyncMode = SyncMode.SupabaseAuto;
-        _settings.IsFirstRun = false;
+        try
+        {
+            _settings.SyncMode = SyncMode.SupabaseAuto;
+            _settings.IsFirstRun = false;
 
-        await Shell.Current.GoToAsync("//Login");
+            await Shell.Current.GoToAsync("//Login");
+        }
+        catch (Exception ex)
+        {
+            var msg = $"Error in WelcomeViewModel:OnlineAutoAsync:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
+        }
+
     }
 }

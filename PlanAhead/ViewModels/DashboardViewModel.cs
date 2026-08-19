@@ -66,23 +66,43 @@ public partial class DashboardViewModel : BaseViewModel
                     await _syncService.SyncAsync(userId);
             }
         }
-        catch (Exception ex) {
-            Dialogs.ShowErrorAsync(ex.Message);
+        catch (Exception ex)
+        {
+            var msg = $"Error in DashboardViewModel:SyncAsync:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
         }
     }
 
     [RelayCommand]
     private async Task TestRepository()
     {
-        var accounts = await _repository.GetAllAsync();
+        try
+        {
+            var accounts = await _repository.GetAllAsync();
 
-        System.Diagnostics.Debug.WriteLine(
-            $"Number of accounts = {accounts.Count}");
+            System.Diagnostics.Debug.WriteLine(
+                $"Number of accounts = {accounts.Count}");
+        }
+        catch (Exception ex)
+        {
+            var msg = $"Error in DashboardViewModel:TestRepository:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
+        }
+
     }
 
 
     public async Task RefreshAsync()
     {
-        WeakReferenceMessenger.Default.Send(new SyncStatusChangedMessage());
+        try
+        {
+            WeakReferenceMessenger.Default.Send(new SyncStatusChangedMessage());
+        }
+        catch (Exception ex)
+        {
+            var msg = $"Error in DashboardViewModel:RefreshAsync:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
+        }
+
     }
 }

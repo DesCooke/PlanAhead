@@ -227,12 +227,16 @@ public partial class SwipeListItem : ContentView
         control.OnPropertyChanged(nameof(HasEditCommand));
         control.OnPropertyChanged(nameof(HasDeleteCommand));
     }
-
     public static readonly BindableProperty OpenCommandProperty =
         BindableProperty.Create(
             nameof(OpenCommand),
             typeof(ICommand),
-            typeof(SwipeListItem));
+            typeof(SwipeListItem),
+            propertyChanged: (b, o, n) =>
+            {
+                System.Diagnostics.Debug.WriteLine(
+                    $"OpenCommand = {(n == null ? "NULL" : "SET")}");
+            });
 
     public ICommand? OpenCommand
     {

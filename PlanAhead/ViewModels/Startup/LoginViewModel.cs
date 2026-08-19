@@ -48,16 +48,24 @@ public partial class LoginViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            await Dialogs.ShowErrorAsync(
-                $"Unable to login to your account.  {ex.Message}");
+            var msg = $"Error in LoginViewModel:LoginAsync:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
         }
     }
 
 
     public async Task InitialiseAsync()
     {
-        Email = "";
-        Password = "";
+        try
+        {
+            Email = "";
+            Password = "";
+        }
+        catch (Exception ex)
+        {
+            var msg = $"Error in LoginViewModel:InitialiseAsync:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
+        }
     }
 
     [RelayCommand]
@@ -85,28 +93,52 @@ public partial class LoginViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-                await Dialogs.ShowErrorAsync(
-                    $"Unable to create your account.  {ex.Message}");
+            var msg = $"Error in LoginViewModel:RegisterAsync:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
         }
     }
 
     [RelayCommand]
     private async Task OfflineOnlyAsync()
     {
-        _settings.SyncMode = PlanAhead.Core.Models.Enums.SyncMode.Offline;
+        try
+        {
+            _settings.SyncMode = PlanAhead.Core.Models.Enums.SyncMode.Offline;
 
-        await Shell.Current.GoToAsync("//Dashboard");
+            await Shell.Current.GoToAsync("//Dashboard");
+        }
+        catch (Exception ex)
+        {
+            var msg = $"Error in LoginViewModel:OfflineOnlyAsync:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
+        }
     }
 
     [RelayCommand]
     private async Task GoogleAsync()
     {
+        try
+        {
 
+        }
+        catch (Exception ex)
+        {
+            var msg = $"Error in LoginViewModel:GoogleAsync:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
+        }
     }
 
     [RelayCommand]
     private async Task CancelAsync()
     {
+        try
+        {
 
+        }
+        catch (Exception ex)
+        {
+            var msg = $"Error in LoginViewModel:CancelAsync:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
+        }
     }
 }

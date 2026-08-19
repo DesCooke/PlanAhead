@@ -73,7 +73,8 @@ public partial class AccountsViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            await Dialogs.ShowErrorAsync("FundsViewModal.cs:LoadAsync:Exception:" + ex.ToString());
+            var msg = $"Error in AccountsViewModel:LoadAsync:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
         }
 
     }
@@ -82,39 +83,75 @@ public partial class AccountsViewModel : BaseViewModel
     [RelayCommand]
     private async Task DeleteAsync(AccountListItem accountListItem)
     {
-        var delete =
-            await Dialogs.ConfirmAsync(
-                "Delete Account",
-                $"Delete '{accountListItem.Account.Name}'?");
+        try
+        {
+            var delete =
+                await Dialogs.ConfirmAsync(
+                    "Delete Account",
+                    $"Delete '{accountListItem.Account.Name}'?");
 
-        if (!delete)
-            return;
+            if (!delete)
+                return;
 
-        await _accountService.DeleteAsync(accountListItem.Account.Id);
+            await _accountService.DeleteAsync(accountListItem.Account.Id);
 
-        await InitialiseAsync();
+            await InitialiseAsync();
+        }
+        catch (Exception ex)
+        {
+            var msg = $"Error in AccountsViewModel:DeleteAsync:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
+        }
+
     }
 
     [RelayCommand]
     private async Task AddAsync()
     {
-        await Shell.Current.GoToAsync("AccountEditPage");
+        try
+        {
+            await Shell.Current.GoToAsync("AccountEditPage");
+        }
+        catch (Exception ex)
+        {
+            var msg = $"Error in AccountsViewModel:AddAsync:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
+        }
+
     }
 
     [RelayCommand]
-    private async Task OpenAsync(AccountListItem accountListItem)
+    private async Task OpenASync(AccountListItem accountListItem)
     {
-        _navigationContext.Set(accountListItem.Account.Id);
+        try
+        {
+            _navigationContext.Set(accountListItem.Account.Id);
 
-        await Shell.Current.GoToAsync("AccountViewPage");
+            await Shell.Current.GoToAsync("AccountViewPage");
+        }
+        catch (Exception ex)
+        {
+            var msg = $"Error in AccountsViewModel:OpenAsync:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
+        }
+
     }
 
     [RelayCommand]
     private async Task EditAsync(AccountListItem accountListItem)
     {
-        _navigationContext.Set(accountListItem.Account.Id);
+        try
+        {
+            _navigationContext.Set(accountListItem.Account.Id);
 
-        await Shell.Current.GoToAsync("AccountEditPage");
+            await Shell.Current.GoToAsync("AccountEditPage");
+        }
+        catch (Exception ex)
+        {
+            var msg = $"Error in AccountsViewModel:EditAsync:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
+        }
+
     }
 
 }

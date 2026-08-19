@@ -4,6 +4,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     Title="Settings">
+
     <ScrollView>
 
         <VerticalStackLayout Padding="20" Spacing="15">
@@ -22,7 +23,56 @@
                 IsVisible="{Binding IsLoggedIn}"
                 Text="Logout" />
 
+            <!--  Danger Zone  -->
+
+            <Border
+                Margin="0,30,0,0"
+                Padding="15"
+                Stroke="#D32F2F"
+                StrokeThickness="2">
+
+                <VerticalStackLayout Spacing="12">
+
+                    <Label
+                        FontAttributes="Bold"
+                        FontSize="22"
+                        Text="⚠ Danger Zone"
+                        TextColor="#D32F2F" />
+
+                    <Label
+                        FontSize="14"
+                        Text="These actions permanently remove data. They cannot be undone."
+                        TextColor="Gray" />
+
+                    <Button
+                        BackgroundColor="#FFF3F3"
+                        BorderColor="#D32F2F"
+                        BorderWidth="1"
+                        Command="{Binding ClearLocalDatabaseCommand}"
+                        Text="🗑 Clear Local Database"
+                        TextColor="#D32F2F" />
+
+                    <Button
+                        BackgroundColor="#FFF3F3"
+                        BorderColor="#D32F2F"
+                        BorderWidth="1"
+                        Command="{Binding ClearRemoteDatabaseCommand}"
+                        Text="☁ Clear Remote Data"
+                        TextColor="#D32F2F" />
+
+                    <Button
+                        BackgroundColor="#D32F2F"
+                        Command="{Binding FactoryResetCommand}"
+                        FontAttributes="Bold"
+                        Text="💥 Factory Reset"
+                        TextColor="White" />
+
+                </VerticalStackLayout>
+
+            </Border>
+
         </VerticalStackLayout>
 
     </ScrollView>
+
 </ContentPage>

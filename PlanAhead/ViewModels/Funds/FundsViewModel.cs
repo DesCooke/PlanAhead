@@ -43,6 +43,8 @@ public partial class FundsViewModel : BaseViewModel
 
     public async Task InitialiseAsync()
     {
+        try
+        {
             if (_navigationContext.Has<Guid>())
             {
                 AccountId = _navigationContext.Get<Guid>();
@@ -53,6 +55,13 @@ public partial class FundsViewModel : BaseViewModel
             {
                 await LoadAsync(AccountId);
             }
+        }
+        catch (Exception ex)
+        {
+            var msg = $"Error in FundsViewModel:InitialiseAsync:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
+        }
+
     }
 
     [RelayCommand]
@@ -75,7 +84,8 @@ public partial class FundsViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            await Dialogs.ShowErrorAsync("FundsViewModal.cs:LoadAsync:Exception:" + ex.ToString());
+            var msg = $"Error in FundsViewModel:LoadAsync:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
         }
 
     }
@@ -83,25 +93,43 @@ public partial class FundsViewModel : BaseViewModel
     [RelayCommand]
     private async Task DeleteAsync(Fund fund)
     {
-        var delete =
-            await Dialogs.ConfirmAsync(
-                "Delete Fund",
-                $"Delete '{fund.Name}'?");
+        try
+        {
+            var delete =
+                await Dialogs.ConfirmAsync(
+                    "Delete Fund",
+                    $"Delete '{fund.Name}'?");
 
-        if (!delete)
-            return;
+            if (!delete)
+                return;
 
-        await _fundService.DeleteAsync(fund.Id);
+            await _fundService.DeleteAsync(fund.Id);
 
-        await LoadAsync(AccountId);
+            await LoadAsync(AccountId);
+        }
+        catch (Exception ex)
+        {
+            var msg = $"Error in FundsViewModel:DeleteAsync:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
+        }
+
     }
 
     [RelayCommand]
     private async Task AddAsync()
     {
-        _navigationContext.Set(AccountId);
+        try
+        {
+            _navigationContext.Set(AccountId);
 
-        await Shell.Current.GoToAsync("FundEditPage");
+            await Shell.Current.GoToAsync("FundEditPage");
+        }
+        catch (Exception ex)
+        {
+            var msg = $"Error in FundsViewModel:AddAsync:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
+        }
+
     }
 
     partial void OnSelectedFundChanged(Fund? value)
@@ -113,22 +141,37 @@ public partial class FundsViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private async Task OpenAsync(Fund fund)
+    private async Task OpenASync(Fund fund)
     {
-        _navigationContext.Set(fund.Id);
+        try
+        {
+            _navigationContext.Set(fund.Id);
 
-        await Shell.Current.GoToAsync("FundViewPage");
-
+            await Shell.Current.GoToAsync("FundViewPage");
+        }
+        catch (Exception ex)
+        {
+            var msg = $"Error in FundsViewModel:OpenAsync:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
+        }
     }
 
     [RelayCommand]
     private async Task EditAsync(Fund fund)
     {
-        _navigationContext.Set(fund);
+        try
+        {
+            _navigationContext.Set(fund);
 
-        await Shell.Current.GoToAsync("FundEditPage");
+            await Shell.Current.GoToAsync("FundEditPage");
 
-        SelectedFund = null;
+            SelectedFund = null;
+        }
+        catch (Exception ex)
+        {
+            var msg = $"Error in FundsViewModel:EditAsync:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
+        }
     }
 
 }

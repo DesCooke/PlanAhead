@@ -19,8 +19,6 @@
 
             <Button Command="{Binding ShowDatabasePathCommand}" Text="Show Database Path" />
 
-            <Button Command="{Binding CreateTestAccountCommand}" Text="Create Test Account" />
-
             <Button Command="{Binding ShowAccountCountCommand}" Text="Show Account Count" />
 
             <Button Command="{Binding DeleteAllCommand}" Text="Clear All - Start as New Install" />

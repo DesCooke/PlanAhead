@@ -1,25 +1,31 @@
 ﻿using SQLite;
 
 namespace PlanAhead.Infrastructure.DB.SQLite;
-
 public sealed class SQLiteContext
 {
-    private readonly string _databasePath;
+    public string DatabasePath { get; }
 
     private SQLiteAsyncConnection? _connection;
 
     public SQLiteContext(string databasePath)
     {
-        _databasePath = databasePath;
+        DatabasePath = databasePath;
     }
 
     public async Task<SQLiteAsyncConnection> GetConnectionAsync()
     {
-        if (_connection != null)
-            return _connection;
-
-        _connection = new SQLiteAsyncConnection(_databasePath);
+        if (_connection == null)
+            _connection = new SQLiteAsyncConnection(DatabasePath);
 
         return _connection;
+    }
+
+    public async Task CloseAsync()
+    {
+        if (_connection != null)
+        {
+            await _connection.CloseAsync();
+            _connection = null;
+        }
     }
 }

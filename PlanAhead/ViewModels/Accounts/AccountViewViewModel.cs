@@ -101,54 +101,82 @@ public partial class AccountViewViewModel : BaseViewModel
     [RelayCommand]
     public async Task LoadAsync()
     {
-        if(Id == Guid.Empty){
-            Id = _navigationContext.Get<Guid>();
-            _navigationContext.Clear();
+        try
+        {
+            if (Id == Guid.Empty)
+            {
+                Id = _navigationContext.Get<Guid>();
+                _navigationContext.Clear();
+            }
+
+            var account = await _accountService.GetByIdAsync(Id);
+
+            if (account != null)
+                Load(account);
+        }
+        catch (Exception ex)
+        {
+            var msg = $"Error in AccountViewViewModel:LoadAsync:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
         }
 
-        var account = await _accountService.GetByIdAsync(Id);
-
-        if (account != null)
-            Load(account);
     }
 
     [RelayCommand]
     private async Task EditAsync()
     {
-        _navigationContext.Set(Id);
+        try
+        {
+            _navigationContext.Set(Id);
 
-        await Shell.Current.GoToAsync("AccountEditPage");
+            await Shell.Current.GoToAsync("AccountEditPage");
+        }
+        catch (Exception ex)
+        {
+            var msg = $"Error in AccountViewViewModel:EditAsync:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
+        }
+
     }
 
     [RelayCommand]
     private Task CancelAsync()
     {
-        return Navigation.GoBackAsync();
+        try
+        {
+            return Navigation.GoBackAsync();
+        }
+        catch (Exception ex)
+        {
+            var msg = $"Error in AccountViewViewModel:CancelAsync:{ex.Message}";
+            Dialogs.ShowErrorAsync(msg);
+        }
+        return Task.CompletedTask;
     }
 
     [RelayCommand]
     private async Task DeleteAsync()
     {
-        var delete =
-            await Dialogs.ConfirmAsync(
-                "Delete Account",
-                $"Delete '{Name}'?");
+        try
+        {
+            var delete =
+                await Dialogs.ConfirmAsync(
+                    "Delete Account",
+                    $"Delete '{Name}'?");
 
-        if (!delete)
-            return;
+            if (!delete)
+                return;
 
-        await _accountService.DeleteAsync(Id);
+            await _accountService.DeleteAsync(Id);
 
-        await Navigation.GoBackAsync();
-    }
+            await Navigation.GoBackAsync();
+        }
+        catch (Exception ex)
+        {
+            var msg = $"Error in AccountViewViewModel:DeleteAsync:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
+        }
 
-    [RelayCommand]
-    private async Task GoToPlansAsync()
-    {
-        var hey =
-            await Dialogs.ConfirmAsync(
-                "Hello World",
-                $"Hello");
     }
 
     [RelayCommand]
@@ -162,7 +190,8 @@ public partial class AccountViewViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            await Dialogs.ShowErrorAsync("AccountViewViewModel.cs:GoToFundsAsync:Exception:" + ex.ToString());
+            var msg = $"Error in AccountViewViewModel:GoToFundsAsync:{ex.Message}";
+            await Dialogs.ShowErrorAsync(msg);
         }
     }
 
