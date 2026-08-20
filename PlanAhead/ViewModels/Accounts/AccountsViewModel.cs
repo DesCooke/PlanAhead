@@ -121,7 +121,7 @@ public partial class AccountsViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private async Task OpenASync(AccountListItem accountListItem)
+    private async Task OpenAsync(AccountListItem accountListItem)
     {
         try
         {

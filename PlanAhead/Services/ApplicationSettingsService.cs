@@ -18,8 +18,12 @@ public class ApplicationSettingsService
 
     public DateTime LastSyncUtc
     {
-        get => Preferences.Default.Get("LastSyncUtc", DateTime.Now);
-        set => Preferences.Default.Set("LastSyncUtc", DateTime.Now);
+        get { 
+            return Preferences.Default.Get("LastSyncUtc", new DateTime(2000, 1, 1)); 
+        }
+        set {
+            Preferences.Default.Set("LastSyncUtc", value); 
+        }
     }
 
     public SyncMode SyncMode
@@ -43,5 +47,11 @@ public class ApplicationSettingsService
     public void MarkFirstRunComplete()
     {
         Preferences.Default.Set(FirstRunKey, false);
+    }
+
+    public void ResetToFactory()
+    {
+        IsFirstRun = true;
+        LastSyncUtc = new DateTime(2001, 1, 1 );
     }
 }

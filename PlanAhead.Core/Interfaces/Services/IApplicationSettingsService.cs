@@ -10,4 +10,6 @@ public interface IApplicationSettingsService
     SyncMode SyncMode { get; set; }
 
     void MarkFirstRunComplete();
+
+    void ResetToFactory();
 }

@@ -7,5 +7,6 @@ namespace PlanAhead.Infrastructure.DB.SQLite
     public interface ILocalDatabaseService
     {
         Task DeleteDatabaseAsync();
+        Task CreateDatabaseAsync();
     }
 }

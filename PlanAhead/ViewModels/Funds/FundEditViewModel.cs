@@ -55,25 +55,18 @@ public partial class FundEditViewModel : BaseViewModel
     {
         try
         {
-            if (!_navigationContext.Has<Guid>())
+            // has a guid - it is the Account Id - it is a new fund
+            if (_navigationContext.Has<Guid>())
             {
-                //
-                // New Fund
-                //
+                AccountId = _navigationContext.Get<Guid>();
+
                 Title = "New Fund";
 
-                return;
-            }
-
-            Id = _navigationContext.Get<Guid>();
-
-            var fund = await _fundService.GetByIdAsync(Id);
-            if (fund == null)
-            {
-                //
-                // New Fund
-                //
-                Title = "New Fund";
+                Id = Guid.Empty;
+                Name = "";
+                Description = "";
+                Notes = "";
+                IconId = "";
 
                 return;
             }
@@ -84,7 +77,9 @@ public partial class FundEditViewModel : BaseViewModel
             // Existing Fund
             //
 
-            Load(fund);
+            var fund = _navigationContext.Get<Fund>();
+            if(fund!=null)
+                Load(fund);
 
             _navigationContext.Clear();
         }

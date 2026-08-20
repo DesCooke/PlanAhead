@@ -27,9 +27,16 @@ public class AccountRepository: IAccountRepository
     {
         var db = await _context.GetConnectionAsync();
 
-        return await db.Table<Account>()
-            .Where(a => a.NeedsSync)
-            .ToListAsync();
+        try
+        {
+            return await db.Table<Account>()
+                .Where(a => a.NeedsSync)
+                .ToListAsync();
+        } catch 
+        {
+
+        }
+         return new List<Account>();
     }
 
     public async Task MarkSyncedAsync(Guid id)

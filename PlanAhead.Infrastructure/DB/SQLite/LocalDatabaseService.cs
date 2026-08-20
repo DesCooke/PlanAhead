@@ -4,6 +4,8 @@ using System.Text;
 
 namespace PlanAhead.Infrastructure.DB.SQLite
 {
+    using global::SQLite;
+    using PlanAhead.Core.Models.Domain;
     using PlanAhead.Infrastructure.DB.SQLite;
 
     public class LocalDatabaseService : ILocalDatabaseService
@@ -21,6 +23,13 @@ namespace PlanAhead.Infrastructure.DB.SQLite
 
             if (File.Exists(_context.DatabasePath))
                 File.Delete(_context.DatabasePath);
+        }
+
+        public async Task CreateDatabaseAsync()
+        {
+            var db = await _context.GetConnectionAsync();
+            await db.CreateTableAsync<Account>();
+            await db.CreateTableAsync<Fund>();
         }
     }
 }

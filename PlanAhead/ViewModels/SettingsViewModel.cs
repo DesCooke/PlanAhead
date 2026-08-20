@@ -1,9 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Infrastructure.Authentication;
 using PlanAhead.Infrastructure.DB.SQLite;
 using PlanAhead.Infrastructure.DB.Supabase;
 using PlanAhead.Infrastructure.Repositories;
+using PlanAhead.Infrastructure.Services;
 using PlanAhead.Interfaces;
 using PlanAhead.Services;
 using System;
@@ -17,6 +19,7 @@ namespace PlanAhead.ViewModels
         private readonly IAuthenticationService _authenticationService;
         private readonly ILocalDatabaseService _localDatabase;
         private readonly IRemoteDatabaseService _remoteDatabase;
+        private readonly IApplicationSettingsService _applicationSettingsService;
 
 
         [ObservableProperty]
@@ -26,11 +29,13 @@ namespace PlanAhead.ViewModels
             IDialogService dialogs, 
             IAuthenticationService authenticationService,
             ILocalDatabaseService localDatabase,
-            IRemoteDatabaseService remoteDatabase) : base(navigation, dialogs)
+            IRemoteDatabaseService remoteDatabase, 
+            IApplicationSettingsService applicationSettingsService) : base(navigation, dialogs)
         {
             _authenticationService = authenticationService;
             _localDatabase = localDatabase;
             _remoteDatabase = remoteDatabase;
+            _applicationSettingsService = applicationSettingsService;
         }
 
 
@@ -87,6 +92,8 @@ namespace PlanAhead.ViewModels
 
                 await _localDatabase.DeleteDatabaseAsync();
 
+                _applicationSettingsService.ResetToFactory();
+
                 await Shell.Current.GoToAsync("//Welcome");
             }
             catch (Exception ex)
@@ -134,6 +141,8 @@ namespace PlanAhead.ViewModels
                 await _remoteDatabase.DeleteUserDataAsync();
 
                 await _localDatabase.DeleteDatabaseAsync();
+
+                _applicationSettingsService.ResetToFactory();
 
                 SecureStorage.Default.Remove("supabase-session");
 

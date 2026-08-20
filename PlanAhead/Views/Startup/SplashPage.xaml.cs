@@ -1,4 +1,5 @@
 using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Infrastructure.DB.SQLite;
 
 namespace PlanAhead.Views.Startup;
 
@@ -6,11 +7,13 @@ public partial class SplashPage : ContentPage
 {
     private readonly IApplicationStartupService _startup;
     private bool _hasNavigated;
+    private readonly ILocalDatabaseService _localDatabaseService;
 
-    public SplashPage(IApplicationStartupService startup)
+    public SplashPage(IApplicationStartupService startup, ILocalDatabaseService localDatabaseService)
     {
         InitializeComponent();
         _startup = startup;
+        _localDatabaseService = localDatabaseService;
     }
 
     protected override async void OnAppearing()
@@ -21,6 +24,9 @@ public partial class SplashPage : ContentPage
             return;
 
         _hasNavigated = true;
+
+        await _localDatabaseService.CreateDatabaseAsync();
+
 
         // IMPORTANT:
         // Yield back to the UI thread so that Shell completes its initial

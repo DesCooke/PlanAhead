@@ -112,7 +112,8 @@ namespace PlanAhead.Infrastructure.DB
                 IconId = fund.IconId,
                 CreatedUtc = fund.CreatedUtc,
                 UpdatedUtc = fund.UpdatedUtc,
-                DeletedUtc = fund.DeletedUtc
+                DeletedUtc = fund.DeletedUtc,
+                UserId = fund.UserId
             };
         }
 
