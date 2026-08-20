@@ -13,23 +13,24 @@ using PlanAhead.Views.Accounts;
 using PlanAhead.Views.Funds;
 using PlanAhead.Views.Startup;
 using System.Collections.ObjectModel;
+using PlanAhead.Infrastructure.DB.SQLite;
 
 namespace PlanAhead.ViewModels.Funds;
 
 public partial class WelcomeViewModel : BaseViewModel
 {
     private readonly IApplicationSettingsService _settings;
-    private readonly IAuthenticationService _authentication;
+    private readonly ILocalDatabaseService _localDatabaseService;
 
     public WelcomeViewModel(
         IApplicationSettingsService settings,
-        IAuthenticationService authentication,
+        ILocalDatabaseService localDatabaseService,
         INavigationService navigation,
         IDialogService dialogs)
         : base(navigation, dialogs)
     {
         _settings = settings;
-        _authentication = authentication;
+        _localDatabaseService = localDatabaseService;
     }
 
     [RelayCommand]
@@ -38,7 +39,10 @@ public partial class WelcomeViewModel : BaseViewModel
         try
         {
             _settings.SyncMode = SyncMode.Offline;
-            _settings.IsFirstRun = false;
+            _settings.IsFirstRun = true;
+            _settings.LastSyncUtc = new DateTime(2000, 1, 1);
+            await _localDatabaseService.DeleteDatabaseAsync();
+            await _localDatabaseService.CreateDatabaseAsync();
 
             await Shell.Current.GoToAsync("//Dashboard");
         }
@@ -56,7 +60,10 @@ public partial class WelcomeViewModel : BaseViewModel
         try
         {
             _settings.SyncMode = SyncMode.SupabaseManual;
-            _settings.IsFirstRun = false;
+            _settings.IsFirstRun = true;
+            _settings.LastSyncUtc = new DateTime(2000, 1, 1);
+            await _localDatabaseService.DeleteDatabaseAsync();
+            await _localDatabaseService.CreateDatabaseAsync();
 
             await Shell.Current.GoToAsync("//Login");
         }
@@ -73,7 +80,10 @@ public partial class WelcomeViewModel : BaseViewModel
         try
         {
             _settings.SyncMode = SyncMode.SupabaseAuto;
-            _settings.IsFirstRun = false;
+            _settings.IsFirstRun = true;
+            _settings.LastSyncUtc = new DateTime(2000, 1, 1);
+            await _localDatabaseService.DeleteDatabaseAsync();
+            await _localDatabaseService.CreateDatabaseAsync();
 
             await Shell.Current.GoToAsync("//Login");
         }
