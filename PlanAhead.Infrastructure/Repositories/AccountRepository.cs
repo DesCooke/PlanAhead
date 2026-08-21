@@ -99,15 +99,11 @@ public class AccountRepository: IAccountRepository
     {
         var db = await Database();
 
-        account.Id = Guid.NewGuid();
-
-        account.CreatedUtc = DateTime.UtcNow;
-
-        account.UpdatedUtc = DateTime.UtcNow;
-
-        account.NeedsSync = true;
-
-        account.DisplayOrder = await db.Table<Account>().CountAsync() + 1;
+        if (account.Id == Guid.Empty)
+        {
+            account.Id = Guid.NewGuid();
+            account.DisplayOrder = await db.Table<Account>().CountAsync() + 1;
+        }
 
         await db.InsertAsync(account);
 
@@ -116,10 +112,6 @@ public class AccountRepository: IAccountRepository
     public async Task UpdateAsync(Account account)
     {
         var db = await Database();
-
-        account.UpdatedUtc = DateTime.UtcNow;
-
-        account.NeedsSync = true;
 
         await db.UpdateAsync(account);
 
@@ -130,6 +122,5 @@ public class AccountRepository: IAccountRepository
         account.Deleted = true;
 
         await UpdateAsync(account);
-
     }
 }

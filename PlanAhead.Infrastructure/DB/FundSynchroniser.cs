@@ -52,8 +52,6 @@ namespace PlanAhead.Infrastructure.DB
 
                 if (local == null)
                 {
-                    remote.NeedsSync = false;
-
                     await _repository.AddAsync(remote);
 
                     continue;
@@ -61,8 +59,6 @@ namespace PlanAhead.Infrastructure.DB
 
                 if (remote.UpdatedUtc > local.UpdatedUtc)
                 {
-                    remote.NeedsSync = false;
-
                     await _repository.UpdateAsync(remote);
                 }
             }
@@ -81,14 +77,11 @@ namespace PlanAhead.Infrastructure.DB
                 if (fund.UserId == Guid.Empty)
                     fund.UserId = userId;
 
-                if (fund.Deleted)
-                {
-                    await DeleteRecordAsync(ToRecord(fund));
-                }
-                else
-                {
-                    await UploadRecordAsync(ToRecord(fund));
-                }
+                //
+                // Deletions are just updates - we just set the delete flag and update
+                // we never actually delete the record
+                //
+                await UploadRecordAsync(ToRecord(fund));
 
                 fund.NeedsSync = false;
 
@@ -132,7 +125,8 @@ namespace PlanAhead.Infrastructure.DB
                 IconId = record.IconId,
                 CreatedUtc = record.CreatedUtc,
                 UpdatedUtc = record.UpdatedUtc,
-                DeletedUtc = record.DeletedUtc
+                DeletedUtc = record.DeletedUtc,
+                UserId = record.UserId
             };
         }
 

@@ -55,16 +55,17 @@ public class FundRepository : IFundRepository
     {
         var db = await Database();
 
-        fund.Id = Guid.NewGuid();
-        fund.CreatedUtc = DateTime.UtcNow;
-        fund.UpdatedUtc = DateTime.UtcNow;
-        fund.NeedsSync = true;
+        if (fund.Id == Guid.Empty)
+        {
+            fund.Id = Guid.NewGuid();
 
-        // Put new funds at the end of the list
-        fund.DisplayOrder =
-            await db.Table<Fund>()
-                    .Where(f => f.AccountId == fund.AccountId && !f.Deleted)
-                    .CountAsync() + 1;
+            // Put new funds at the end of the list - only for
+            // actually new funds - not synchronised
+            fund.DisplayOrder =
+                await db.Table<Fund>()
+                        .Where(f => f.AccountId == fund.AccountId && !f.Deleted)
+                        .CountAsync() + 1;
+        }
 
         await db.InsertAsync(fund);
     }
@@ -72,9 +73,6 @@ public class FundRepository : IFundRepository
     public async Task UpdateAsync(Fund fund)
     {
         var db = await Database();
-
-        fund.UpdatedUtc = DateTime.UtcNow;
-        fund.NeedsSync = true;
 
         await db.UpdateAsync(fund);
     }

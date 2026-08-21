@@ -39,7 +39,7 @@ public partial class WelcomeViewModel : BaseViewModel
         try
         {
             _settings.SyncMode = SyncMode.Offline;
-            _settings.IsFirstRun = true;
+            _settings.IsFirstRun = false;
             _settings.LastSyncUtc = new DateTime(2000, 1, 1);
             await _localDatabaseService.DeleteDatabaseAsync();
             await _localDatabaseService.CreateDatabaseAsync();
@@ -60,7 +60,7 @@ public partial class WelcomeViewModel : BaseViewModel
         try
         {
             _settings.SyncMode = SyncMode.SupabaseManual;
-            _settings.IsFirstRun = true;
+            _settings.IsFirstRun = false;
             _settings.LastSyncUtc = new DateTime(2000, 1, 1);
             await _localDatabaseService.DeleteDatabaseAsync();
             await _localDatabaseService.CreateDatabaseAsync();
@@ -80,7 +80,7 @@ public partial class WelcomeViewModel : BaseViewModel
         try
         {
             _settings.SyncMode = SyncMode.SupabaseAuto;
-            _settings.IsFirstRun = true;
+            _settings.IsFirstRun = false;
             _settings.LastSyncUtc = new DateTime(2000, 1, 1);
             await _localDatabaseService.DeleteDatabaseAsync();
             await _localDatabaseService.CreateDatabaseAsync();

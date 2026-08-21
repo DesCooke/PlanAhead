@@ -34,9 +34,16 @@ public class FundService : IFundService
     public Task AddAsync(
         Fund fund)
     {
-        // Future business rules go here.
-        if (fund.Id == Guid.Empty)
-            fund.Id = Guid.NewGuid();
+        // 
+        // we set these now in the business logic because at this point
+        // we are actually adding a new row
+        // But _repository.AddAsync is also called when we 
+        // add a row for synchronisation - in that circumstance - we do not
+        // set these variables - that is why we set them here
+        //
+        fund.CreatedUtc = DateTime.UtcNow;
+        fund.UpdatedUtc = DateTime.UtcNow;
+        fund.NeedsSync = true;
 
         return _fundRepository.AddAsync(fund);
     }
@@ -44,7 +51,15 @@ public class FundService : IFundService
     public Task UpdateAsync(
         Fund fund)
     {
-        // Validation will eventually live here.
+        //
+        // We do this now rather than in the FundRepository because
+        // here, we know we are updating the record
+        // FundRepostiry.UpdateAsync gets called for synchronisation
+        // updates also - where we do not want to update these values
+        //
+        fund.UpdatedUtc = DateTime.UtcNow;
+        fund.NeedsSync = true;
+
 
         return _fundRepository.UpdateAsync(fund);
     }
