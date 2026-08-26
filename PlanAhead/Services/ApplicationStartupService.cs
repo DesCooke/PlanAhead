@@ -17,25 +17,33 @@ public class ApplicationStartupService : IApplicationStartupService
     private readonly IAuthenticationService _authenticationService;
     private readonly IDialogService _dialogs;
     private readonly IConnectivityService _connectivityService;
+    private readonly IAutoSyncService _autoSyncService;
+    private readonly ISyncStatusService _syncStatusService;
 
     public ApplicationStartupService(
         IApplicationSettingsService settings,
         Client client,
         IAuthenticationService  authenticationService,
         IDialogService dialogs, 
-        IConnectivityService connectivityService)
+        IConnectivityService connectivityService,
+        IAutoSyncService autoSyncService,
+        ISyncStatusService syncStatusService)
     {
         _settings = settings;
         _client = client;
         _authenticationService = authenticationService; 
         _dialogs = dialogs;
         _connectivityService = connectivityService;
+        _autoSyncService = autoSyncService;
+        _syncStatusService = syncStatusService;
     }
 
     public async Task NavigateToStartupPageAsync()
     {
         try
         {
+            _syncStatusService.IsSyncing = false;
+
             //
             // User is currently offline - go into offline mode
             //
@@ -74,6 +82,16 @@ public class ApplicationStartupService : IApplicationStartupService
 
             if (await _authenticationService.IsLoggedInAsync())
             {
+                if (_settings.SyncMode == PlanAhead.Core.Models.Enums.SyncMode.SupabaseAuto)
+                {
+                    var userIdStr = await _authenticationService.GetCurrentUserIdAsync();
+                    if (userIdStr != null)
+                    {
+                        var userId = Guid.Parse(userIdStr);
+//                        _autoSyncService.Start(userId);
+                    }
+                }
+
                 await Shell.Current.GoToAsync("//Dashboard");
                 return;
             }

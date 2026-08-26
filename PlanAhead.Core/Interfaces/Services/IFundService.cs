@@ -19,5 +19,5 @@ public interface IFundService
         Fund fund);
 
     Task DeleteAsync(
-        Guid fundId);
+        Fund fund);
 }

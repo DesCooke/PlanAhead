@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using PlanAhead.Infrastructure.Authentication;
+using System.Diagnostics;
 
 
 namespace PlanAhead.Infrastructure.DB
@@ -46,14 +47,7 @@ namespace PlanAhead.Infrastructure.DB
                 if (account.UserId == Guid.Empty)
                     account.UserId = userId;
 
-                if (account.Deleted)
-                {
-                    await DeleteRecordAsync(ToRecord(account));
-                }
-                else
-                {
-                    await UploadRecordAsync(ToRecord(account));
-                }
+                await UploadRecordAsync(ToRecord(account));
 
                 account.NeedsSync = false;
 
@@ -77,10 +71,12 @@ namespace PlanAhead.Infrastructure.DB
 
                 var remote = ToDomain(record);
 
+                Debug.WriteLine($"Record {record.Name}");
                 var local = await _repository.GetByIdAsync(remote.Id);
 
                 if (local == null)
                 {
+                    Debug.WriteLine(" -> Adding");
                     remote.NeedsSync = false;
 
                     await _repository.AddAsync(remote);
@@ -90,6 +86,7 @@ namespace PlanAhead.Infrastructure.DB
 
                 if (remote.UpdatedUtc > local.UpdatedUtc)
                 {
+                    Debug.WriteLine(" -> Updating");
                     remote.NeedsSync = false;
 
                     await _repository.UpdateAsync(remote);
@@ -113,7 +110,8 @@ namespace PlanAhead.Infrastructure.DB
                 IconId = account.IconId,
                 CreatedUtc = account.CreatedUtc,
                 UpdatedUtc = account.UpdatedUtc,
-                DeletedUtc = account.DeletedUtc
+                DeletedUtc = account.DeletedUtc,
+                Deleted = account.Deleted
             };
         }
 
@@ -132,7 +130,8 @@ namespace PlanAhead.Infrastructure.DB
                 IconId = record.IconId,
                 CreatedUtc = record.CreatedUtc,
                 UpdatedUtc = record.UpdatedUtc,
-                DeletedUtc = record.DeletedUtc
+                DeletedUtc = record.DeletedUtc,
+                Deleted = record.Deleted
             };
         }
 

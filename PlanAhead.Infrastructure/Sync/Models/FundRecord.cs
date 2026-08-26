@@ -48,5 +48,8 @@ namespace PlanAhead.Infrastructure.Sync.Models
         [Column("user_id")]
         public Guid UserId { get; set; }
 
+        [Column("deleted")]
+        public bool Deleted { get; set; }
+
     }
 }

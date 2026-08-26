@@ -7,6 +7,8 @@ public interface IApplicationSettingsService
 
     DateTime LastSyncUtc { get; set; }
 
+    long LastSyncVersion { get; set; }
+
     SyncMode SyncMode { get; set; }
 
     void MarkFirstRunComplete();

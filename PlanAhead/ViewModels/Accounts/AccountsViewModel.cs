@@ -93,7 +93,7 @@ public partial class AccountsViewModel : BaseViewModel
             if (!delete)
                 return;
 
-            await _accountService.DeleteAsync(accountListItem.Account.Id);
+            await _accountService.DeleteAsync(accountListItem.Account);
 
             await InitialiseAsync();
         }

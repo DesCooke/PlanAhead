@@ -167,7 +167,7 @@ public partial class AccountViewViewModel : BaseViewModel
             if (!delete)
                 return;
 
-            await _accountService.DeleteAsync(Id);
+            await _accountService.DeleteAsync(Build());
 
             await Navigation.GoBackAsync();
         }

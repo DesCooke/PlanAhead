@@ -6,6 +6,7 @@ using PlanAhead.Infrastructure.DB.SQLite;
 using PlanAhead.Infrastructure.DB.Supabase;
 using PlanAhead.Infrastructure.Repositories;
 using PlanAhead.Infrastructure.Services;
+using PlanAhead.Infrastructure.Sync;
 using PlanAhead.Interfaces;
 using PlanAhead.Services;
 using System;
@@ -20,6 +21,7 @@ namespace PlanAhead.ViewModels
         private readonly ILocalDatabaseService _localDatabase;
         private readonly IRemoteDatabaseService _remoteDatabase;
         private readonly IApplicationSettingsService _applicationSettingsService;
+        private readonly IAutoSyncService _autoSyncService;
 
 
         [ObservableProperty]
@@ -30,12 +32,14 @@ namespace PlanAhead.ViewModels
             IAuthenticationService authenticationService,
             ILocalDatabaseService localDatabase,
             IRemoteDatabaseService remoteDatabase, 
-            IApplicationSettingsService applicationSettingsService) : base(navigation, dialogs)
+            IApplicationSettingsService applicationSettingsService,
+            IAutoSyncService autoSyncService) : base(navigation, dialogs)
         {
             _authenticationService = authenticationService;
             _localDatabase = localDatabase;
             _remoteDatabase = remoteDatabase;
             _applicationSettingsService = applicationSettingsService;
+            _autoSyncService = autoSyncService;
         }
 
 
@@ -67,6 +71,8 @@ namespace PlanAhead.ViewModels
                     return;
 
                 await _authenticationService.LogoutAsync();
+
+                await _autoSyncService.StopAsync();
 
                 SecureStorage.Default.Remove("supabase-session");
 

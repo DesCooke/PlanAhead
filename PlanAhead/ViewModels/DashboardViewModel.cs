@@ -3,20 +3,23 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using PlanAhead.Core.Constants;
 using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.Messaging;
 using PlanAhead.Infrastructure.Authentication;
 using PlanAhead.Infrastructure.Repositories;
+using PlanAhead.Infrastructure.Sync;
 using PlanAhead.Interfaces;
 using PlanAhead.Services;
 using PlanAhead.Views;
 using PlanAhead.Views.Startup;
 using Supabase;
-using PlanAhead.Core.Messaging;
-using PlanAhead.Infrastructure.Sync;
+using System.Diagnostics;
 
 namespace PlanAhead.ViewModels;
 
 public partial class DashboardViewModel : BaseViewModel
 {
+    public bool IsSyncing => _syncStatusService.IsSyncing;
+
     [ObservableProperty]
     private string title = AppConstants.ApplicationName;
 
@@ -27,6 +30,8 @@ public partial class DashboardViewModel : BaseViewModel
     [ObservableProperty]
     private string version =
         $"Version {AppConstants.Version}";
+
+    private readonly ISyncStatusService _syncStatusService;
 
     private readonly AccountRepository _repository;
     private readonly IApplicationSettingsService _settings;
@@ -42,7 +47,8 @@ public partial class DashboardViewModel : BaseViewModel
         IAuthenticationService authenticationService,
         IApplicationStartupService startupService,
         IApplicationSettingsService settings, 
-        ISyncService syncService): base (navigation, dialogs)
+        ISyncService syncService,
+        ISyncStatusService syncStatusService): base (navigation, dialogs)
     {
         _repository = repository;
         _settings = settings;
@@ -51,9 +57,22 @@ public partial class DashboardViewModel : BaseViewModel
      
         _startupService = startupService;
         _syncService = syncService;
+        _syncStatusService = syncStatusService;
+
+        _syncStatusService.PropertyChanged += (_, e) =>
+        {
+            if (e.PropertyName == nameof(ISyncStatusService.IsSyncing))
+            {
+                Debug.WriteLine($"Status set to {_syncStatusService.IsSyncing}");
+                OnPropertyChanged(nameof(IsSyncing));
+                OnPropertyChanged(nameof(SyncIcon));   // <-- Missing
+                SyncCommand.NotifyCanExecuteChanged();
+            }
+        };
     }
 
-    [RelayCommand]
+
+    [RelayCommand(CanExecute = nameof(CanSync))]
     private async Task SyncAsync()
     {
         try
@@ -72,6 +91,18 @@ public partial class DashboardViewModel : BaseViewModel
             await Dialogs.ShowErrorAsync(msg);
         }
     }
+
+
+    public string SyncIcon => IsSyncing
+        ? "sync_disabled.png"
+        : "sync_auto.png";
+
+
+    private bool CanSync()
+    {
+        return !_syncStatusService.IsSyncing;
+    }
+
 
     [RelayCommand]
     private async Task TestRepository()

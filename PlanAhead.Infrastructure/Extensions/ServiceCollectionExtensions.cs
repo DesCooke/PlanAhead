@@ -36,6 +36,10 @@ public static class ServiceCollectionExtensions
 
         services.AddSingleton<IRemoteDatabaseService, RemoteDatabaseService>();
 
+        services.AddSingleton<IAutoSyncService, AutoSyncService>();
+        services.AddSingleton<ISyncStateService, SyncStateService>();
+        services.AddSingleton<ISyncStatusService, SyncStatusService>();
+
         return services;
     }
 }

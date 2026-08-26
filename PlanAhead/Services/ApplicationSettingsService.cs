@@ -16,6 +16,18 @@ public class ApplicationSettingsService
         set => Preferences.Default.Set("FirstRun", value);
     }
 
+    public long LastSyncVersion
+    {
+        get
+        {
+            return Preferences.Default.Get("LastSyncVersion", 0);
+        }
+        set
+        {
+            Preferences.Default.Set("LastSyncVersion", value);
+        }
+    }
+
     public DateTime LastSyncUtc
     {
         get { 

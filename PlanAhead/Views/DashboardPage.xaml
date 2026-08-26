@@ -11,7 +11,8 @@
 
         <ToolbarItem
             Command="{Binding SyncCommand}"
-            IconImageSource="refresh.png"
+            IconImageSource="{Binding SyncIcon}"
+            IsEnabled="{Binding CanSync}"
             Order="Primary"
             Priority="0" />
 

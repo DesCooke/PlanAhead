@@ -4,9 +4,13 @@ using System.Text;
 
 namespace PlanAhead.Infrastructure.Sync
 {
-    public interface ISyncService
+    public interface IAutoSyncService
     {
-        Task<bool> SyncAsync(Guid userId,
+        void Start(Guid userId);
+
+        Task StopAsync();
+
+        Task<bool> AutoSyncAsync(
             CancellationToken cancellationToken = default);
     }
 }

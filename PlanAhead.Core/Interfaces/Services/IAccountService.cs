@@ -12,5 +12,5 @@ public interface IAccountService
 
     Task UpdateAsync(Account account);
 
-    Task DeleteAsync(Guid accountId);
+    Task DeleteAsync(Account accou);
 }

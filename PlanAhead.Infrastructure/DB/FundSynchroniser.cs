@@ -106,7 +106,8 @@ namespace PlanAhead.Infrastructure.DB
                 CreatedUtc = fund.CreatedUtc,
                 UpdatedUtc = fund.UpdatedUtc,
                 DeletedUtc = fund.DeletedUtc,
-                UserId = fund.UserId
+                UserId = fund.UserId,
+                Deleted = fund.Deleted
             };
         }
 
@@ -126,7 +127,8 @@ namespace PlanAhead.Infrastructure.DB
                 CreatedUtc = record.CreatedUtc,
                 UpdatedUtc = record.UpdatedUtc,
                 DeletedUtc = record.DeletedUtc,
-                UserId = record.UserId
+                UserId = record.UserId,
+                Deleted = record.Deleted
             };
         }
 

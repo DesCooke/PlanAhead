@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using PlanAhead;
 using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Infrastructure.Authentication;
+using PlanAhead.Infrastructure.Sync;
 using PlanAhead.Interfaces;
 using PlanAhead.Services;
 using PlanAhead.ViewModels;
@@ -14,16 +15,23 @@ public partial class LoginViewModel : BaseViewModel
 {
     private IApplicationSettingsService _settings;
     private IAuthenticationService _authenticationService;
+    private ISyncService _syncService;
+    private IAutoSyncService _autoSyncService;
+    
 
     public LoginViewModel(
         IApplicationSettingsService settings,
         IAuthenticationService authenticationService,
         INavigationService navigation,
-        IDialogService dialogs)
+        IDialogService dialogs,
+        ISyncService syncService,
+        IAutoSyncService autoSyncService)
         : base(navigation, dialogs)
     {
         _settings = settings;
         _authenticationService = authenticationService;
+        _syncService = syncService;
+        _autoSyncService = autoSyncService;
     }
 
 
@@ -43,6 +51,19 @@ public partial class LoginViewModel : BaseViewModel
             await SecureStorage.Default.SetAsync(
                 "supabase-session",
                 JsonSerializer.Serialize(response));
+
+            var userIdString = await _authenticationService.GetCurrentUserIdAsync();
+            if (userIdString != null)
+            {
+                var userId = Guid.Parse(userIdString);
+                if (userId != Guid.Empty)
+                    await _syncService.SyncAsync(userId);
+                if (_settings.SyncMode == PlanAhead.Core.Models.Enums.SyncMode.SupabaseAuto)
+                {
+//                    _autoSyncService.Start(userId);
+                }
+            }
+
 
             await Shell.Current.GoToAsync("//Dashboard");
         }
@@ -77,9 +98,17 @@ public partial class LoginViewModel : BaseViewModel
                 Email,
                 Password);
 
-
-
             var response = await _authenticationService.LoginAsync(Email, Password);
+
+            if (_settings.SyncMode == PlanAhead.Core.Models.Enums.SyncMode.SupabaseAuto)
+            {
+                var userIdStr = await _authenticationService.GetCurrentUserIdAsync();
+                if(userIdStr != null)
+                {
+                    var userId = Guid.Parse(userIdStr);
+                    _autoSyncService.Start(userId);
+                }
+            }
 
             await SecureStorage.Default.SetAsync(
                 "supabase-session",

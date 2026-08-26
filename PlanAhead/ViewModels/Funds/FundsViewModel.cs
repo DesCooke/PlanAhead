@@ -103,7 +103,7 @@ public partial class FundsViewModel : BaseViewModel
             if (!delete)
                 return;
 
-            await _fundService.DeleteAsync(fund.Id);
+            await _fundService.DeleteAsync(fund);
 
             await LoadAsync(AccountId);
         }

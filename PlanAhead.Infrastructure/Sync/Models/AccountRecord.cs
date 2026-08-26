@@ -42,6 +42,9 @@ namespace PlanAhead.Infrastructure.Sync.Models
         [Column("deleted_utc")]
         public DateTime DeletedUtc { get; set; }
 
+        [Column("deleted")]
+        public bool Deleted { get; set; }
+
         [Column("user_id")]
         public Guid UserId { get; set; }
     }

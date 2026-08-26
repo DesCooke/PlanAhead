@@ -1,34 +1,35 @@
 ﻿using PlanAhead.Core.Interfaces.Repositories;
 using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Core.Models.Domain;
+using System.Security.Principal;
 
 namespace PlanAhead.Core.Services.Funds;
 
 public class FundService : IFundService
 {
-    private readonly IFundRepository _fundRepository;
+    private readonly IFundRepository _repository;
 
     public FundService(
         IFundRepository fundRepository)
     {
-        _fundRepository = fundRepository;
+        _repository = fundRepository;
     }
 
     public Task<List<Fund>> GetAllAsync()
     {
-        return _fundRepository.GetAllAsync();
+        return _repository.GetAllAsync();
     }
 
     public Task<List<Fund>> GetByAccountIdAsync(
         Guid accountId)
     {
-        return _fundRepository.GetByAccountIdAsync(accountId);
+        return _repository.GetByAccountIdAsync(accountId);
     }
 
     public Task<Fund?> GetByIdAsync(
         Guid id)
     {
-        return _fundRepository.GetByIdAsync(id);
+        return _repository.GetByIdAsync(id);
     }
 
     public Task AddAsync(
@@ -45,7 +46,7 @@ public class FundService : IFundService
         fund.UpdatedUtc = DateTime.UtcNow;
         fund.NeedsSync = true;
 
-        return _fundRepository.AddAsync(fund);
+        return _repository.AddAsync(fund);
     }
 
     public Task UpdateAsync(
@@ -61,18 +62,16 @@ public class FundService : IFundService
         fund.NeedsSync = true;
 
 
-        return _fundRepository.UpdateAsync(fund);
+        return _repository.UpdateAsync(fund);
     }
 
     public async Task DeleteAsync(
-        Guid fundId)
+        Fund fund)
     {
-        var fund =
-            await _fundRepository.GetByIdAsync(fundId);
+        fund.Deleted = true;
+        fund.DeletedUtc = DateTime.UtcNow;
+        fund.NeedsSync = true;
 
-        if (fund == null)
-            return;
-
-        await _fundRepository.DeleteAsync(fund);
+        await _repository.DeleteAsync(fund);
     }
 }

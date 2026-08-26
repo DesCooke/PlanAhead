@@ -1,0 +1,75 @@
+﻿create table public.user_sync
+(
+    user_id uuid primary key references auth.users(id),
+    sync_version bigint not null default 0,
+    last_updated_utc timestamptz not null default now()
+);
+
+create or replace function public.bump_sync_version(
+    p_user_id uuid
+)
+returns void
+language plpgsql
+security definer
+as $$
+begin
+
+    insert into public.user_sync
+    (
+        user_id,
+        sync_version,
+        last_updated_utc
+    )
+    values
+    (
+        p_user_id,
+        1,
+        now()
+    )
+
+    on conflict (user_id)
+    do update
+        set sync_version = user_sync.sync_version + 1,
+            last_updated_utc = now();
+
+end;
+$$;
+
+create or replace function public.sync_trigger()
+returns trigger
+language plpgsql
+as $$
+begin
+
+    if TG_OP = 'DELETE' then
+        perform public.bump_sync_version(old.user_id);
+        return old;
+    end if;
+
+    perform public.bump_sync_version(new.user_id);
+
+    return new;
+
+end;
+$$;
+
+create trigger trg_accounts_sync
+after insert or update or delete
+on public.accounts
+for each row
+execute function public.sync_trigger();
+
+create trigger trg_funds_sync
+after insert or update or delete
+on public.funds
+for each row
+execute function public.sync_trigger();
+
+create policy "Users can view their own sync"
+on public.user_sync
+for select
+using (
+    auth.uid() = user_id
+);
+
+

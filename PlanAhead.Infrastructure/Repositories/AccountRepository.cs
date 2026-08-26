@@ -119,8 +119,8 @@ public class AccountRepository: IAccountRepository
 
     public async Task DeleteAsync(Account account)
     {
-        account.Deleted = true;
+        var db = await Database();
 
-        await UpdateAsync(account);
+        await db.UpdateAsync(account);
     }
 }

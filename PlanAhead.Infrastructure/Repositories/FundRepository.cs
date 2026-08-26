@@ -110,8 +110,8 @@ public class FundRepository : IFundRepository
     }
     public async Task DeleteAsync(Fund fund)
     {
-        fund.Deleted = true;
+        var db = await Database();
 
-        await UpdateAsync(fund);
+        await db.UpdateAsync(fund);
     }
 }

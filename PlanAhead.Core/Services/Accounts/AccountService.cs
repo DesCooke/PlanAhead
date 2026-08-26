@@ -44,12 +44,12 @@ public class AccountService : IAccountService
         return _repository.UpdateAsync(account);
     }
 
-    public async Task DeleteAsync(Guid accountId)
+    public async Task DeleteAsync(Account account)
     {
-        var account =
-            await _repository.GetByIdAsync(accountId);
+        account.Deleted = true;
+        account.DeletedUtc = DateTime.UtcNow;
+        account.NeedsSync = true;
 
-        if (account != null)
-            await _repository.DeleteAsync(account);
+        await _repository.DeleteAsync(account);
     }
 }

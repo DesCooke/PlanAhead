@@ -146,7 +146,7 @@ public partial class FundViewViewModel : BaseViewModel
             if (!delete)
                 return;
 
-            await _fundService.DeleteAsync(Id);
+            await _fundService.DeleteAsync(Build());
 
             await Navigation.GoBackAsync();
         }
