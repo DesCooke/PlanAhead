@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Text;
 using PlanAhead.Infrastructure.Authentication;
 using System.Diagnostics;
+using PlanAhead.Core.Interfaces.Services;
 
 
 namespace PlanAhead.Infrastructure.DB
@@ -17,15 +18,18 @@ namespace PlanAhead.Infrastructure.DB
     public class AccountSynchroniser : EntitySynchroniser<Account>, IEntitySynchroniser
     {
         private readonly IAccountRepository _repository;
+        private readonly ILogService _logService;
 
         public string EntityName => "Account";
 
         public AccountSynchroniser(
             Client client,
-            IAccountRepository repository)
+            IAccountRepository repository,
+            ILogService logService)
             : base(client)
         {
             _repository = repository;
+            _logService = logService;
         }
 
         public override async Task UploadAsync(Account account)
@@ -71,12 +75,12 @@ namespace PlanAhead.Infrastructure.DB
 
                 var remote = ToDomain(record);
 
-                Debug.WriteLine($"Record {record.Name}");
+                await _logService.LogAsync($"Record {record.Name}");
                 var local = await _repository.GetByIdAsync(remote.Id);
 
                 if (local == null)
                 {
-                    Debug.WriteLine(" -> Adding");
+                    await _logService.LogAsync(" -> Adding");
                     remote.NeedsSync = false;
 
                     await _repository.AddAsync(remote);
@@ -86,7 +90,7 @@ namespace PlanAhead.Infrastructure.DB
 
                 if (remote.UpdatedUtc > local.UpdatedUtc)
                 {
-                    Debug.WriteLine(" -> Updating");
+                    await _logService.LogAsync(" -> Updating");
                     remote.NeedsSync = false;
 
                     await _repository.UpdateAsync(remote);

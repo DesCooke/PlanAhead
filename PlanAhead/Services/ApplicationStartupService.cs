@@ -19,6 +19,7 @@ public class ApplicationStartupService : IApplicationStartupService
     private readonly IConnectivityService _connectivityService;
     private readonly IAutoSyncService _autoSyncService;
     private readonly ISyncStatusService _syncStatusService;
+    private readonly ILogService _logService;
 
     public ApplicationStartupService(
         IApplicationSettingsService settings,
@@ -27,7 +28,8 @@ public class ApplicationStartupService : IApplicationStartupService
         IDialogService dialogs, 
         IConnectivityService connectivityService,
         IAutoSyncService autoSyncService,
-        ISyncStatusService syncStatusService)
+        ISyncStatusService syncStatusService, 
+        ILogService logService)
     {
         _settings = settings;
         _client = client;
@@ -36,13 +38,18 @@ public class ApplicationStartupService : IApplicationStartupService
         _connectivityService = connectivityService;
         _autoSyncService = autoSyncService;
         _syncStatusService = syncStatusService;
+        _logService = logService;
     }
 
     public async Task NavigateToStartupPageAsync()
     {
         try
         {
+            await _logService.ClearAsync();
+
+            await _logService.LogAsync("Setting _syncStatusService.IsSyncing to false");
             _syncStatusService.IsSyncing = false;
+            await _logService.LogAsync($".._syncStatusService.IsSyncing is {_syncStatusService.IsSyncing}");
 
             //
             // User is currently offline - go into offline mode
@@ -88,7 +95,7 @@ public class ApplicationStartupService : IApplicationStartupService
                     if (userIdStr != null)
                     {
                         var userId = Guid.Parse(userIdStr);
-//                        _autoSyncService.Start(userId);
+                        _autoSyncService.Start(userId);
                     }
                 }
 

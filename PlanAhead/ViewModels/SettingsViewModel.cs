@@ -111,6 +111,21 @@ namespace PlanAhead.ViewModels
         }
 
         [RelayCommand]
+        private async Task Diagnostics()
+        {
+            try
+            {
+                await Shell.Current.GoToAsync("DiagnosticsPage");
+            }
+            catch (Exception ex)
+            {
+                var msg = $"Error in SettingsViewModel:Dignostics:{ex.Message}";
+                await Dialogs.ShowErrorAsync(msg);
+            }
+
+        }
+
+        [RelayCommand]
         private async Task ClearRemoteDatabase()
         {
             try
@@ -143,6 +158,8 @@ namespace PlanAhead.ViewModels
                         "Factory Reset?",
                         "This will clear the local and remote database and clear settings.  This cannot be undone"))
                     return;
+
+                await _authenticationService.EnsureSessionAsync();
 
                 await _remoteDatabase.DeleteUserDataAsync();
 

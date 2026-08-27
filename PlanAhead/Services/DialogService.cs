@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Maui.Extensions;
+using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Interfaces;
 using PlanAhead.Views.Popups;
 
@@ -8,10 +9,12 @@ public class DialogService
     : IDialogService
 {
     private readonly IServiceProvider _serviceProvider;
+    private readonly ILogService _logService;
 
-    public DialogService(IServiceProvider serviceProvider)
+    public DialogService(IServiceProvider serviceProvider, ILogService logService)
     {
         _serviceProvider = serviceProvider;
+        _logService = logService;
     }
 
     private static Page? GetCurrentPage(Page? page)
@@ -42,6 +45,8 @@ public class DialogService
         string title,
         string message)
     {
+        _logService.LogAsync($"Message shown: {title}, {message}");
+
         var page = GetCurrentPage(Application.Current?.Windows[0].Page);
 
         if (page != null)
@@ -57,6 +62,8 @@ public class DialogService
     public Task ShowErrorAsync(
         string message)
     {
+        _logService.LogAsync($"Error shown: {message}");
+
         var page = GetCurrentPage(Application.Current?.Windows[0].Page);
 
         if (page != null)
@@ -73,6 +80,8 @@ public class DialogService
         string title,
         string message)
     {
+        await _logService.LogAsync($"Confirmation shown: {title} {message}");
+
         var page = GetCurrentPage(Application.Current?.Windows[0].Page);
 
         if (page != null)

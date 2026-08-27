@@ -59,9 +59,6 @@ public partial class LargeOptionButton : ContentView
         object newValue)
     {
         var control = (LargeOptionButton)bindable;
-
-        System.Diagnostics.Debug.WriteLine(
-            $"LargeOptionButton Status: {oldValue} -> {newValue}");
     }
     // ------------------------------------------------------------
     // Title
@@ -155,16 +152,8 @@ public partial class LargeOptionButton : ContentView
             nameof(OpenCommand),
             typeof(ICommand),
             typeof(LargeOptionButton),
-            null,
-            propertyChanged: OnOpenCommandChanged);
+            null);
 
-    private static void OnOpenCommandChanged(
-        BindableObject bindable,
-        object oldValue,
-        object newValue)
-    {
-        System.Diagnostics.Debug.WriteLine($"OpenCommand = {newValue}");
-    }
     public ICommand? OpenCommand
     {
         get => (ICommand?)GetValue(OpenCommandProperty);

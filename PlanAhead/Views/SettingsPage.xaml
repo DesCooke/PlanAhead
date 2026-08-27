@@ -18,6 +18,8 @@
 
             <Button Command="{Binding ChangeSignInCommand}" Text="Change Signin Method" />
 
+            <Button Command="{Binding DiagnosticsCommand}" Text="Diagnostics" />
+
             <Button
                 Command="{Binding LogoutCommand}"
                 IsVisible="{Binding IsLoggedIn}"
@@ -66,6 +68,7 @@
                         FontAttributes="Bold"
                         Text="💥 Factory Reset"
                         TextColor="White" />
+
 
                 </VerticalStackLayout>
 

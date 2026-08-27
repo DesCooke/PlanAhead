@@ -24,4 +24,6 @@ public interface IAuthenticationService
 
     Task<User?> GetCurrentUserAsync();
 
+    Task EnsureSessionAsync();
+
 }

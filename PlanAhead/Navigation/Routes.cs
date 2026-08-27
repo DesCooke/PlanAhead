@@ -15,5 +15,6 @@ namespace PlanAhead.Navigation
         public const string FundsPage = "FundsPage";
         public const string FundView = "fund-view";
         public const string FundViewPage = "FundViewPage";
+        public const string DiagnosticsPage = "DagnosticsPage";
     }
 }

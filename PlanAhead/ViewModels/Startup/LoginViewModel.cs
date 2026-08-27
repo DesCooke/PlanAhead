@@ -60,7 +60,7 @@ public partial class LoginViewModel : BaseViewModel
                     await _syncService.SyncAsync(userId);
                 if (_settings.SyncMode == PlanAhead.Core.Models.Enums.SyncMode.SupabaseAuto)
                 {
-//                    _autoSyncService.Start(userId);
+                    _autoSyncService.Start(userId);
                 }
             }
 

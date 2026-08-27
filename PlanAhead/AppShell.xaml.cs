@@ -30,6 +30,7 @@ namespace PlanAhead
             Routing.RegisterRoute(nameof(FundsPage), typeof(FundsPage));
             Routing.RegisterRoute(nameof(FundViewPage), typeof(FundViewPage));
             Routing.RegisterRoute(nameof(DeveloperToolsPage), typeof(DeveloperToolsPage));
+            Routing.RegisterRoute(nameof(DiagnosticsPage), typeof(DiagnosticsPage));
         }
 
         protected override async void OnAppearing()

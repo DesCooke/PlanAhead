@@ -15,14 +15,16 @@ public class AuthenticationService : IAuthenticationService
     private readonly ISupabaseClientProvider _provider;
     private readonly ISecureStorageService _secureStorageService;
     private readonly ISyncService _syncService;
+    private readonly ILogService _logService;
 
     public AuthenticationService(
         ISupabaseClientProvider provider, ISecureStorageService secureStorageService, 
-        ISyncService syncService)
+        ISyncService syncService, ILogService logService)
     {
         _provider = provider;
         _secureStorageService = secureStorageService;
         _syncService = syncService;
+        _logService = logService;
     }
 
     public async Task<Supabase.Gotrue.Session?> LoginAsync(
@@ -80,9 +82,9 @@ public class AuthenticationService : IAuthenticationService
     {
         var client = await _provider.GetClientAsync();
 
-        Debug.WriteLine("===== IsLoggedInAsync =====");
-        Debug.WriteLine($"CurrentUser    : {client.Auth.CurrentUser?.Email}");
-        Debug.WriteLine($"CurrentSession : {client.Auth.CurrentSession != null}");
+        await _logService.LogAsync("===== IsLoggedInAsync =====");
+        await _logService.LogAsync($"CurrentUser    : {client.Auth.CurrentUser?.Email}");
+        await _logService.LogAsync($"CurrentSession : {client.Auth.CurrentSession != null}");
 
         return client.Auth.CurrentUser != null;
     }
@@ -99,6 +101,24 @@ public class AuthenticationService : IAuthenticationService
         var client = await _provider.GetClientAsync();
 
         return client.Auth.CurrentUser?.Email;
+    }
+
+    public async Task EnsureSessionAsync()
+    {
+        var client = await _provider.GetClientAsync();
+
+        var session = client.Auth.CurrentSession;
+
+        if (session == null)
+            throw new Exception("Not logged in.");
+
+        var newSession = await client.Auth.SetSession(
+            session.AccessToken!,
+            session.RefreshToken!);
+
+        await _secureStorageService.SetAsync(
+            "supabase-session",
+            JsonSerializer.Serialize(newSession));
     }
 
     public async Task<bool> RestoreSessionAsync()
@@ -135,7 +155,7 @@ public class AuthenticationService : IAuthenticationService
         }
         catch (Exception ex)
         {
-            Debug.WriteLine(ex);
+            await _logService.LogExceptionAsync(ex);
             _secureStorageService.Remove("supabase-session");
             return false;
         }

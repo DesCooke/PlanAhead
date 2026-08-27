@@ -39,6 +39,8 @@ public partial class DashboardViewModel : BaseViewModel
     private readonly IAuthenticationService _authenticationService;
     private readonly IApplicationStartupService _startupService;
     private readonly ISyncService _syncService;
+    private readonly ILogService _logService;
+
 
     public DashboardViewModel(AccountRepository repository,
         INavigationService navigation,
@@ -48,7 +50,8 @@ public partial class DashboardViewModel : BaseViewModel
         IApplicationStartupService startupService,
         IApplicationSettingsService settings, 
         ISyncService syncService,
-        ISyncStatusService syncStatusService): base (navigation, dialogs)
+        ISyncStatusService syncStatusService, 
+        ILogService logService): base (navigation, dialogs)
     {
         _repository = repository;
         _settings = settings;
@@ -58,12 +61,12 @@ public partial class DashboardViewModel : BaseViewModel
         _startupService = startupService;
         _syncService = syncService;
         _syncStatusService = syncStatusService;
+        _logService = logService;
 
         _syncStatusService.PropertyChanged += (_, e) =>
         {
             if (e.PropertyName == nameof(ISyncStatusService.IsSyncing))
             {
-                Debug.WriteLine($"Status set to {_syncStatusService.IsSyncing}");
                 OnPropertyChanged(nameof(IsSyncing));
                 OnPropertyChanged(nameof(SyncIcon));   // <-- Missing
                 SyncCommand.NotifyCanExecuteChanged();
@@ -93,9 +96,7 @@ public partial class DashboardViewModel : BaseViewModel
     }
 
 
-    public string SyncIcon => IsSyncing
-        ? "sync_disabled.png"
-        : "sync_auto.png";
+    public string SyncIcon = "sync_auto.png";
 
 
     private bool CanSync()
@@ -111,7 +112,7 @@ public partial class DashboardViewModel : BaseViewModel
         {
             var accounts = await _repository.GetAllAsync();
 
-            System.Diagnostics.Debug.WriteLine(
+            await _logService.LogAsync(
                 $"Number of accounts = {accounts.Count}");
         }
         catch (Exception ex)

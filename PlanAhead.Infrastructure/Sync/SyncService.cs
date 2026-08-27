@@ -19,6 +19,7 @@ public class SyncService : ISyncService
     private readonly SQLiteContext _context;
     private readonly Client _supabase;
     private ISyncStatusService _syncStatusService;
+    private readonly ILogService _logService;
 
 
     public SyncService(
@@ -27,7 +28,8 @@ public class SyncService : ISyncService
         INetworkService networkService,
         SQLiteContext context, 
         Client client,
-        ISyncStatusService syncStatusService)
+        ISyncStatusService syncStatusService,
+        ILogService logService)
     {
         _settings = settings;
         _synchronisers = synchronisers;
@@ -35,6 +37,7 @@ public class SyncService : ISyncService
         _context = context;
         _supabase = client;
         _syncStatusService = syncStatusService;
+        _logService = logService;
     }
 
     private async Task<long> GetRemoteSyncVersionAsync(Guid userId)
@@ -53,44 +56,55 @@ public class SyncService : ISyncService
     public async Task<bool> SyncAsync(Guid userId,
         CancellationToken cancellationToken = default)
     {
-        /*
-    Debug.WriteLine("SyncAsync Start");
-    if (_syncStatusService.IsSyncing)
-    {
-        Debug.WriteLine("_syncStatusService.IsSyncing is true - so ignoring");
-        return false;
-    }
-
-    if (!_networkService.IsConnected)
-    {
-        Debug.WriteLine("_networkService.IsConnected is false - so ignoring");
-        return false;
-    }
-
-    _syncStatusService.IsSyncing = true;
-    try
-    {
-        Debug.WriteLine($"Uploading changes since {_settings.LastSyncUtc}");
-        foreach (var synchroniser in _synchronisers)
+        if (_syncStatusService.IsSyncing)
         {
-            await synchroniser.UploadPendingAsync(userId);
+            await _logService.LogAsync("_syncStatusService.IsSyncing is true - so ignoring");
+            return false;
         }
 
-        Debug.WriteLine($"Downloading changes since {_settings.LastSyncUtc}");
-        foreach (var synchroniser in _synchronisers)
+        await _logService.LogAsync("Setting _syncStatusService.IsSyncing to true");
+        _syncStatusService.IsSyncing = true;
+        await _logService.LogAsync($".._syncStatusService.IsSyncing is {_syncStatusService.IsSyncing}");
+        try
         {
-            await synchroniser.DownloadChangesAsync(_settings.LastSyncUtc);
-        }
+            try
+            {
+                await _logService.LogAsync("SyncAsync Start");
 
-        _settings.LastSyncUtc = DateTime.UtcNow;
-        Debug.WriteLine($"Setting LastSyncUtc to {_settings.LastSyncUtc}");
-        await Task.Delay(5000);
+                if (!_networkService.IsConnected)
+                {
+                    await _logService.LogAsync("_networkService.IsConnected is false - so ignoring");
+                    await _logService.LogAsync("Setting _syncStatusService.IsSyncing to false");
+                    _syncStatusService.IsSyncing = false;
+                    await _logService.LogAsync($".._syncStatusService.IsSyncing is {_syncStatusService.IsSyncing}");
+                    return false;
+                }
+
+                await _logService.LogAsync($"Uploading changes since {_settings.LastSyncUtc}");
+                foreach (var synchroniser in _synchronisers)
+                {
+                    await synchroniser.UploadPendingAsync(userId);
+                }
+
+                await _logService.LogAsync($"Downloading changes since {_settings.LastSyncUtc}");
+                foreach (var synchroniser in _synchronisers)
+                {
+                    await synchroniser.DownloadChangesAsync(_settings.LastSyncUtc);
+                }
+
+                _settings.LastSyncUtc = DateTime.UtcNow;
+                await _logService.LogAsync($"Setting LastSyncUtc to {_settings.LastSyncUtc}");
+            } catch (Exception ex) { 
+                await _logService.LogExceptionAsync(ex);
+            }
         }
         finally
         {
+            await _logService.LogAsync("Setting _syncStatusService.IsSyncing to false");
             _syncStatusService.IsSyncing = false;
+            await _logService.LogAsync($".._syncStatusService.IsSyncing is {_syncStatusService.IsSyncing}");
         }
-        */
+
         return true;
     }
 

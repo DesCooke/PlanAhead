@@ -43,8 +43,7 @@ public partial class SwipeListItem : ContentView
             nameof(Status),
             typeof(Status),
             typeof(SwipeListItem),
-            Status.NotSet,
-            propertyChanged: OnStatusChanged);
+            Status.NotSet);
 
     public Status Status
     {
@@ -52,16 +51,6 @@ public partial class SwipeListItem : ContentView
         set => SetValue(StatusProperty, value);
     }
 
-    private static void OnStatusChanged(
-        BindableObject bindable,
-        object oldValue,
-        object newValue)
-    {
-        var control = (SwipeListItem)bindable;
-
-        System.Diagnostics.Debug.WriteLine(
-            $"SwipeListItem Status: {oldValue} -> {newValue}");
-    }
     // ------------------------------------------------------------
     // Title
     // ------------------------------------------------------------
@@ -231,12 +220,7 @@ public partial class SwipeListItem : ContentView
         BindableProperty.Create(
             nameof(OpenCommand),
             typeof(ICommand),
-            typeof(SwipeListItem),
-            propertyChanged: (b, o, n) =>
-            {
-                System.Diagnostics.Debug.WriteLine(
-                    $"OpenCommand = {(n == null ? "NULL" : "SET")}");
-            });
+            typeof(SwipeListItem));
 
     public ICommand? OpenCommand
     {

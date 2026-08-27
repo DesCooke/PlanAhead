@@ -20,10 +20,12 @@ public class AutoSyncService : IAutoSyncService, IDisposable
     private readonly ISyncService _syncService;
     private readonly ISyncStateService _syncStateService;
     private readonly ISyncStatusService _syncStatusService;
+    private readonly ILogService _logService;
 
     private CancellationTokenSource? _cts;
     private Task? _worker;
     private Guid _userId;
+    private bool _autoSyncRunning = false;
     
     public bool IsRunning => _worker != null;
     
@@ -36,7 +38,8 @@ public class AutoSyncService : IAutoSyncService, IDisposable
         SQLiteContext context,
         ISyncService syncService,
         ISyncStateService syncStateService,
-        ISyncStatusService syncStatusService)
+        ISyncStatusService syncStatusService,
+        ILogService logService)
     {
         _settings = settings;
         _synchronisers = synchronisers;
@@ -46,6 +49,7 @@ public class AutoSyncService : IAutoSyncService, IDisposable
         _syncService = syncService;
         _syncStateService = syncStateService;
         _syncStatusService = syncStatusService;
+        _logService = logService;
     }
 
     public void Start(Guid userId)
@@ -67,29 +71,33 @@ public class AutoSyncService : IAutoSyncService, IDisposable
         {
             try
             {
-                Debug.WriteLine("Syncing Start");
-                try
+                if (!_autoSyncRunning)
                 {
-//                    if (await _syncStateService.HasRemoteChangesAsync(_userId))
-  //                  {
+                    _autoSyncRunning = true;
+
+                    await _logService.LogAsync("AutoSyncing Start");
+                    try
+                    {
+                        //                    if (await _syncStateService.HasRemoteChangesAsync(_userId))
+                        //                  {
                         await _syncService.SyncAsync(_userId, token);
 
-                        await _syncStateService.MarkAsUptodateAsync(_userId);
-    //                }
+                        //                    await _syncStateService.MarkAsUptodateAsync(_userId);
+                        //              }
+                    }
+                    catch (Exception ex)
+                    {
+                        await _logService.LogExceptionAsync(ex);
+                    }
+                    await Task.Delay(TimeSpan.FromSeconds(2), token);
+                    await _logService.LogAsync("AutoSyncing End");
                 }
-                catch (Exception ex)
-                {
-                    System.Diagnostics.Debug.WriteLine(ex);
-                }
-                // just in case the check is superfast - make it atleast 2 seconds so we see 
-                // something in the UI
-                Debug.WriteLine("Syncing End");
-//                await Task.Delay(TimeSpan.FromSeconds(2), token);
             }
             finally
             {
+                _autoSyncRunning = false;
             }
-            await Task.Delay(TimeSpan.FromSeconds(10), token);
+            await Task.Delay(TimeSpan.FromSeconds(5), token);
         }
     }
 
