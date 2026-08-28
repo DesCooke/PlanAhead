@@ -6,14 +6,7 @@ namespace PlanAhead.Infrastructure.Sync;
 
 public partial class SyncStatusService : ObservableObject, ISyncStatusService
 {
-    private bool _isSyncing;
+    [ObservableProperty]
+    private bool isSyncing;
 
-    public bool IsSyncing
-    {
-        get => _isSyncing;
-        set
-        {
-            _isSyncing = value;
-        }
-    }
 }

@@ -12,6 +12,7 @@ using PlanAhead.Services;
 using PlanAhead.Views;
 using PlanAhead.Views.Startup;
 using Supabase;
+using System.ComponentModel;
 using System.Diagnostics;
 
 namespace PlanAhead.ViewModels;
@@ -63,18 +64,18 @@ public partial class DashboardViewModel : BaseViewModel
         _syncStatusService = syncStatusService;
         _logService = logService;
 
-        _syncStatusService.PropertyChanged += (_, e) =>
-        {
-            if (e.PropertyName == nameof(ISyncStatusService.IsSyncing))
-            {
-                OnPropertyChanged(nameof(IsSyncing));
-                OnPropertyChanged(nameof(SyncIcon));   // <-- Missing
-                SyncCommand.NotifyCanExecuteChanged();
-            }
-        };
+        _syncStatusService.PropertyChanged += SyncStatusChanged;
     }
 
+    public bool IsSyncButtonEnabled => !_syncStatusService.IsSyncing;
 
+    private void SyncStatusChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(SyncStatusService.IsSyncing))
+        {
+            OnPropertyChanged(nameof(IsSyncButtonEnabled));
+        }
+    }
     [RelayCommand(CanExecute = nameof(CanSync))]
     private async Task SyncAsync()
     {

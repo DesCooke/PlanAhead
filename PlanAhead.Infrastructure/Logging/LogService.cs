@@ -1,4 +1,5 @@
 ﻿using PlanAhead.Core.Interfaces.Services;
+using System.Diagnostics;
 using System.Text;
 
 namespace PlanAhead.Infrastructure.Logging;
@@ -29,6 +30,7 @@ public class LogService : ILogService
 
         try
         {
+            Debug.WriteLine(line);
             await File.AppendAllTextAsync(
                 _logFile,
                 line + Environment.NewLine);
@@ -55,6 +57,8 @@ public class LogService : ILogService
                 sb.Append(context).Append(": ");
 
             sb.Append(ex);
+
+            Debug.WriteLine(sb.ToString());
 
             await LogAsync(sb.ToString());
         }

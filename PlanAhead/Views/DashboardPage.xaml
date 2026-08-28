@@ -12,7 +12,7 @@
         <ToolbarItem
             Command="{Binding SyncCommand}"
             IconImageSource="sync_auto.png"
-            IsEnabled="true"
+            IsEnabled="{Binding IsSyncButtonEnabled}"
             Order="Primary"
             Priority="0" />
 
