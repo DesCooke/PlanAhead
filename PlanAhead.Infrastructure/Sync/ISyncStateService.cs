@@ -11,8 +11,15 @@ namespace PlanAhead.Infrastructure.Sync
         Task<long> GetRemoteSyncVersionAsync(Guid userId,
             CancellationToken cancellationToken = default);
 
-        Task MarkAsUptodateAsync(Guid userId,
+        Task UpdateRemoteSyncVersionAsync(Guid userId,
             CancellationToken cancellationToken = default);
 
+        Task<bool> HasLocalChangesAsync(CancellationToken cancellationToken = default);
+
+        Task<long> GetLocalSyncVersionAsync(CancellationToken cancellationToken = default);
+
+        Task UpdateLocalSyncVersionAsync(CancellationToken cancellationToken = default);
+
+        Task IncreaseLocalVersion(CancellationToken cancellationToken = default);
     }
 }

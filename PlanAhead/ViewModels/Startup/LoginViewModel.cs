@@ -17,6 +17,7 @@ public partial class LoginViewModel : BaseViewModel
     private IAuthenticationService _authenticationService;
     private ISyncService _syncService;
     private IAutoSyncService _autoSyncService;
+    private ISyncStateService _syncStateService;
     
 
     public LoginViewModel(
@@ -25,13 +26,15 @@ public partial class LoginViewModel : BaseViewModel
         INavigationService navigation,
         IDialogService dialogs,
         ISyncService syncService,
-        IAutoSyncService autoSyncService)
+        IAutoSyncService autoSyncService,
+        ISyncStateService syncStateService)
         : base(navigation, dialogs)
     {
         _settings = settings;
         _authenticationService = authenticationService;
         _syncService = syncService;
         _autoSyncService = autoSyncService;
+        _syncStateService = syncStateService;
     }
 
 
@@ -57,7 +60,14 @@ public partial class LoginViewModel : BaseViewModel
             {
                 var userId = Guid.Parse(userIdString);
                 if (userId != Guid.Empty)
-                    await _syncService.SyncAsync(userId);
+                {
+                    bool hasLocalChanges = await _syncStateService.HasLocalChangesAsync();
+                    bool hasRemoteChanges = await _syncStateService.HasRemoteChangesAsync(userId);
+                    if (hasLocalChanges || hasRemoteChanges)
+                    {
+                        await _syncService.SyncAsync(userId, hasLocalChanges, hasRemoteChanges);
+                    }
+                }
                 if (_settings.SyncMode == PlanAhead.Core.Models.Enums.SyncMode.SupabaseAuto)
                 {
                     _autoSyncService.Start(userId);

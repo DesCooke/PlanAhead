@@ -1,4 +1,5 @@
-﻿using PlanAhead.Core.Interfaces.Repositories;
+﻿using Newtonsoft.Json.Linq;
+using PlanAhead.Core.Interfaces.Repositories;
 using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Infrastructure.Authentication;
 using PlanAhead.Infrastructure.DB;
@@ -78,12 +79,14 @@ public class AutoSyncService : IAutoSyncService, IDisposable
                     await _logService.LogAsync("AutoSyncing Start");
                     try
                     {
-                        //                    if (await _syncStateService.HasRemoteChangesAsync(_userId))
-                        //                  {
-                        await _syncService.SyncAsync(_userId, token);
+                        bool hasLocalChanges = await _syncStateService.HasLocalChangesAsync(token);
+                        bool hasRemoteChanges = await _syncStateService.HasRemoteChangesAsync(_userId, token);
+                        if (hasLocalChanges || hasRemoteChanges)
+                        {
+                            await _syncService.SyncAsync(_userId, hasLocalChanges, hasRemoteChanges, token);
 
-                        //                    await _syncStateService.MarkAsUptodateAsync(_userId);
-                        //              }
+                            await _syncStateService.UpdateRemoteSyncVersionAsync(_userId, token);
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -145,18 +148,35 @@ public class AutoSyncService : IAutoSyncService, IDisposable
     public async Task<bool> AutoSyncAsync(
         CancellationToken cancellationToken = default)
     {
+        await _logService.LogAsync("AutoSyncAsync starting");
+
         if (!_networkService.IsConnected)
-            return false;
+        {
+            await _logService.LogAsync("  - Not connected to network - skipping");
+        }
+        else
+        {
+            bool hasLocalChanges = await _syncStateService.HasLocalChangesAsync(cancellationToken);
+            bool hasRemoteChanges = await _syncStateService.HasRemoteChangesAsync(_userId, cancellationToken);
 
-        var remoteVersion = await GetRemoteSyncVersionAsync();
+            await _logService.LogAsync($"  - hasLocalChanges {hasLocalChanges}, hasRemoteChanges {hasRemoteChanges}");
 
-        if (remoteVersion == _settings.LastSyncVersion)
-            return true;
+            if (hasLocalChanges || hasRemoteChanges)
+            {
+                await _logService.LogAsync("  - calling _syncService.SyncAsync for current user");
 
-        await _syncService.SyncAsync(_userId);
+                await _syncService.SyncAsync(_userId, hasLocalChanges, hasRemoteChanges, cancellationToken);
 
-        remoteVersion = await GetRemoteSyncVersionAsync();
-        _settings.LastSyncVersion = remoteVersion;
+                await _syncStateService.UpdateRemoteSyncVersionAsync(_userId, cancellationToken);
+            }
+            else
+            {
+                await _logService.LogAsync("  - No changes - skipping");
+            }
+
+        }
+
+        await _logService.LogAsync("AutoSyncAsync ending");
 
         return true;
     }

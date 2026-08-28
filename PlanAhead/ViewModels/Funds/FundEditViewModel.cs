@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Core.Models.Enums;
 using PlanAhead.Core.Services.Accounts;
+using PlanAhead.Infrastructure.Sync;
 using PlanAhead.Interfaces;
 
 namespace PlanAhead.ViewModels.Funds;
@@ -11,6 +12,7 @@ public partial class FundEditViewModel : BaseViewModel
 {
     private readonly IFundService _fundService;
     private readonly INavigationContext _navigationContext;
+    private readonly ISyncStateService  _syncStateService;
 
     public IEnumerable<Frequency> Frequencies =>
         Enum.GetValues<Frequency>();
@@ -42,11 +44,13 @@ public partial class FundEditViewModel : BaseViewModel
         IAccountService accountService,
         INavigationService navigation,
         INavigationContext navigationContext,
-        IDialogService dialogs)
+        IDialogService dialogs,
+        ISyncStateService syncStateService)
         : base(navigation, dialogs)
     {
         _fundService = fundService;
         _navigationContext = navigationContext;
+        _syncStateService = syncStateService;
 
         Title = "New Fund";
     }
@@ -148,6 +152,8 @@ public partial class FundEditViewModel : BaseViewModel
                 await _fundService.AddAsync(Build());
             else
                 await _fundService.UpdateAsync(Build());
+
+            await _syncStateService.IncreaseLocalVersion();
 
             await Navigation.GoBackAsync();
         }

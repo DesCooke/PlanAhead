@@ -7,6 +7,8 @@ namespace PlanAhead.Infrastructure.Sync
     public interface ISyncService
     {
         Task<bool> SyncAsync(Guid userId,
+            bool hasRemoteChanges,
+            bool hasLocalChanges,
             CancellationToken cancellationToken = default);
     }
 }

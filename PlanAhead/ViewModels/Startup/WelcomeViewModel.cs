@@ -40,7 +40,9 @@ public partial class WelcomeViewModel : BaseViewModel
         {
             _settings.SyncMode = SyncMode.Offline;
             _settings.IsFirstRun = false;
-            _settings.LastSyncUtc = new DateTime(2000, 1, 1);
+            _settings.LastLocalSyncUtc = new DateTime(2000, 1, 1);
+            _settings.LastRemoteSyncUtc = new DateTime(2000, 1, 1);
+            _settings.LastLocalUtc = new DateTime(2000, 1, 1);
             await _localDatabaseService.DeleteDatabaseAsync();
             await _localDatabaseService.CreateDatabaseAsync();
 
@@ -61,7 +63,9 @@ public partial class WelcomeViewModel : BaseViewModel
         {
             _settings.SyncMode = SyncMode.SupabaseManual;
             _settings.IsFirstRun = false;
-            _settings.LastSyncUtc = new DateTime(2000, 1, 1);
+            _settings.LastLocalSyncUtc = new DateTime(2000, 1, 1);
+            _settings.LastRemoteSyncUtc = new DateTime(2000, 1, 1);
+            _settings.LastLocalUtc = new DateTime(2000, 1, 1);
             await _localDatabaseService.DeleteDatabaseAsync();
             await _localDatabaseService.CreateDatabaseAsync();
 
@@ -81,7 +85,9 @@ public partial class WelcomeViewModel : BaseViewModel
         {
             _settings.SyncMode = SyncMode.SupabaseAuto;
             _settings.IsFirstRun = false;
-            _settings.LastSyncUtc = new DateTime(2000, 1, 1);
+            _settings.LastLocalSyncUtc = new DateTime(2000, 1, 1);
+            _settings.LastRemoteSyncUtc = new DateTime(2000, 1, 1);
+            _settings.LastLocalUtc = new DateTime(2000, 1, 1);
             await _localDatabaseService.DeleteDatabaseAsync();
             await _localDatabaseService.CreateDatabaseAsync();
 

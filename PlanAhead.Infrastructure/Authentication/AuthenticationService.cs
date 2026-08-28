@@ -1,9 +1,11 @@
-﻿using PlanAhead.Core.Interfaces.Services;
+﻿using Newtonsoft.Json.Linq;
+using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Infrastructure.Authentication;
 using PlanAhead.Infrastructure.Sync;
 using Supabase;
 using Supabase.Gotrue;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using static System.Collections.Specialized.BitVector32;
 
@@ -14,16 +16,14 @@ public class AuthenticationService : IAuthenticationService
 {
     private readonly ISupabaseClientProvider _provider;
     private readonly ISecureStorageService _secureStorageService;
-    private readonly ISyncService _syncService;
     private readonly ILogService _logService;
 
     public AuthenticationService(
         ISupabaseClientProvider provider, ISecureStorageService secureStorageService, 
-        ISyncService syncService, ILogService logService)
+        ILogService logService)
     {
         _provider = provider;
         _secureStorageService = secureStorageService;
-        _syncService = syncService;
         _logService = logService;
     }
 
@@ -144,14 +144,6 @@ public class AuthenticationService : IAuthenticationService
             await _secureStorageService.SetAsync(
                 "supabase-session",
                 JsonSerializer.Serialize(newSession));
-
-            var userIdString = client.Auth.CurrentUser?.Id;
-            if (userIdString != null)
-            {
-                var userId = Guid.Parse(userIdString);
-                if(userId!=Guid.Empty)
-                    await _syncService.SyncAsync(userId);
-            }
         }
         catch (Exception ex)
         {

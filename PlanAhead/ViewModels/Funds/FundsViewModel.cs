@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Core.Services.Accounts;
+using PlanAhead.Infrastructure.Sync;
 using PlanAhead.Interfaces;
 using PlanAhead.Services;
 using PlanAhead.ViewModels.Accounts;
@@ -16,6 +17,7 @@ public partial class FundsViewModel : BaseViewModel
     private readonly IAccountService _accountService;
     private readonly IFundService _fundService;
     private readonly INavigationContext _navigationContext;
+    private readonly ISyncStateService _syncStateService;
 
     public ObservableCollection<Fund> Funds { get; } = new();
 
@@ -33,12 +35,14 @@ public partial class FundsViewModel : BaseViewModel
         IFundService fundService,
         INavigationService navigation,
         INavigationContext navigationContext,
-        IDialogService dialogs)
+        IDialogService dialogs,
+        ISyncStateService syncStateService)
         : base(navigation, dialogs)
     {
         _accountService = accountService;
         _fundService = fundService;
         _navigationContext = navigationContext;
+        _syncStateService = syncStateService;
     }
 
     public async Task InitialiseAsync()
@@ -104,6 +108,8 @@ public partial class FundsViewModel : BaseViewModel
                 return;
 
             await _fundService.DeleteAsync(fund);
+
+            await _syncStateService.IncreaseLocalVersion();
 
             await LoadAsync(AccountId);
         }

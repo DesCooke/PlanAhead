@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Core.Models.Domain;
 using PlanAhead.Core.Models.Enums;
+using PlanAhead.Infrastructure.Sync;
 using PlanAhead.Interfaces;
 using PlanAhead.Views.Accounts;
 using PlanAhead.Views.Funds;
@@ -13,6 +14,7 @@ public partial class AccountViewViewModel : BaseViewModel
 {
     private readonly IAccountService _accountService;
     private readonly INavigationContext _navigationContext;
+    private readonly ISyncStateService _syncStateService;
 
     public IEnumerable<Frequency> Frequencies =>
         Enum.GetValues<Frequency>();
@@ -52,11 +54,13 @@ public partial class AccountViewViewModel : BaseViewModel
         IAccountService accountService,
         INavigationService navigation,
         INavigationContext navigationContext,
-        IDialogService dialogs)
+        IDialogService dialogs,
+        ISyncStateService syncStateService)
         : base(navigation, dialogs)
     {
         _accountService = accountService;
         _navigationContext = navigationContext;
+        _syncStateService = syncStateService;
 
         Title = "Account Details";
     }
@@ -168,6 +172,8 @@ public partial class AccountViewViewModel : BaseViewModel
                 return;
 
             await _accountService.DeleteAsync(Build());
+
+            await _syncStateService.IncreaseLocalVersion();
 
             await Navigation.GoBackAsync();
         }

@@ -4,6 +4,7 @@ using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Core.Models.Domain;
 using PlanAhead.Core.Services.Accounts;
 using PlanAhead.Core.Services.Funds;
+using PlanAhead.Infrastructure.Sync;
 using PlanAhead.Interfaces;
 using PlanAhead.Services;
 using PlanAhead.Views.Accounts;
@@ -16,6 +17,7 @@ public partial class AccountsViewModel : BaseViewModel
     private readonly IAccountService _accountService;
     private readonly INavigationContext _navigationContext;
     private readonly IAccountHealthService _accountHealthService;
+    private readonly ISyncStateService _syncStateService;
 
     public ObservableCollection<AccountListItem> Accounts { get; } = new();
 
@@ -31,12 +33,14 @@ public partial class AccountsViewModel : BaseViewModel
         INavigationService navigation,
         INavigationContext navigationContext,
         IAccountHealthService accountHealthService,
-        IDialogService dialogs)
+        IDialogService dialogs,
+        ISyncStateService syncStateService)
         : base(navigation, dialogs)
     {
         _accountService = accountService;
         _navigationContext = navigationContext;
         _accountHealthService = accountHealthService;
+        _syncStateService = syncStateService;
     }
 
     public async Task InitialiseAsync()
@@ -94,6 +98,8 @@ public partial class AccountsViewModel : BaseViewModel
                 return;
 
             await _accountService.DeleteAsync(accountListItem.Account);
+
+            await _syncStateService.IncreaseLocalVersion();
 
             await InitialiseAsync();
         }

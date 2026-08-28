@@ -16,25 +16,73 @@ public class ApplicationSettingsService
         set => Preferences.Default.Set("FirstRun", value);
     }
 
-    public long LastSyncVersion
+    public long LastRemoteSyncVersion
     {
         get
         {
-            return Preferences.Default.Get("LastSyncVersion", 0);
+            return Preferences.Default.Get("LastRemoteSyncVersion", 0);
         }
         set
         {
-            Preferences.Default.Set("LastSyncVersion", value);
+            Preferences.Default.Set("LastRemoteSyncVersion", value);
         }
     }
 
-    public DateTime LastSyncUtc
+    public long LastLocalSyncVersion
+    {
+        get
+        {
+            return Preferences.Default.Get("LastLocalSyncVersion", 0);
+        }
+        set
+        {
+            Preferences.Default.Set("LastLocalSyncVersion", value);
+        }
+    }
+
+    public long LastLocalVersion
+    {
+        get
+        {
+            return Preferences.Default.Get("LastLocalVersion", 0);
+        }
+        set
+        {
+            Preferences.Default.Set("LastLocalVersion", value);
+        }
+    }
+
+    public DateTime LastRemoteSyncUtc
     {
         get { 
-            return Preferences.Default.Get("LastSyncUtc", new DateTime(2000, 1, 1)); 
+            return Preferences.Default.Get("LastRemoteSyncUtc", new DateTime(2000, 1, 1)); 
         }
         set {
-            Preferences.Default.Set("LastSyncUtc", value); 
+            Preferences.Default.Set("LastRemoteSyncUtc", value); 
+        }
+    }
+
+    public DateTime LastLocalSyncUtc
+    {
+        get
+        {
+            return Preferences.Default.Get("LastLocalSyncUtc", new DateTime(2000, 1, 1));
+        }
+        set
+        {
+            Preferences.Default.Set("LastLocalSyncUtc", value);
+        }
+    }
+
+    public DateTime LastLocalUtc
+    {
+        get
+        {
+            return Preferences.Default.Get("LastLocalUtc", new DateTime(2000, 1, 1));
+        }
+        set
+        {
+            Preferences.Default.Set("LastLocalUtc", value);
         }
     }
 
@@ -64,6 +112,12 @@ public class ApplicationSettingsService
     public void ResetToFactory()
     {
         IsFirstRun = true;
-        LastSyncUtc = new DateTime(2001, 1, 1 );
+        LastRemoteSyncVersion = 0;
+        LastLocalSyncVersion = 0;
+        LastLocalVersion = 0;
+        LastRemoteSyncUtc = new DateTime(2001, 1, 1 );
+        LastLocalSyncUtc = new DateTime(2001, 1, 1);
+        LastLocalUtc = new DateTime(2001, 1, 1);
+
     }
 }
