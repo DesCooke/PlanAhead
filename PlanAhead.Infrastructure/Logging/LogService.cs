@@ -1,102 +1,80 @@
 ﻿using PlanAhead.Core.Interfaces.Services;
-using System.Diagnostics;
 using System.Text;
 
 namespace PlanAhead.Infrastructure.Logging;
 
 public class LogService : ILogService
 {
-    private readonly string _logFile;
+    private readonly List<string> _lines = [];
 
-    private readonly SemaphoreSlim _lock = new(1, 1);
+    private readonly object _lock = new();
 
     public LogService()
     {
-        _logFile = Path.Combine(
-            FileSystem.AppDataDirectory,
-            "planahead.log");
     }
 
-    private string getTime()
+    private string GetTime()
     {
-        return $"{DateTime.Now:HH:mm:ss.fff} UTC";
+        return $"{DateTime.Now:HH:mm:ss.fff}";
     }
 
-    public async Task LogAsync(string message)
+    public void Log(string message)
     {
-        var line = $"{getTime()}: {message}";
+        var line = $"{GetTime()}: {message}";
 
-        await _lock.WaitAsync();
-
-        try
+        lock (_lock)
         {
-            Debug.WriteLine(line);
-            await File.AppendAllTextAsync(
-                _logFile,
-                line + Environment.NewLine);
-        }
-        finally
-        {
-            _lock.Release();
+            _lines.Add(line);
         }
     }
 
-    public async Task LogExceptionAsync(
+    public Task LogAsync(string message)
+    {
+        Log(message);
+
+        return Task.CompletedTask;
+    }
+
+    public Task LogExceptionAsync(
         Exception ex,
         string? context = null)
     {
-        await _lock.WaitAsync();
+        var sb = new StringBuilder();
 
-        try
+        sb.Append($"{GetTime()}: ");
+        sb.Append("(***EXCEPTION***): ");
+
+        if (!string.IsNullOrWhiteSpace(context))
         {
-            var sb = new StringBuilder();
-
-            sb.Append($"{getTime()}:");
-
-            if (!string.IsNullOrWhiteSpace(context))
-                sb.Append(context).Append(": ");
-
-            sb.Append(ex);
-
-            Debug.WriteLine(sb.ToString());
-
-            await LogAsync(sb.ToString());
+            sb.Append(context).Append(": ");
         }
-        finally
+
+        sb.Append(ex);
+
+        lock (_lock)
         {
-            _lock.Release();
+            _lines.Add(sb.ToString());
+        }
+
+        return Task.CompletedTask;
+    }
+
+    public Task<string> GetLogAsync()
+    {
+        lock (_lock)
+        {
+            return Task.FromResult(
+                string.Join("\r\n", _lines));
         }
     }
 
-    public async Task<string> GetLogAsync()
+    public Task ClearAsync()
     {
-        await _lock.WaitAsync();
-
-        try
+        lock (_lock)
         {
-            if (!File.Exists(_logFile))
-                return string.Empty;
+            _lines.Clear();
+        }
 
-            return await File.ReadAllTextAsync(_logFile);
-        }
-        finally
-        {
-            _lock.Release();
-        }
-    }
-
-    public async Task ClearAsync()
-    {
-        await _lock.WaitAsync();
-
-        try
-        {
-            if (File.Exists(_logFile))
-                File.Delete(_logFile);
-        }
-        finally
-        {
-            _lock.Release();
-        }
+        return Task.CompletedTask;
     }
 }

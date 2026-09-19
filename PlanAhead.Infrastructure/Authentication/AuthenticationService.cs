@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Infrastructure.Authentication;
+using PlanAhead.Infrastructure.Logging;
 using PlanAhead.Infrastructure.Sync;
 using Supabase;
 using Supabase.Gotrue;
@@ -12,6 +13,7 @@ using static System.Collections.Specialized.BitVector32;
 
 namespace PlanAhead.Infrastructure.Authentication;
 
+[MethodLogging]
 public class AuthenticationService : IAuthenticationService
 {
     private readonly ISupabaseClientProvider _provider;
@@ -82,11 +84,13 @@ public class AuthenticationService : IAuthenticationService
     {
         var client = await _provider.GetClientAsync();
 
-        await _logService.LogAsync("===== IsLoggedInAsync =====");
-        await _logService.LogAsync($"CurrentUser    : {client.Auth.CurrentUser?.Email}");
-        await _logService.LogAsync($"CurrentSession : {client.Auth.CurrentSession != null}");
+        MethodLoggingService.Write($"  CurrentUser    : {client.Auth.CurrentUser?.Email}");
 
-        return client.Auth.CurrentUser != null;
+        var retval = client.Auth.CurrentUser != null;
+
+        MethodLoggingService.Write($"  retval : {retval}");
+
+        return retval;
     }
 
     public async Task<string?> GetCurrentUserIdAsync()

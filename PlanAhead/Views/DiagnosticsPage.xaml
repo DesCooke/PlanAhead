@@ -9,9 +9,9 @@
 
         <HorizontalStackLayout>
 
-            <Button Command="{Binding BindingContext.RefreshCommand}" Text="Refresh" />
+            <Button Command="{Binding RefreshCommand}" Text="Refresh" />
 
-            <Button Command="{Binding BindingContext.ClearCommand}" Text="Clear" />
+            <Button Command="{Binding ClearCommand}" Text="Clear" />
 
         </HorizontalStackLayout>
 
