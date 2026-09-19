@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Infrastructure.Repositories;
 using PlanAhead.Interfaces;
 
@@ -11,7 +12,9 @@ public partial class DeveloperToolsViewModel : BaseViewModel
 
     public DeveloperToolsViewModel(AccountRepository repository,
         INavigationService navigation,
-        IDialogService dialogs): base (navigation, dialogs)
+        IDialogService dialogs,
+        ILogService logService)
+        : base(navigation, dialogs, logService)
     {
         _repository = repository;
     }
@@ -25,7 +28,7 @@ public partial class DeveloperToolsViewModel : BaseViewModel
 
             if (accounts.Count == 0)
             {
-                await Dialogs.ShowMessageAsync(
+                await DialogService.ShowMessageAsync(
                     "Accounts", "No accounts found.");
 
                 return;
@@ -33,10 +36,9 @@ public partial class DeveloperToolsViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in DeveloperToolsViewModel:ShowAllAccounts:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            LogService.LogException(ex);
+            await DialogService.ShowException(ex);
         }
-
     }
 
     [RelayCommand]
@@ -49,16 +51,14 @@ public partial class DeveloperToolsViewModel : BaseViewModel
                 "PlanAhead.db");
             File.Delete(path);
             Preferences.Default.Clear();
-            await Dialogs.ShowMessageAsync(
+            await DialogService.ShowMessageAsync(
                     "Set as New Install", $"Database and Preferences removed. Next run will be as a New Install");
         }
         catch (Exception ex)
         {
-            var msg = $"Error in DeveloperToolsViewModel:DeleteAll:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            LogService.LogException(ex);
+            await DialogService.ShowException(ex);
         }
-
-
     }
 
     [RelayCommand]
@@ -68,15 +68,14 @@ public partial class DeveloperToolsViewModel : BaseViewModel
         {
             var accounts = await _repository.GetAllAsync();
 
-            await Dialogs.ShowMessageAsync(
+            await DialogService.ShowMessageAsync(
                     "Accounts", $"There are {accounts.Count} accounts.");
         }
         catch (Exception ex)
         {
-            var msg = $"Error in DeveloperToolsViewModel:ShowAccountCount:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            LogService.LogException(ex);
+            await DialogService.ShowException(ex);
         }
-
     }
 
     [RelayCommand]
@@ -88,14 +87,13 @@ public partial class DeveloperToolsViewModel : BaseViewModel
                 FileSystem.AppDataDirectory,
                 "PlanAhead.db");
 
-            await Dialogs.ShowMessageAsync(
+            await DialogService.ShowMessageAsync(
                     "Database", $"{path}");
         }
         catch (Exception ex)
         {
-            var msg = $"Error in DeveloperToolsViewModel:ShowDatabasePath:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            LogService.LogException(ex);
+            await DialogService.ShowException(ex);
         }
-
     }
 }

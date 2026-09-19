@@ -26,8 +26,9 @@ public partial class WelcomeViewModel : BaseViewModel
         IApplicationSettingsService settings,
         ILocalDatabaseService localDatabaseService,
         INavigationService navigation,
-        IDialogService dialogs)
-        : base(navigation, dialogs)
+        IDialogService dialogs,
+        ILogService logService)
+        : base(navigation, dialogs, logService)
     {
         _settings = settings;
         _localDatabaseService = localDatabaseService;
@@ -50,10 +51,9 @@ public partial class WelcomeViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in WelcomeViewModel:OfflineAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            LogService.LogException(ex);
+            await DialogService.ShowException(ex);
         }
-
     }
 
     [RelayCommand]
@@ -73,8 +73,8 @@ public partial class WelcomeViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in WelcomeViewModel:OnlineManualAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            LogService.LogException(ex);
+            await DialogService.ShowException(ex);
         }
     }
 
@@ -95,9 +95,8 @@ public partial class WelcomeViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in WelcomeViewModel:OnlineAutoAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            LogService.LogException(ex);
+            await DialogService.ShowException(ex);
         }
-
     }
 }

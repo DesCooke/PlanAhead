@@ -76,6 +76,22 @@ public class DialogService
         return Task.CompletedTask;
     }
 
+    public Task ShowException(
+        Exception ex)
+    {
+
+        var page = GetCurrentPage(Application.Current?.Windows[0].Page);
+
+        if (page != null)
+        {
+            return page.DisplayAlertAsync(
+            "Exception",
+            ex.Message,
+            "OK");
+        }
+        return Task.CompletedTask;
+    }
+
     public async Task<bool> ConfirmAsync(
         string title,
         string message)

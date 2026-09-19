@@ -47,8 +47,9 @@ public partial class FundViewViewModel : BaseViewModel
         INavigationService navigation,
         INavigationContext navigationContext,
         IDialogService dialogs,
-        ISyncStateService syncStateService)
-        : base(navigation, dialogs)
+        ISyncStateService syncStateService,
+        ILogService logService)
+        : base(navigation, dialogs, logService)
     {
         _fundService = fundService;
         _navigationContext = navigationContext;
@@ -100,8 +101,8 @@ public partial class FundViewViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in FundViewViewModel:LoadAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            LogService.LogException(ex);
+            await DialogService.ShowException(ex);
         }
     }
 
@@ -116,10 +117,9 @@ public partial class FundViewViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in FundViewViewModel:EditAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            LogService.LogException(ex);
+            await DialogService.ShowException(ex);
         }
-
     }
 
     [RelayCommand]
@@ -131,8 +131,8 @@ public partial class FundViewViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in FundViewViewModel:CancelAsync:{ex.Message}";
-            Dialogs.ShowErrorAsync(msg);
+            LogService.LogException(ex);
+            DialogService.ShowException(ex);
         }
         return Task.CompletedTask;
     }
@@ -143,7 +143,7 @@ public partial class FundViewViewModel : BaseViewModel
         try
         {
             var delete =
-                await Dialogs.ConfirmAsync(
+                await DialogService.ConfirmAsync(
                     "Delete Fund",
                     $"Delete '{Name}'?");
 
@@ -158,8 +158,8 @@ public partial class FundViewViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in FundViewViewModel:DeleteAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            LogService.LogException(ex);
+            await DialogService.ShowException(ex);
         }
 
     }

@@ -4,6 +4,7 @@ using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Infrastructure.Authentication;
 using PlanAhead.Infrastructure.DB;
 using PlanAhead.Infrastructure.DB.SQLite;
+using PlanAhead.Infrastructure.Logging;
 using PlanAhead.Infrastructure.Repositories;
 using PlanAhead.Infrastructure.Sync.Models;
 using Supabase;
@@ -114,7 +115,7 @@ public class SyncService : ISyncService
                 }
                 catch (Exception ex)
                 {
-                    await _logService.LogExceptionAsync(ex);
+                    _logService.LogException(ex);
                 }
             }
             finally

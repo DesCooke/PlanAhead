@@ -45,8 +45,9 @@ public partial class FundEditViewModel : BaseViewModel
         INavigationService navigation,
         INavigationContext navigationContext,
         IDialogService dialogs,
-        ISyncStateService syncStateService)
-        : base(navigation, dialogs)
+        ISyncStateService syncStateService,
+        ILogService logService)
+        : base(navigation, dialogs, logService)
     {
         _fundService = fundService;
         _navigationContext = navigationContext;
@@ -89,10 +90,9 @@ public partial class FundEditViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in FundEditViewModel:InitialiseAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            LogService.LogException(ex);
+            await DialogService.ShowException(ex);
         }
-
     }
 
     private void Load(Fund fund)
@@ -141,7 +141,7 @@ public partial class FundEditViewModel : BaseViewModel
             var error = Validate();
             if (error != null)
             {
-                await Dialogs.ShowMessageAsync(
+                await DialogService.ShowMessageAsync(
                     "Validation",
                     error);
 
@@ -159,8 +159,8 @@ public partial class FundEditViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in FundEditViewModel:SaveAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            LogService.LogException(ex);
+            await DialogService.ShowException(ex);
         }
     }
 
@@ -173,8 +173,8 @@ public partial class FundEditViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in FundEditViewModel:CancelAsync:{ex.Message}";
-            Dialogs.ShowErrorAsync(msg);
+            LogService.LogException(ex);
+            DialogService.ShowException(ex);
         }
         return Task.CompletedTask;
             

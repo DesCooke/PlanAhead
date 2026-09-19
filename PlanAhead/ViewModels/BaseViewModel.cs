@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Interfaces;
 
 namespace PlanAhead.ViewModels;
@@ -6,14 +7,17 @@ namespace PlanAhead.ViewModels;
 public abstract partial class BaseViewModel : ObservableObject
 {
     protected INavigationService Navigation { get; }
-    protected IDialogService Dialogs { get; }
+    protected IDialogService DialogService { get; }
+    protected ILogService LogService { get; }
 
     protected BaseViewModel(
         INavigationService navigation,
-        IDialogService dialogs)
+        IDialogService dialogService, 
+        ILogService logService)
     {
         Navigation = navigation;
-        Dialogs = dialogs;
+        DialogService = dialogService;
+        LogService = logService;
     }
 
     [ObservableProperty]
@@ -52,9 +56,8 @@ public abstract partial class BaseViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            var msg = $"Error in BaseViewModel:ExecuteBusyAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            LogService.LogException(ex);
+            await DialogService.ShowException(ex);
         }
-
     }
 }

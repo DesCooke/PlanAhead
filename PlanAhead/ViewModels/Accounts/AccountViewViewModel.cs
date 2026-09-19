@@ -55,8 +55,9 @@ public partial class AccountViewViewModel : BaseViewModel
         INavigationService navigation,
         INavigationContext navigationContext,
         IDialogService dialogs,
-        ISyncStateService syncStateService)
-        : base(navigation, dialogs)
+        ISyncStateService syncStateService,
+        ILogService logService)
+        : base(navigation, dialogs, logService)
     {
         _accountService = accountService;
         _navigationContext = navigationContext;
@@ -120,10 +121,9 @@ public partial class AccountViewViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in AccountViewViewModel:LoadAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            LogService.LogException(ex);
+            await DialogService.ShowException(ex);
         }
-
     }
 
     [RelayCommand]
@@ -137,10 +137,9 @@ public partial class AccountViewViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in AccountViewViewModel:EditAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            LogService.LogException(ex);
+            await DialogService.ShowException(ex);
         }
-
     }
 
     [RelayCommand]
@@ -152,8 +151,8 @@ public partial class AccountViewViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in AccountViewViewModel:CancelAsync:{ex.Message}";
-            Dialogs.ShowErrorAsync(msg);
+            LogService.LogException(ex);
+            DialogService.ShowException(ex);
         }
         return Task.CompletedTask;
     }
@@ -164,7 +163,7 @@ public partial class AccountViewViewModel : BaseViewModel
         try
         {
             var delete =
-                await Dialogs.ConfirmAsync(
+                await DialogService.ConfirmAsync(
                     "Delete Account",
                     $"Delete '{Name}'?");
 
@@ -179,10 +178,9 @@ public partial class AccountViewViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in AccountViewViewModel:DeleteAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            LogService.LogException(ex);
+            await DialogService.ShowException(ex);
         }
-
     }
 
     [RelayCommand]
@@ -196,8 +194,8 @@ public partial class AccountViewViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in AccountViewViewModel:GoToFundsAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            LogService.LogException(ex);
+            await DialogService.ShowException(ex);
         }
     }
 

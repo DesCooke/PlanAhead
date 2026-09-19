@@ -3,26 +3,182 @@
 <ContentPage
     x:Class="PlanAhead.Views.DiagnosticsPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    Title="Diagnostics"
+    BackgroundColor="{AppThemeBinding Light=#F5F6F8,
+                                      Dark=#121212}">
 
-    <Grid RowDefinitions="Auto,*">
+    <Shell.TitleView>
 
-        <HorizontalStackLayout>
+        <Grid
+            ColumnDefinitions="*,Auto"
+            ColumnSpacing="10"
+            VerticalOptions="Center">
 
-            <Button Command="{Binding RefreshCommand}" Text="Refresh" />
+            <VerticalStackLayout
+                Grid.Column="0"
+                Spacing="0"
+                VerticalOptions="Center">
 
-            <Button Command="{Binding ClearCommand}" Text="Clear" />
+                <Label
+                    FontAttributes="Bold"
+                    FontSize="16"
+                    Text="Diagnostics"
+                    TextColor="{AppThemeBinding Light=#202124,
+                                                Dark=#FFFFFF}" />
 
-        </HorizontalStackLayout>
+                <Label
+                    FontSize="10"
+                    Text="Application logging and diagnostic information"
+                    TextColor="{AppThemeBinding Light=#6B7280,
+                                                Dark=#AAAAAA}" />
 
-        <ScrollView Grid.Row="1">
+            </VerticalStackLayout>
 
-            <Label
-                FontFamily="Courier New"
-                LineBreakMode="WordWrap"
-                Text="{Binding Log}" />
+            <Border
+                Grid.Column="1"
+                Padding="8,5"
+                BackgroundColor="{AppThemeBinding Light=#E8F5E9,
+                                                  Dark=#19351F}"
+                StrokeShape="RoundRectangle 10"
+                StrokeThickness="0"
+                VerticalOptions="Center">
 
-        </ScrollView>
+                <HorizontalStackLayout Spacing="5">
+
+                    <Ellipse
+                        BackgroundColor="#35A853"
+                        HeightRequest="7"
+                        WidthRequest="7" />
+
+                    <Label
+                        FontSize="10"
+                        Text="Logging"
+                        TextColor="{AppThemeBinding Light=#287D32,
+                                                    Dark=#81C784}"
+                        VerticalOptions="Center" />
+
+                </HorizontalStackLayout>
+
+            </Border>
+
+        </Grid>
+
+    </Shell.TitleView>
+
+    <Grid
+        Padding="20"
+        RowDefinitions="Auto,Auto,*"
+        RowSpacing="14">
+
+
+        <!--  Toolbar  -->
+        <Border
+            Grid.Row="1"
+            Padding="12"
+            BackgroundColor="{AppThemeBinding Light=#FFFFFF,
+                                              Dark=#1E1E1E}"
+            Stroke="{AppThemeBinding Light=#E1E4E8,
+                                     Dark=#333333}"
+            StrokeShape="RoundRectangle 10"
+            StrokeThickness="1">
+
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="8">
+
+                <Entry
+                    Grid.Column="0"
+                    ClearButtonVisibility="WhileEditing"
+                    FontSize="13"
+                    Placeholder="Filter log..."
+                    Text="{Binding Filter}"
+                    VerticalOptions="Center" />
+
+                <Button
+                    Grid.Column="1"
+                    Command="{Binding RefreshCommand}"
+                    Text="↻  Refresh" />
+
+                <Button
+                    Grid.Column="2"
+                    Command="{Binding ClearCommand}"
+                    Text="Clear" />
+
+            </Grid>
+
+        </Border>
+
+        <!--  Log area  -->
+        <Border
+            Grid.Row="2"
+            BackgroundColor="{AppThemeBinding Light=#202124,
+                                              Dark=#0D0D0D}"
+            Stroke="{AppThemeBinding Light=#D0D3D8,
+                                     Dark=#333333}"
+            StrokeShape="RoundRectangle 10"
+            StrokeThickness="1">
+
+            <Grid RowDefinitions="Auto,*">
+
+                <!--  Log header  -->
+                <Grid
+                    Padding="14,10"
+                    BackgroundColor="{AppThemeBinding Light=#292A2D,
+                                                      Dark=#171717}"
+                    ColumnDefinitions="*,Auto">
+
+                    <HorizontalStackLayout Spacing="8">
+
+                        <Ellipse
+                            BackgroundColor="#EA4335"
+                            HeightRequest="9"
+                            WidthRequest="9" />
+
+                        <Ellipse
+                            BackgroundColor="#FBBC04"
+                            HeightRequest="9"
+                            WidthRequest="9" />
+
+                        <Ellipse
+                            BackgroundColor="#34A853"
+                            HeightRequest="9"
+                            WidthRequest="9" />
+
+                        <Label
+                            Margin="6,0,0,0"
+                            FontAttributes="Bold"
+                            FontSize="12"
+                            Text="Application Log"
+                            TextColor="#DADCE0"
+                            VerticalOptions="Center" />
+
+                    </HorizontalStackLayout>
+
+                    <Label
+                        Grid.Column="1"
+                        FontSize="11"
+                        Text="LIVE"
+                        TextColor="#81C995"
+                        VerticalOptions="Center" />
+
+                </Grid>
+
+
+                <!--  Log contents  -->
+                <Editor
+                    x:Name="LogEditor"
+                    Grid.Row="1"
+                    BackgroundColor="Transparent"
+                    FontFamily="CourierNew"
+                    FontSize="12"
+                    IsReadOnly="True"
+                    IsSpellCheckEnabled="False"
+                    IsTextPredictionEnabled="False"
+                    Loaded="LogEditor_Loaded"
+                    Text="{Binding Log}"
+                    TextColor="#E8EAED" />
+            </Grid>
+
+        </Border>
 
     </Grid>
 

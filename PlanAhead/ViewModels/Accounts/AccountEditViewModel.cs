@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Core.Models.Domain;
 using PlanAhead.Core.Models.Enums;
+using PlanAhead.Infrastructure.Logging;
 using PlanAhead.Infrastructure.Sync;
 using PlanAhead.Interfaces;
 using PlanAhead.Services;
@@ -50,8 +51,9 @@ public partial class AccountEditViewModel : BaseViewModel
         INavigationContext navigationContext,
         IDialogService dialogService,
         IDialogService dialogs,
-        ISyncStateService syncStateService)
-        : base(navigation, dialogs)
+        ISyncStateService syncStateService, 
+        ILogService logService)
+        : base(navigation, dialogs, logService)
     {
         _accountService = accountService;
         _navigationContext = navigationContext;
@@ -98,10 +100,9 @@ public partial class AccountEditViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in AccountEditViewModel:InitialiseAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            LogService.LogException(ex);
+            await DialogService.ShowException(ex);
         }
-
     }
 
     private void Load(Account account)
@@ -145,7 +146,7 @@ public partial class AccountEditViewModel : BaseViewModel
             var error = Validate();
             if (error != null)
             {
-                await Dialogs.ShowMessageAsync(
+                await DialogService.ShowMessageAsync(
                     "Validation",
                     error);
 
@@ -163,8 +164,8 @@ public partial class AccountEditViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in AccountEditViewModel:SaveAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            LogService.LogException(ex);
+            await DialogService.ShowException(ex);
         }
     }
 
@@ -177,8 +178,8 @@ public partial class AccountEditViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in AccountEditViewModel:CancelAsync:{ex.Message}";
-            Dialogs.ShowErrorAsync(msg);
+            LogService.LogException(ex);
+            DialogService.ShowException(ex);
         }
         return Task.CompletedTask;
     }
@@ -195,9 +196,8 @@ public partial class AccountEditViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in AccountEditViewModel:ChooseIconAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            LogService.LogException(ex);
+            await DialogService.ShowException(ex);
         }
-
     }
 }

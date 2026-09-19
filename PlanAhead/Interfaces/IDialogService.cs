@@ -11,6 +11,9 @@ public interface IDialogService
     Task ShowErrorAsync(
         string message);
 
+    Task ShowException(
+        Exception ex);
+
     Task<bool> ConfirmAsync(
         string title,
         string message);

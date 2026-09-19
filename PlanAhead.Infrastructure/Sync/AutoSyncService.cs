@@ -4,6 +4,7 @@ using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Infrastructure.Authentication;
 using PlanAhead.Infrastructure.DB;
 using PlanAhead.Infrastructure.DB.SQLite;
+using PlanAhead.Infrastructure.Logging;
 using PlanAhead.Infrastructure.Repositories;
 using PlanAhead.Infrastructure.Sync.Models;
 using System.Diagnostics;
@@ -90,7 +91,7 @@ public class AutoSyncService : IAutoSyncService, IDisposable
                     }
                     catch (Exception ex)
                     {
-                        await _logService.LogExceptionAsync(ex);
+                        _logService.LogException(ex);
                     }
                     await Task.Delay(TimeSpan.FromSeconds(2), token);
                     await _logService.LogAsync("AutoSyncing End");

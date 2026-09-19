@@ -33,7 +33,9 @@ namespace PlanAhead.ViewModels
             ILocalDatabaseService localDatabase,
             IRemoteDatabaseService remoteDatabase, 
             IApplicationSettingsService applicationSettingsService,
-            IAutoSyncService autoSyncService) : base(navigation, dialogs)
+            IAutoSyncService autoSyncService,
+            ILogService logService)
+        : base(navigation, dialogs, logService)
         {
             _authenticationService = authenticationService;
             _localDatabase = localDatabase;
@@ -52,10 +54,9 @@ namespace PlanAhead.ViewModels
             }
             catch (Exception ex)
             {
-                var msg = $"Error in SettingsViewModel:DeveloperTools:{ex.Message}";
-                await Dialogs.ShowErrorAsync(msg);
+                LogService.LogException(ex);
+                await DialogService.ShowException(ex);
             }
-
         }
 
 
@@ -65,7 +66,7 @@ namespace PlanAhead.ViewModels
         {
             try
             {
-                if (!await Dialogs.ConfirmAsync(
+                if (!await DialogService.ConfirmAsync(
                         "Logout",
                         "Are you sure you want to logout?"))
                     return;
@@ -80,10 +81,9 @@ namespace PlanAhead.ViewModels
             }
             catch (Exception ex)
             {
-                var msg = $"Error in SettingsViewModel:LogoutAsync:{ex.Message}";
-                await Dialogs.ShowErrorAsync(msg);
+                LogService.LogException(ex);
+                await DialogService.ShowException(ex);
             }
-
         }
 
         [RelayCommand]
@@ -91,7 +91,7 @@ namespace PlanAhead.ViewModels
         {
             try
             {
-                if (!await Dialogs.ConfirmAsync(
+                if (!await DialogService.ConfirmAsync(
                         "Clear Local Database",
                         "Are you sure you want to clear the local database?.  This cannot be undone"))
                     return;
@@ -100,14 +100,13 @@ namespace PlanAhead.ViewModels
 
                 _applicationSettingsService.ResetToFactory();
 
-                await Shell.Current.GoToAsync("//Welcome");
+                await Shell.Current.GoToAsync("//Dashboard");
             }
             catch (Exception ex)
             {
-                var msg = $"Error in SettingsViewModel:ClearLocalDatabase:{ex.Message}";
-                await Dialogs.ShowErrorAsync(msg);
+                LogService.LogException(ex);
+                await DialogService.ShowException(ex);
             }
-
         }
 
         [RelayCommand]
@@ -119,10 +118,9 @@ namespace PlanAhead.ViewModels
             }
             catch (Exception ex)
             {
-                var msg = $"Error in SettingsViewModel:Dignostics:{ex.Message}";
-                await Dialogs.ShowErrorAsync(msg);
+                LogService.LogException(ex);
+                await DialogService.ShowException(ex);
             }
-
         }
 
         [RelayCommand]
@@ -130,7 +128,7 @@ namespace PlanAhead.ViewModels
         {
             try
             {
-                if (!await Dialogs.ConfirmAsync(
+                if (!await DialogService.ConfirmAsync(
                         "Clear Remote Database",
                         "Are you sure you want to clear the remote database?.  This cannot be undone"))
                     return;
@@ -143,10 +141,9 @@ namespace PlanAhead.ViewModels
             }
             catch (Exception ex)
             {
-                var msg = $"Error in SettingsViewModel:ClearRemoteDatabase:{ex.Message}";
-                await Dialogs.ShowErrorAsync(msg);
+                LogService.LogException(ex);
+                await DialogService.ShowException(ex);
             }
-
         }
 
         [RelayCommand]
@@ -154,7 +151,7 @@ namespace PlanAhead.ViewModels
         {
             try
             {
-                if (!await Dialogs.ConfirmAsync(
+                if (!await DialogService.ConfirmAsync(
                         "Factory Reset?",
                         "This will clear the local and remote database and clear settings.  This cannot be undone"))
                     return;
@@ -173,10 +170,9 @@ namespace PlanAhead.ViewModels
             }
             catch (Exception ex)
             {
-                var msg = $"Error in SettingsViewModel:FactoryReset:{ex.Message}";
-                await Dialogs.ShowErrorAsync(msg);
+                LogService.LogException(ex);
+                await DialogService.ShowException(ex);
             }
-
         }
 
         [RelayCommand]
@@ -188,10 +184,9 @@ namespace PlanAhead.ViewModels
             }
             catch (Exception ex)
             {
-                var msg = $"Error in SettingsViewModel:ChangeSignIn:{ex.Message}";
-                await Dialogs.ShowErrorAsync(msg);
+                LogService.LogException(ex);
+                await DialogService.ShowException(ex);
             }
-
         }
 
         public async Task InitialiseAsync()
@@ -202,10 +197,9 @@ namespace PlanAhead.ViewModels
             }
             catch (Exception ex)
             {
-                var msg = $"Error in SettingsViewModel:InitialiseAsync:{ex.Message}";
-                await Dialogs.ShowErrorAsync(msg);
+                LogService.LogException(ex);
+                await DialogService.ShowException(ex);
             }
-
         }
 
     }

@@ -110,9 +110,8 @@ public class ApplicationStartupService : IApplicationStartupService
         }
         catch (Exception ex)
         {
-            await _dialogs.ShowErrorAsync(
-                $"Unable to navigate to startup page.  {ex.Message}");
+            _logService.LogException(ex);
+            await _dialogs.ShowException(ex);
         }
-
     }
 }

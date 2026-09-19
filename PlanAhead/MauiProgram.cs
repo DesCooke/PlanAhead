@@ -7,6 +7,10 @@ using PlanAhead.Infrastructure.Authentication;
 using PlanAhead.Infrastructure.Extensions;
 using PlanAhead.Infrastructure.Logging;
 using Supabase;
+#if ANDROID
+using Android.Text;
+using Microsoft.Maui.Handlers;
+#endif
 
 namespace PlanAhead
 {
@@ -22,6 +26,7 @@ namespace PlanAhead
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                    fonts.AddFont("cour.ttf", "CourierNew");
                 });
 
             string dbPath = Path.Combine(
@@ -50,6 +55,27 @@ namespace PlanAhead
             builder.Logging.AddDebug();
 #endif
 
+#if ANDROID
+            EditorHandler.Mapper.AppendToMapping("DiagnosticsEditor", (handler, view) =>
+            {
+                var editor = handler.PlatformView;
+
+                // Multiline, but don't wrap lines horizontally
+                editor.SetSingleLine(false);
+                editor.SetHorizontallyScrolling(true);
+
+                // Prevent Android from introducing its own line wrapping
+                editor.SetMaxLines(int.MaxValue);
+                editor.Ellipsize = null;
+
+                // Use the simplest text layout
+                editor.BreakStrategy = BreakStrategy.Simple;
+
+                // Enable scrolling
+                editor.VerticalScrollBarEnabled = true;
+                editor.HorizontalScrollBarEnabled = true;
+            });
+#endif
             var app = builder.Build();
 
             var logService =

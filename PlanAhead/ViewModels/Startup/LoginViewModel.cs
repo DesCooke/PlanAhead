@@ -27,8 +27,9 @@ public partial class LoginViewModel : BaseViewModel
         IDialogService dialogs,
         ISyncService syncService,
         IAutoSyncService autoSyncService,
-        ISyncStateService syncStateService)
-        : base(navigation, dialogs)
+        ISyncStateService syncStateService,
+        ILogService logService)
+        : base(navigation, dialogs, logService)
     {
         _settings = settings;
         _authenticationService = authenticationService;
@@ -79,8 +80,8 @@ public partial class LoginViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in LoginViewModel:LoginAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            LogService.LogException(ex);
+            await DialogService.ShowException(ex);
         }
     }
 
@@ -94,8 +95,8 @@ public partial class LoginViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in LoginViewModel:InitialiseAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            LogService.LogException(ex);
+            await DialogService.ShowException(ex);
         }
     }
 
@@ -124,7 +125,7 @@ public partial class LoginViewModel : BaseViewModel
                 "supabase-session",
                 JsonSerializer.Serialize(response));
 
-            await Dialogs.ShowMessageAsync(
+            await DialogService.ShowMessageAsync(
                 "Registration",
                 "Your account has been created and logged in.");
 
@@ -132,8 +133,8 @@ public partial class LoginViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in LoginViewModel:RegisterAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            LogService.LogException(ex);
+            await DialogService.ShowException(ex);
         }
     }
 
@@ -148,8 +149,8 @@ public partial class LoginViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in LoginViewModel:OfflineOnlyAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            LogService.LogException(ex);
+            await DialogService.ShowException(ex);
         }
     }
 
@@ -162,8 +163,8 @@ public partial class LoginViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in LoginViewModel:GoogleAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            LogService.LogException(ex);
+            await DialogService.ShowException(ex);
         }
     }
 
@@ -176,8 +177,8 @@ public partial class LoginViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in LoginViewModel:CancelAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            LogService.LogException(ex);
+            await DialogService.ShowException(ex);
         }
     }
 }

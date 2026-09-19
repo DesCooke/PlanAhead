@@ -36,8 +36,9 @@ public partial class FundsViewModel : BaseViewModel
         INavigationService navigation,
         INavigationContext navigationContext,
         IDialogService dialogs,
-        ISyncStateService syncStateService)
-        : base(navigation, dialogs)
+        ISyncStateService syncStateService,
+        ILogService logService)
+        : base(navigation, dialogs, logService)
     {
         _accountService = accountService;
         _fundService = fundService;
@@ -62,10 +63,9 @@ public partial class FundsViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in FundsViewModel:InitialiseAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            LogService.LogException(ex);
+            await DialogService.ShowException(ex);
         }
-
     }
 
     [RelayCommand]
@@ -88,10 +88,9 @@ public partial class FundsViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in FundsViewModel:LoadAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            LogService.LogException(ex);
+            await DialogService.ShowException(ex);
         }
-
     }
 
     [RelayCommand]
@@ -100,7 +99,7 @@ public partial class FundsViewModel : BaseViewModel
         try
         {
             var delete =
-                await Dialogs.ConfirmAsync(
+                await DialogService.ConfirmAsync(
                     "Delete Fund",
                     $"Delete '{fund.Name}'?");
 
@@ -115,10 +114,9 @@ public partial class FundsViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in FundsViewModel:DeleteAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            LogService.LogException(ex);
+            await DialogService.ShowException(ex);
         }
-
     }
 
     [RelayCommand]
@@ -132,10 +130,9 @@ public partial class FundsViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in FundsViewModel:AddAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            LogService.LogException(ex);
+            await DialogService.ShowException(ex);
         }
-
     }
 
     partial void OnSelectedFundChanged(Fund? value)
@@ -157,8 +154,8 @@ public partial class FundsViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in FundsViewModel:OpenAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            LogService.LogException(ex);
+            await DialogService.ShowException(ex);
         }
     }
 
@@ -175,8 +172,8 @@ public partial class FundsViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in FundsViewModel:EditAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            LogService.LogException(ex);
+            await DialogService.ShowException(ex);
         }
     }
 

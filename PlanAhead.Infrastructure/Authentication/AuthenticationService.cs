@@ -151,8 +151,7 @@ public class AuthenticationService : IAuthenticationService
         }
         catch (Exception ex)
         {
-            await _logService.LogExceptionAsync(ex);
-            _secureStorageService.Remove("supabase-session");
+            _logService.LogException(ex);
             return false;
         }
         return true;
