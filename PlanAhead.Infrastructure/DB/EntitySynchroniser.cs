@@ -1,11 +1,13 @@
 ﻿using PlanAhead.Core.Models.Domain;
 using PlanAhead.Infrastructure.Authentication;
+using PlanAhead.Infrastructure.Logging;
 using PlanAhead.Infrastructure.Repositories;
 using Supabase;
 using Supabase.Postgrest.Models;
 
 namespace PlanAhead.Infrastructure.DB;
 
+[MethodLogging]
 public abstract class EntitySynchroniser<TEntity>
     where TEntity : SyncEntity
 {

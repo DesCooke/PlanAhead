@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Microsoft.Maui.Networking;
+using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Infrastructure.Logging;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using PlanAhead.Core.Interfaces.Services;
-using Microsoft.Maui.Networking;
 
 namespace PlanAhead.Services
 {

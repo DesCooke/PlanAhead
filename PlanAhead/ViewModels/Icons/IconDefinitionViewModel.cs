@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using PlanAhead.Infrastructure.Logging;
 using PlanAhead.Resources.Icons;
 
 namespace PlanAhead.ViewModels.Icons;

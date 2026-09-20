@@ -1,5 +1,6 @@
 using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Infrastructure.DB.SQLite;
+using PlanAhead.Infrastructure.Logging;
 
 namespace PlanAhead.Views.Startup;
 

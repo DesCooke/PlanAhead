@@ -1,20 +1,22 @@
 ﻿using PlanAhead.Core.Interfaces.Repositories;
+using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Core.Models.Domain;
+using PlanAhead.Infrastructure.Authentication;
+using PlanAhead.Infrastructure.Logging;
 using PlanAhead.Infrastructure.Repositories;
 using PlanAhead.Infrastructure.Sync.Models;
 using Supabase;
-using Supabase.Postgrest.Models;
 using Supabase.Postgrest.Attributes;
+using Supabase.Postgrest.Models;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using PlanAhead.Infrastructure.Authentication;
 using System.Diagnostics;
-using PlanAhead.Core.Interfaces.Services;
+using System.Text;
 
 
 namespace PlanAhead.Infrastructure.DB
 {
+    [MethodLogging]
     public class AccountSynchroniser : EntitySynchroniser<Account>, IEntitySynchroniser
     {
         private readonly IAccountRepository _repository;

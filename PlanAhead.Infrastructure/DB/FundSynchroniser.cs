@@ -2,6 +2,7 @@
 using PlanAhead.Core.Models.Domain;
 using PlanAhead.Core.Models.Enums;
 using PlanAhead.Infrastructure.Authentication;
+using PlanAhead.Infrastructure.Logging;
 using PlanAhead.Infrastructure.Repositories;
 using PlanAhead.Infrastructure.Sync.Models;
 using Supabase;
@@ -15,6 +16,7 @@ using System.Text;
 
 namespace PlanAhead.Infrastructure.DB
 {
+    [MethodLogging]
     public class FundSynchroniser : EntitySynchroniser<Fund>,
     IEntitySynchroniser
     {

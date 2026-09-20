@@ -29,6 +29,7 @@ public class AuthenticationService : IAuthenticationService
         _logService = logService;
     }
 
+
     public async Task<Supabase.Gotrue.Session?> LoginAsync(
         string email,
         string password)
@@ -36,15 +37,15 @@ public class AuthenticationService : IAuthenticationService
         var client = await _provider.GetClientAsync();
 
         var session = await client.Auth.SignIn(email, password);
-
         if (session != null)
         {
+            var json = JsonSerializer.Serialize(session);
             await _secureStorageService.SetAsync(
                 "supabase-session",
-                JsonSerializer.Serialize(session));
+                json);            
         }
-
         return session;
+       
     }
 
     public async Task<User?> GetCurrentUserAsync()

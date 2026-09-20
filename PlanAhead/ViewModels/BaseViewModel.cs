@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Infrastructure.Logging;
 using PlanAhead.Interfaces;
 
 namespace PlanAhead.ViewModels;

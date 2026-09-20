@@ -5,6 +5,7 @@ using PlanAhead.Core.Constants;
 using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Core.Messaging;
 using PlanAhead.Infrastructure.Authentication;
+using PlanAhead.Infrastructure.Logging;
 using PlanAhead.Infrastructure.Repositories;
 using PlanAhead.Infrastructure.Sync;
 using PlanAhead.Interfaces;

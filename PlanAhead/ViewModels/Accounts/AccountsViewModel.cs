@@ -4,6 +4,7 @@ using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Core.Models.Domain;
 using PlanAhead.Core.Services.Accounts;
 using PlanAhead.Core.Services.Funds;
+using PlanAhead.Infrastructure.Logging;
 using PlanAhead.Infrastructure.Sync;
 using PlanAhead.Interfaces;
 using PlanAhead.Services;
@@ -11,7 +12,7 @@ using PlanAhead.Views.Accounts;
 using System.Collections.ObjectModel;
 
 namespace PlanAhead.ViewModels.Accounts;
-    
+
 public partial class AccountsViewModel : BaseViewModel
 {
     private readonly IAccountService _accountService;

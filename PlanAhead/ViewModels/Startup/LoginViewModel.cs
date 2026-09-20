@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using PlanAhead;
 using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Infrastructure.Authentication;
+using PlanAhead.Infrastructure.Logging;
 using PlanAhead.Infrastructure.Sync;
 using PlanAhead.Interfaces;
 using PlanAhead.Services;
@@ -18,7 +19,10 @@ public partial class LoginViewModel : BaseViewModel
     private ISyncService _syncService;
     private IAutoSyncService _autoSyncService;
     private ISyncStateService _syncStateService;
-    
+    private ISupabaseClientProvider _provider;
+    private ISecureStorageService _secureStorageService;
+  
+
 
     public LoginViewModel(
         IApplicationSettingsService settings,
@@ -28,7 +32,9 @@ public partial class LoginViewModel : BaseViewModel
         ISyncService syncService,
         IAutoSyncService autoSyncService,
         ISyncStateService syncStateService,
-        ILogService logService)
+        ILogService logService,
+        ISupabaseClientProvider provider,
+        ISecureStorageService secureStorageService)
         : base(navigation, dialogs, logService)
     {
         _settings = settings;
@@ -36,6 +42,8 @@ public partial class LoginViewModel : BaseViewModel
         _syncService = syncService;
         _autoSyncService = autoSyncService;
         _syncStateService = syncStateService;
+        _provider = provider;
+        _secureStorageService = secureStorageService;
     }
 
 
@@ -50,6 +58,7 @@ public partial class LoginViewModel : BaseViewModel
     {
         try
         {
+            
             var response = await _authenticationService.LoginAsync(Email, Password);
 
             await SecureStorage.Default.SetAsync(

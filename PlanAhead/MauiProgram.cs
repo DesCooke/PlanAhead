@@ -81,6 +81,8 @@ namespace PlanAhead
             var logService =
                 app.Services.GetRequiredService<ILogService>();
 
+            logService.ClearAsync();
+
             MethodLoggingService.Configure(logService);
 
             return app;

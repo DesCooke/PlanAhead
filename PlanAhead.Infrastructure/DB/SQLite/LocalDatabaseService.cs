@@ -7,7 +7,9 @@ namespace PlanAhead.Infrastructure.DB.SQLite
     using global::SQLite;
     using PlanAhead.Core.Models.Domain;
     using PlanAhead.Infrastructure.DB.SQLite;
+    using PlanAhead.Infrastructure.Logging;
 
+    [MethodLogging]
     public class LocalDatabaseService : ILocalDatabaseService
     {
         private readonly SQLiteContext _context;

@@ -4,6 +4,7 @@ using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Infrastructure.Authentication;
 using PlanAhead.Infrastructure.DB.SQLite;
 using PlanAhead.Infrastructure.DB.Supabase;
+using PlanAhead.Infrastructure.Logging;
 using PlanAhead.Infrastructure.Repositories;
 using PlanAhead.Infrastructure.Services;
 using PlanAhead.Infrastructure.Sync;

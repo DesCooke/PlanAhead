@@ -2,6 +2,7 @@
 using PlanAhead.Core.Models.Sync;
 using PlanAhead.Infrastructure.Authentication;
 using PlanAhead.Infrastructure.DB;
+using PlanAhead.Infrastructure.Logging;
 using PlanAhead.Infrastructure.Sync;
 using PlanAhead.Interfaces;
 using PlanAhead.Views.Startup;
@@ -10,6 +11,7 @@ using System.Text.Json;
 
 namespace PlanAhead.Services;
 
+[MethodLogging]
 public class ApplicationStartupService : IApplicationStartupService
 {
     private readonly IApplicationSettingsService _settings;
@@ -45,7 +47,6 @@ public class ApplicationStartupService : IApplicationStartupService
     {
         try
         {
-            await _logService.ClearAsync();
 
             await _logService.LogAsync("Setting _syncStatusService.IsSyncing to false");
             _syncStatusService.IsSyncing = false;

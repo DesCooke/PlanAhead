@@ -1,10 +1,12 @@
 ﻿using PlanAhead.Core.Interfaces.Repositories;
 using PlanAhead.Core.Models.Domain;
 using PlanAhead.Infrastructure.DB.SQLite;
+using PlanAhead.Infrastructure.Logging;
 using SQLite;
 
 namespace PlanAhead.Infrastructure.Repositories;
 
+[MethodLogging]
 public class FundRepository : IFundRepository
 {
     private readonly SQLiteContext _context;

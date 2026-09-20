@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.Collections;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using PlanAhead.Infrastructure.Logging;
 using PlanAhead.Resources.Icons;
 using System.Collections.ObjectModel;
 

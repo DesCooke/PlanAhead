@@ -1,14 +1,16 @@
-﻿using System;
+﻿using Supabase;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using Supabase;
 
 namespace PlanAhead.Infrastructure.DB.Supabase
 {
     using PlanAhead.Infrastructure.Authentication;
+    using PlanAhead.Infrastructure.Logging;
     using PlanAhead.Infrastructure.Sync.Models;
     using Supabase;
 
+    [MethodLogging]
     public class RemoteDatabaseService : IRemoteDatabaseService
     {
         private readonly Client _client;

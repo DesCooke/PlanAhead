@@ -1,6 +1,7 @@
 ﻿using Microsoft.Maui.Storage;
 using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Core.Models.Enums;
+using PlanAhead.Infrastructure.Logging;
 
 namespace PlanAhead.Infrastructure.Services;
 

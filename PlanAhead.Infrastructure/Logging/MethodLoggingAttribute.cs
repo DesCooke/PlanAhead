@@ -24,6 +24,11 @@ public sealed class MethodLoggingAttribute
 
     private static readonly AsyncLocal<int> _depth = new();
 
+    public override bool CompileTimeValidate(MethodBase method)
+    {
+        return !ShouldIgnore(method);
+    }
+
     public override void OnEntry(
         MethodExecutionArgs args)
     {
@@ -112,8 +117,7 @@ public sealed class MethodLoggingAttribute
         {
             state.Ended = true;
 
-            MethodLoggingService.Depth =
-                Math.Max(0, state.Depth);
+            _depth.Value = Math.Max(0, state.Depth);
         }
 
         // VERY IMPORTANT:

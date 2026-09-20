@@ -4,11 +4,13 @@ using PlanAhead.Core.Models.Domain;
 using PlanAhead.Core.Models.Enums;
 using PlanAhead.Core.Models.Sync;
 using PlanAhead.Infrastructure.DB.SQLite;
+using PlanAhead.Infrastructure.Logging;
 using SQLite;
 using Supabase.Postgrest.Models;
 
 namespace PlanAhead.Infrastructure.Repositories;
 
+[MethodLogging]
 public class AccountRepository: IAccountRepository
 {
     private readonly SQLiteContext _context;

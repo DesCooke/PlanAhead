@@ -4,6 +4,8 @@ using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Core.Models.Enums;
 using PlanAhead.Core.Services.Accounts;
 using PlanAhead.Infrastructure.Authentication;
+using PlanAhead.Infrastructure.DB.SQLite;
+using PlanAhead.Infrastructure.Logging;
 using PlanAhead.Interfaces;
 using PlanAhead.Navigation;
 using PlanAhead.Services;
@@ -13,7 +15,6 @@ using PlanAhead.Views.Accounts;
 using PlanAhead.Views.Funds;
 using PlanAhead.Views.Startup;
 using System.Collections.ObjectModel;
-using PlanAhead.Infrastructure.DB.SQLite;
 
 namespace PlanAhead.ViewModels.Funds;
 

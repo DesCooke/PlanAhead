@@ -1,7 +1,9 @@
-﻿using Supabase;
+﻿using PlanAhead.Infrastructure.Logging;
+using Supabase;
 
 namespace PlanAhead.Infrastructure.Authentication;
 
+[MethodLogging]
 public class SupabaseClientProvider : ISupabaseClientProvider
 {
     private readonly Client _client;

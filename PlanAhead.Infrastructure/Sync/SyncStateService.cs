@@ -6,6 +6,7 @@ using Supabase;
 
 namespace PlanAhead.Infrastructure.Sync;
 
+[MethodLogging]
 public class SyncStateService : ISyncStateService
 {
     private readonly Client _client;
