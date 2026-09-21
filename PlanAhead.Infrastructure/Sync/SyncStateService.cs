@@ -3,6 +3,7 @@ using PlanAhead.Infrastructure.Authentication;
 using PlanAhead.Infrastructure.Logging;
 using PlanAhead.Infrastructure.Sync.Models;
 using Supabase;
+using PlanAhead.Core.MethodLogging;
 
 namespace PlanAhead.Infrastructure.Sync;
 

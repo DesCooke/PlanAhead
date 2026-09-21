@@ -3,6 +3,7 @@ using PlanAhead.Core.Models.Domain;
 using PlanAhead.Infrastructure.DB.SQLite;
 using PlanAhead.Infrastructure.Logging;
 using SQLite;
+using PlanAhead.Core.MethodLogging;
 
 namespace PlanAhead.Infrastructure.Repositories;
 

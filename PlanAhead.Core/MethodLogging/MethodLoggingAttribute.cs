@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-namespace PlanAhead.Infrastructure.Logging;
+namespace PlanAhead.Core.MethodLogging;
 
 [AttributeUsage(
     AttributeTargets.Class |
@@ -87,27 +87,25 @@ public sealed class MethodLoggingAttribute
             $"{methodName} [{elapsed}ms]");
     }
 
-    public override void OnException(
-        MethodExecutionArgs args)
+    public override void OnException(MethodExecutionArgs args)
     {
         if (ShouldIgnore(args.Method))
             return;
 
-        if (args.MethodExecutionTag
-            is not MethodState state)
+        if (args.MethodExecutionTag is not MethodState state)
         {
             Write(
                 $"! {GetMethodName(args)} " +
                 $"EXCEPTION: {args.Exception.Message}");
 
-            args.FlowBehavior =
-                FlowBehavior.RethrowException;
+            MethodLoggingService.HandleException(args.Exception);
+
+            args.FlowBehavior = FlowBehavior.Continue;
 
             return;
         }
 
-        var methodName =
-            GetMethodName(args);
+        var methodName = GetMethodName(args);
 
         Write(
             $"! {methodName} " +
@@ -116,15 +114,15 @@ public sealed class MethodLoggingAttribute
         if (!state.Ended)
         {
             state.Ended = true;
-
             _depth.Value = Math.Max(0, state.Depth);
         }
 
-        // VERY IMPORTANT:
-        // Don't swallow the exception.
-        args.FlowBehavior =
-            FlowBehavior.RethrowException;
+        MethodLoggingService.HandleException(args.Exception);
+
+        args.FlowBehavior = FlowBehavior.RethrowException;
     }
+
+
 
     private static bool ShouldIgnore(
         MethodBase method)
@@ -162,8 +160,12 @@ public sealed class MethodLoggingAttribute
             args.Method.DeclaringType?.Name
             ?? "UnknownType";
 
-        return $"{declaringType}.{args.Method.Name}";
+        var typeName = args.Method.DeclaringType?.FullName;
+        var methodName = args.Method.Name;
+
+        return $"{typeName}.{methodName}";
     }
+
 
     private static string Indent(
         int depth)

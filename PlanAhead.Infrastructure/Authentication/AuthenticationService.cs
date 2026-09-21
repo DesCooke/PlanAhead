@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using static System.Collections.Specialized.BitVector32;
+using PlanAhead.Core.MethodLogging;
 
 
 namespace PlanAhead.Infrastructure.Authentication;
@@ -140,8 +141,6 @@ public class AuthenticationService : IAuthenticationService
 
         var client = await _provider.GetClientAsync();
 
-        try
-        {
             var newSession = await client.Auth.SetSession(
                 session.AccessToken,
                 session.RefreshToken);
@@ -149,12 +148,6 @@ public class AuthenticationService : IAuthenticationService
             await _secureStorageService.SetAsync(
                 "supabase-session",
                 JsonSerializer.Serialize(newSession));
-        }
-        catch (Exception ex)
-        {
-            _logService.LogException(ex);
-            return false;
-        }
         return true;
     }
 

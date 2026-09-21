@@ -8,10 +8,18 @@ namespace PlanAhead.Infrastructure.Logging;
 public class LogService : ILogService
 {
     private readonly List<string> _lines = [];
-
-    public IReadOnlyList<string> Lines => _lines;
-
     private readonly object _lock = new();
+
+    public IReadOnlyList<string> Lines
+    {
+        get
+        {
+            lock (_lock)
+            {
+                return _lines.ToList();
+            }
+        }
+    }
 
     public LogService()
     {
@@ -44,7 +52,10 @@ public class LogService : ILogService
         [CallerMemberName] string memberName = "",
         [CallerFilePath] string filePath = "")
     {
-        var unitName = System.IO.Path.GetFileNameWithoutExtension(filePath).Split('/', '\\').Last();
+        var unitName =
+            Path.GetFileNameWithoutExtension(filePath)
+                .Split('/', '\\')
+                .Last();
 
         var message =
             $"Error in {unitName}:{memberName}:{exception.Message}";

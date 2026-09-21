@@ -1,11 +1,14 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.MethodLogging;
 using PlanAhead.Core.Services.Funds;
 using PlanAhead.Interfaces;
 using PlanAhead.Services;
 using PlanAhead.ViewModels;
+using System.Diagnostics;
 
+[MethodLogging]
 public partial class DiagnosticsViewModel : BaseViewModel
 {
 
@@ -63,15 +66,7 @@ public partial class DiagnosticsViewModel : BaseViewModel
 
     public async Task InitialiseAsync()
     {
-        try
-        {
-            Log = await _logService.GetLogAsync();
-        }
-        catch (Exception ex)
-        {
-            LogService.LogException(ex);
-            await DialogService.ShowException(ex);
-        }
+        Log = await _logService.GetLogAsync();
     }
 
     [RelayCommand]
@@ -80,18 +75,11 @@ public partial class DiagnosticsViewModel : BaseViewModel
         Log = await _logService.GetLogAsync();
     }
 
-    [RelayCommand]
+    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
     public async Task ClearAsync()
     {
-        try
-        {
-            await _logService.ClearAsync();
-            Log = string.Empty;
-        }
-        catch (Exception ex)
-        {
-            LogService.LogException(ex);
-            await DialogService.ShowException(ex);
-        }
+
+        await LogService.ClearAsync();
+        Log = await _logService.GetLogAsync();
     }
 }

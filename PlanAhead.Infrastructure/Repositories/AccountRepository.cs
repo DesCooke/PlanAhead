@@ -7,6 +7,7 @@ using PlanAhead.Infrastructure.DB.SQLite;
 using PlanAhead.Infrastructure.Logging;
 using SQLite;
 using Supabase.Postgrest.Models;
+using PlanAhead.Core.MethodLogging;
 
 namespace PlanAhead.Infrastructure.Repositories;
 
@@ -29,16 +30,9 @@ public class AccountRepository: IAccountRepository
     {
         var db = await _context.GetConnectionAsync();
 
-        try
-        {
             return await db.Table<Account>()
                 .Where(a => a.NeedsSync)
                 .ToListAsync();
-        } catch 
-        {
-
-        }
-         return new List<Account>();
     }
 
     public async Task MarkSyncedAsync(Guid id)

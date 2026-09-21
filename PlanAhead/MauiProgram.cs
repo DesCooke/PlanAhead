@@ -2,11 +2,16 @@
 using Microsoft.Extensions.Logging;
 using PlanAhead.Core.Extensions;
 using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.MethodLogging;
 using PlanAhead.Extensions;
 using PlanAhead.Infrastructure.Authentication;
 using PlanAhead.Infrastructure.Extensions;
 using PlanAhead.Infrastructure.Logging;
 using Supabase;
+using PlanAhead.Interfaces;
+using System.Diagnostics;
+
+
 #if ANDROID
 using Android.Text;
 using Microsoft.Maui.Handlers;
@@ -81,6 +86,27 @@ namespace PlanAhead
             var logService =
                 app.Services.GetRequiredService<ILogService>();
 
+            var dialogService =
+                app.Services.GetRequiredService<IDialogService>();
+
+            MethodLoggingService.SetExceptionHandler(
+                async exception =>
+                {
+                    try
+                    {
+                        await MainThread.InvokeOnMainThreadAsync(
+                            async () =>
+                            {
+                                await dialogService.ShowException(exception);
+                            });
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.WriteLine(
+                            $"Exception displaying error dialog: {ex}");
+                    }
+                });
+            
             logService.ClearAsync();
 
             MethodLoggingService.Configure(logService);

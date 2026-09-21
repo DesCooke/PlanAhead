@@ -2,6 +2,7 @@
 using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Interfaces;
 using PlanAhead.Views.Popups;
+using System.Diagnostics;
 
 namespace PlanAhead.Services;
 
@@ -76,22 +77,36 @@ public class DialogService
         return Task.CompletedTask;
     }
 
-    public Task ShowException(
-        Exception ex)
+    public Task ShowException(Exception ex)
     {
-
-        var page = GetCurrentPage(Application.Current?.Windows[0].Page);
-
-        if (page != null)
+        MainThread.BeginInvokeOnMainThread(async () =>
         {
-            return page.DisplayAlertAsync(
-            "Exception",
-            ex.Message,
-            "OK");
-        }
+            try
+            {
+                // Allow the current page lifecycle/navigation
+                // to finish before attempting the alert.
+                await Task.Yield();
+
+                var page =
+                    GetCurrentPage(
+                        Application.Current?.Windows[0].Page);
+
+                if (page == null)
+                    return;
+
+                await page.DisplayAlertAsync(
+                    "Exception",
+                    ex.Message,
+                    "OK");
+            }
+            catch (Exception alertException)
+            {
+                Debug.WriteLine(
+                    $"DisplayAlertAsync failed: {alertException}");
+            }
+        });
         return Task.CompletedTask;
     }
-
     public async Task<bool> ConfirmAsync(
         string title,
         string message)

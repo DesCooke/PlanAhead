@@ -8,6 +8,7 @@ using PlanAhead.Interfaces;
 using PlanAhead.Views.Startup;
 using Supabase;
 using System.Text.Json;
+using PlanAhead.Core.MethodLogging;
 
 namespace PlanAhead.Services;
 
@@ -45,74 +46,64 @@ public class ApplicationStartupService : IApplicationStartupService
 
     public async Task NavigateToStartupPageAsync()
     {
-        try
+        await _logService.LogAsync("Setting _syncStatusService.IsSyncing to false");
+        _syncStatusService.IsSyncing = false;
+        await _logService.LogAsync($".._syncStatusService.IsSyncing is {_syncStatusService.IsSyncing}");
+
+        //
+        // User is currently offline - go into offline mode
+        //
+        if (!_connectivityService.IsOnline)
         {
+            await _dialogs.ShowMessageAsync("You are OFFLINE",
+                "You appear to be offline - reading and writing will be restricted to this device only - until internet service resumes");
+            await Shell.Current.GoToAsync("//Dashboard");
+            return;
+        }
 
-            await _logService.LogAsync("Setting _syncStatusService.IsSyncing to false");
-            _syncStatusService.IsSyncing = false;
-            await _logService.LogAsync($".._syncStatusService.IsSyncing is {_syncStatusService.IsSyncing}");
 
-            //
-            // User is currently offline - go into offline mode
-            //
-            if (!_connectivityService.IsOnline)
+        //
+        // User is online - first time of running - offer different ways to connect
+        //
+        if (_settings.IsFirstRun)
+        {
+            await Shell.Current.GoToAsync("//Welcome");
+            return;
+        }
+
+
+        //
+        // User is online - not first time of running - use he saved method
+        //
+
+
+        // if offline only - start the app
+        if (_settings.SyncMode == Core.Models.Enums.SyncMode.Offline)
+        {
+            await Shell.Current.GoToAsync("//Dashboard");
+            return;
+        }
+
+        await _authenticationService.RestoreSessionAsync();
+
+        if (await _authenticationService.IsLoggedInAsync())
+        {
+            if (_settings.SyncMode == PlanAhead.Core.Models.Enums.SyncMode.SupabaseAuto)
             {
-                await _dialogs.ShowMessageAsync("You are OFFLINE",
-                    "You appear to be offline - reading and writing will be restricted to this device only - until internet service resumes");
-                await Shell.Current.GoToAsync("//Dashboard");
-                return;
-            }
-
-
-            //
-            // User is online - first time of running - offer different ways to connect
-            //
-            if (_settings.IsFirstRun)
-            {
-                await Shell.Current.GoToAsync("//Welcome");
-                return;
-            }
-
-
-            //
-            // User is online - not first time of running - use he saved method
-            //
-
-
-            // if offline only - start the app
-            if (_settings.SyncMode == Core.Models.Enums.SyncMode.Offline)
-            {
-                await Shell.Current.GoToAsync("//Dashboard");
-                return;
-            }
-
-            await _authenticationService.RestoreSessionAsync();
-
-            if (await _authenticationService.IsLoggedInAsync())
-            {
-                if (_settings.SyncMode == PlanAhead.Core.Models.Enums.SyncMode.SupabaseAuto)
+                var userIdStr = await _authenticationService.GetCurrentUserIdAsync();
+                if (userIdStr != null)
                 {
-                    var userIdStr = await _authenticationService.GetCurrentUserIdAsync();
-                    if (userIdStr != null)
-                    {
-                        var userId = Guid.Parse(userIdStr);
-                        _autoSyncService.Start(userId);
-                    }
+                    var userId = Guid.Parse(userIdStr);
+                    _autoSyncService.Start(userId);
                 }
-
-                await Shell.Current.GoToAsync("//Dashboard");
-                return;
             }
 
-
-            // go to login page
-            await Shell.Current.GoToAsync("//Login");
-
+            await Shell.Current.GoToAsync("//Dashboard");
+            return;
         }
-        catch (Exception ex)
-        {
-            _logService.LogException(ex);
-            await _dialogs.ShowException(ex);
-        }
+
+
+        // go to login page
+        await Shell.Current.GoToAsync("//Login");
     }
 }

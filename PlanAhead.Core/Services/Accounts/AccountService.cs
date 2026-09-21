@@ -1,8 +1,11 @@
 ﻿using PlanAhead.Core.Interfaces.Repositories;
 using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Core.Models.Domain;
+using PlanAhead.Core.MethodLogging;
 
 namespace PlanAhead.Core.Services.Accounts;
+
+[MethodLogging]
 
 public class AccountService : IAccountService
 {

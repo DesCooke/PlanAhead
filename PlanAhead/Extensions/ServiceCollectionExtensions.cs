@@ -86,6 +86,8 @@ namespace PlanAhead.Extensions
             services.AddTransient<DiagnosticsPage>();
             services.AddTransient<DiagnosticsViewModel>();
 
+
+
             return services;
         }
     }

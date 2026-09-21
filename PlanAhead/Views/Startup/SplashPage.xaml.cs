@@ -1,6 +1,9 @@
+using MethodBoundaryAspect.Fody.Attributes;
 using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Infrastructure.DB.SQLite;
 using PlanAhead.Infrastructure.Logging;
+using PlanAhead.Interfaces;
+using System.Diagnostics;
 
 namespace PlanAhead.Views.Startup;
 
@@ -17,7 +20,7 @@ public partial class SplashPage : ContentPage
         _localDatabaseService = localDatabaseService;
     }
 
-    protected override async void OnAppearing()
+    protected override void OnAppearing()
     {
         base.OnAppearing();
 
@@ -26,14 +29,12 @@ public partial class SplashPage : ContentPage
 
         _hasNavigated = true;
 
+        _ = StartAsync();
+    }
+
+    private async Task StartAsync()
+    {
         await _localDatabaseService.CreateDatabaseAsync();
-
-
-        // IMPORTANT:
-        // Yield back to the UI thread so that Shell completes its initial
-        // navigation to the Splash page before we perform our startup navigation.
-        // Without this, Shell can throw "Pending Navigations still processing".
-        await Task.Yield();
 
         await _startup.NavigateToStartupPageAsync();
     }
