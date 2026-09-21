@@ -50,17 +50,27 @@ public class SyncStateService : ISyncStateService
     public async Task<long> GetRemoteSyncVersionAsync(Guid userId,
         CancellationToken cancellationToken = default)
     {
-        var response = await _client
-            .From<UserSyncRecord>()
-            .Where(x => x.UserId == userId)
-            .Single();
+        try
+        {
+            var response = await _client
+                .From<UserSyncRecord>()
+                .Where(x => x.UserId == userId)
+                .Single();
 
-        if (response == null)
-            return 0;
+            if (response == null)
+                return 0L;
 
-        await _logService.LogAsync($"GetRemoteSyncVersionAsync returns response.SyncVersion");
+            await _logService.LogAsync($"GetRemoteSyncVersionAsync returns response.SyncVersion");
 
-        return response.SyncVersion;
+            return response.SyncVersion;
+
+        }
+        catch (Exception ex)
+        { 
+            await _logService.LogAsync($"Error: {ex.Message}");
+        }
+
+        return 0L;
     }
 
     public async Task UpdateLocalSyncVersionAsync(CancellationToken cancellationToken = default)

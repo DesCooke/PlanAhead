@@ -78,7 +78,6 @@ public partial class DiagnosticsViewModel : BaseViewModel
     [RelayCommand(FlowExceptionsToTaskScheduler = true)]
     public async Task ClearAsync()
     {
-
         await LogService.ClearAsync();
         Log = await _logService.GetLogAsync();
     }

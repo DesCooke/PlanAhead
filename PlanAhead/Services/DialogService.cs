@@ -95,8 +95,8 @@ public class DialogService
                     return;
 
                 await page.DisplayAlertAsync(
-                    "Exception",
-                    ex.Message,
+                    $"Exception: {ex.Message}",
+                    $"Call Stack: {ex.StackTrace}",
                     "OK");
             }
             catch (Exception alertException)
