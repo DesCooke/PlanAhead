@@ -1,4 +1,5 @@
 ﻿using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.MethodLogging;
 using PlanAhead.Core.Models.Domain;
 using PlanAhead.Core.Models.Enums;
 using System;
@@ -7,6 +8,7 @@ using System.Text;
 
 namespace PlanAhead.Core.Services.Accounts
 {
+    [MethodLogging]
     public class AccountHealthService: IAccountHealthService
     {
         public async Task<Status> GetStatusAsync(Account account)

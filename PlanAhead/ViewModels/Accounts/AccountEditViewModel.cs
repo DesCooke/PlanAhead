@@ -63,46 +63,38 @@ public partial class AccountEditViewModel : BaseViewModel
 
     public async Task InitialiseAsync()
     {
-        try
+        if (!_navigationContext.Has<Guid>())
         {
-            if (!_navigationContext.Has<Guid>())
-            {
-                //
-                // New Account
-                //
-                Title = "New Account";
-
-                return;
-            }
-
-            Id = _navigationContext.Get<Guid>();
-
-            var account = await _accountService.GetByIdAsync(Id);
-            if (account == null)
-            {
-                //
-                // New Account
-                //
-                Title = "New Account";
-
-                return;
-            }
-
-            Title = "Change Account";
-
             //
-            // Existing Account
+            // New Account
             //
+            Title = "New Account";
 
-            Load(account);
-
-            _navigationContext.Clear();
+            return;
         }
-        catch (Exception ex)
+
+        Id = _navigationContext.Get<Guid>();
+
+        var account = await _accountService.GetByIdAsync(Id);
+        if (account == null)
         {
-            LogService.LogException(ex);
-            await DialogService.ShowException(ex);
+            //
+            // New Account
+            //
+            Title = "New Account";
+
+            return;
         }
+
+        Title = "Change Account";
+
+        //
+        // Existing Account
+        //
+
+        Load(account);
+
+        _navigationContext.Clear();
     }
 
     private void Load(Account account)
@@ -138,66 +130,41 @@ public partial class AccountEditViewModel : BaseViewModel
         return null;
     }
 
-    [RelayCommand]
+    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
     private async Task SaveAsync()
     {
-        try
+        var error = Validate();
+        if (error != null)
         {
-            var error = Validate();
-            if (error != null)
-            {
-                await DialogService.ShowMessageAsync(
-                    "Validation",
-                    error);
+            await DialogService.ShowMessageAsync(
+                "Validation",
+                error);
 
-                return;
-            }
-
-            if (Id == Guid.Empty)
-                await _accountService.AddAsync(Build());
-            else
-                await _accountService.UpdateAsync(Build());
-
-            await _syncStateService.IncreaseLocalVersion();
-
-            await Navigation.GoBackAsync();
+            return;
         }
-        catch (Exception ex)
-        {
-            LogService.LogException(ex);
-            await DialogService.ShowException(ex);
-        }
+
+        if (Id == Guid.Empty)
+            await _accountService.AddAsync(Build());
+        else
+            await _accountService.UpdateAsync(Build());
+
+        await _syncStateService.IncreaseLocalVersion();
+
+        await Navigation.GoBackAsync();
     }
 
-    [RelayCommand]
+    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
     private Task CancelAsync()
     {
-        try
-        {
-            return Navigation.GoBackAsync();
-        }
-        catch (Exception ex)
-        {
-            LogService.LogException(ex);
-            DialogService.ShowException(ex);
-        }
-        return Task.CompletedTask;
+        return Navigation.GoBackAsync();
     }
 
-    [RelayCommand]
+    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
     private async Task ChooseIconAsync()
     {
-        try
-        {
-            var iconId = await _dialogService.PickIconAsync(IconId);
+        var iconId = await _dialogService.PickIconAsync(IconId);
 
-            if (iconId != null)
-                IconId = iconId;
-        }
-        catch (Exception ex)
-        {
-            LogService.LogException(ex);
-            await DialogService.ShowException(ex);
-        }
+        if (iconId != null)
+            IconId = iconId;
     }
 }

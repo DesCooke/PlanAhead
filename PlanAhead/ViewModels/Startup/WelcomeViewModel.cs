@@ -35,69 +35,45 @@ public partial class WelcomeViewModel : BaseViewModel
         _localDatabaseService = localDatabaseService;
     }
 
-    [RelayCommand]
+    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
     private async Task OfflineAsync()
     {
-        try
-        {
-            _settings.SyncMode = SyncMode.Offline;
-            _settings.IsFirstRun = false;
-            _settings.LastLocalSyncUtc = new DateTime(2000, 1, 1);
-            _settings.LastRemoteSyncUtc = new DateTime(2000, 1, 1);
-            _settings.LastLocalUtc = new DateTime(2000, 1, 1);
-            await _localDatabaseService.DeleteDatabaseAsync();
-            await _localDatabaseService.CreateDatabaseAsync();
+        _settings.SyncMode = SyncMode.Offline;
+        _settings.IsFirstRun = false;
+        _settings.LastLocalSyncUtc = new DateTime(2000, 1, 1);
+        _settings.LastRemoteSyncUtc = new DateTime(2000, 1, 1);
+        _settings.LastLocalUtc = new DateTime(2000, 1, 1);
+        await _localDatabaseService.DeleteDatabaseAsync();
+        await _localDatabaseService.CreateDatabaseAsync();
 
-            await Shell.Current.GoToAsync("//Dashboard");
-        }
-        catch (Exception ex)
-        {
-            LogService.LogException(ex);
-            await DialogService.ShowException(ex);
-        }
+        await Shell.Current.GoToAsync("//Dashboard");
     }
 
-    [RelayCommand]
+    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
     private async Task OnlineManualAsync()
     {
-        try
-        {
-            _settings.SyncMode = SyncMode.SupabaseManual;
-            _settings.IsFirstRun = false;
-            _settings.LastLocalSyncUtc = new DateTime(2000, 1, 1);
-            _settings.LastRemoteSyncUtc = new DateTime(2000, 1, 1);
-            _settings.LastLocalUtc = new DateTime(2000, 1, 1);
-            await _localDatabaseService.DeleteDatabaseAsync();
-            await _localDatabaseService.CreateDatabaseAsync();
+        _settings.SyncMode = SyncMode.SupabaseManual;
+        _settings.IsFirstRun = false;
+        _settings.LastLocalSyncUtc = new DateTime(2000, 1, 1);
+        _settings.LastRemoteSyncUtc = new DateTime(2000, 1, 1);
+        _settings.LastLocalUtc = new DateTime(2000, 1, 1);
+        await _localDatabaseService.DeleteDatabaseAsync();
+        await _localDatabaseService.CreateDatabaseAsync();
 
-            await Shell.Current.GoToAsync("//Login");
-        }
-        catch (Exception ex)
-        {
-            LogService.LogException(ex);
-            await DialogService.ShowException(ex);
-        }
+        await Shell.Current.GoToAsync("//Login");
     }
 
-    [RelayCommand]
+    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
     private async Task OnlineAutoAsync()
     {
-        try
-        {
-            _settings.SyncMode = SyncMode.SupabaseAuto;
-            _settings.IsFirstRun = false;
-            _settings.LastLocalSyncUtc = new DateTime(2000, 1, 1);
-            _settings.LastRemoteSyncUtc = new DateTime(2000, 1, 1);
-            _settings.LastLocalUtc = new DateTime(2000, 1, 1);
-            await _localDatabaseService.DeleteDatabaseAsync();
-            await _localDatabaseService.CreateDatabaseAsync();
+        _settings.SyncMode = SyncMode.SupabaseAuto;
+        _settings.IsFirstRun = false;
+        _settings.LastLocalSyncUtc = new DateTime(2000, 1, 1);
+        _settings.LastRemoteSyncUtc = new DateTime(2000, 1, 1);
+        _settings.LastLocalUtc = new DateTime(2000, 1, 1);
+        await _localDatabaseService.DeleteDatabaseAsync();
+        await _localDatabaseService.CreateDatabaseAsync();
 
-            await Shell.Current.GoToAsync("//Login");
-        }
-        catch (Exception ex)
-        {
-            LogService.LogException(ex);
-            await DialogService.ShowException(ex);
-        }
+        await Shell.Current.GoToAsync("//Login");
     }
 }

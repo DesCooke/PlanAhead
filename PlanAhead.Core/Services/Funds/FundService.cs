@@ -1,10 +1,12 @@
 ﻿using PlanAhead.Core.Interfaces.Repositories;
 using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.MethodLogging;
 using PlanAhead.Core.Models.Domain;
 using System.Security.Principal;
 
 namespace PlanAhead.Core.Services.Funds;
 
+[MethodLogging]
 public class FundService : IFundService
 {
     private readonly IFundRepository _repository;

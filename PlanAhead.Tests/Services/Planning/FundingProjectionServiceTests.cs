@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using PlanAhead.Core.MethodLogging;
 using PlanAhead.Core.Models.Domain;
 using PlanAhead.Core.Models.Enums;
 using PlanAhead.Core.Services.Planning;
@@ -7,6 +8,7 @@ using PlanAhead.Tests.Builders;
 
 namespace PlanAhead.Tests.Services.Planning;
 
+[MethodLogging]
 public class FundingProjectionServiceTests
 {
     private readonly FundingProjectionService _service;

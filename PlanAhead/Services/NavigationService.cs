@@ -1,6 +1,8 @@
-﻿using PlanAhead.Interfaces;
+﻿using PlanAhead.Core.MethodLogging;
+using PlanAhead.Interfaces;
 using PlanAhead.Navigation;
 
+[MethodLogging]
 public class NavigationService : INavigationService
 {
     public Task NavigateToAsync<TPage>()

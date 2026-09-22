@@ -22,7 +22,6 @@ public sealed class MethodLoggingAttribute
         public bool Ended { get; set; }
     }
 
-    private static readonly AsyncLocal<int> _depth = new();
 
     public override bool CompileTimeValidate(MethodBase method)
     {
@@ -32,14 +31,12 @@ public sealed class MethodLoggingAttribute
     public override void OnEntry(
         MethodExecutionArgs args)
     {
-        // Ignore compiler generated methods such as:
-        // <RestoreSessionAsync>d__12.MoveNext
         if (ShouldIgnore(args.Method))
             return;
 
         var methodName = GetMethodName(args);
 
-        var currentDepth = _depth.Value;
+        var currentDepth = MethodLoggingService.Depth;
 
         var state = new MethodState
         {
@@ -51,13 +48,12 @@ public sealed class MethodLoggingAttribute
         Write(
             $"{Indent(currentDepth)}> {methodName}");
 
-        _depth.Value = currentDepth + 1;
+        MethodLoggingService.Depth = currentDepth + 1;
     }
 
     public override void OnExit(
         MethodExecutionArgs args)
     {
-        // Ignore compiler generated methods
         if (ShouldIgnore(args.Method))
             return;
 
@@ -72,9 +68,8 @@ public sealed class MethodLoggingAttribute
 
         state.Ended = true;
 
-        _depth.Value = Math.Max(
-            0,
-            state.Depth);
+        MethodLoggingService.Depth =
+            Math.Max(0, state.Depth);
 
         var elapsed =
             state.Stopwatch.ElapsedMilliseconds;
@@ -87,25 +82,30 @@ public sealed class MethodLoggingAttribute
             $"{methodName} [{elapsed}ms]");
     }
 
-    public override void OnException(MethodExecutionArgs args)
+    public override void OnException(
+        MethodExecutionArgs args)
     {
         if (ShouldIgnore(args.Method))
             return;
 
-        if (args.MethodExecutionTag is not MethodState state)
+        if (args.MethodExecutionTag
+            is not MethodState state)
         {
             Write(
                 $"! {GetMethodName(args)} " +
                 $"EXCEPTION: {args.Exception.Message}");
 
-            MethodLoggingService.HandleException(args.Exception);
+            MethodLoggingService.HandleException(
+                args.Exception);
 
-            args.FlowBehavior = FlowBehavior.Continue;
+            args.FlowBehavior =
+                FlowBehavior.RethrowException;
 
             return;
         }
 
-        var methodName = GetMethodName(args);
+        var methodName =
+            GetMethodName(args);
 
         Write(
             $"! {methodName} " +
@@ -114,14 +114,17 @@ public sealed class MethodLoggingAttribute
         if (!state.Ended)
         {
             state.Ended = true;
-            _depth.Value = Math.Max(0, state.Depth);
+
+            MethodLoggingService.Depth =
+                Math.Max(0, state.Depth);
         }
 
-        MethodLoggingService.HandleException(args.Exception);
+        MethodLoggingService.HandleException(
+            args.Exception);
 
-        args.FlowBehavior = FlowBehavior.RethrowException;
+        args.FlowBehavior =
+            FlowBehavior.RethrowException;
     }
-
 
 
     private static bool ShouldIgnore(

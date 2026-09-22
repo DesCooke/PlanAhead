@@ -53,12 +53,9 @@ public partial class LoginViewModel : BaseViewModel
     [ObservableProperty]
     private string password = "";
 
-    [RelayCommand]
+    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
     private async Task LoginAsync()
     {
-        try
-        {
-            
             var response = await _authenticationService.LoginAsync(Email, Password);
 
             await SecureStorage.Default.SetAsync(
@@ -86,34 +83,18 @@ public partial class LoginViewModel : BaseViewModel
 
 
             await Shell.Current.GoToAsync("//Dashboard");
-        }
-        catch (Exception ex)
-        {
-            LogService.LogException(ex);
-            await DialogService.ShowException(ex);
-        }
     }
 
 
     public async Task InitialiseAsync()
     {
-        try
-        {
-            Email = "";
-            Password = "";
-        }
-        catch (Exception ex)
-        {
-            LogService.LogException(ex);
-            await DialogService.ShowException(ex);
-        }
+        Email = "";
+        Password = "";
     }
 
-    [RelayCommand]
+    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
     private async Task RegisterAsync()
     {
-        try
-        {
             await _authenticationService.RegisterAsync(
                 Email,
                 Password);
@@ -139,55 +120,23 @@ public partial class LoginViewModel : BaseViewModel
                 "Your account has been created and logged in.");
 
             await Shell.Current.GoToAsync("//Dashboard");
-        }
-        catch (Exception ex)
-        {
-            LogService.LogException(ex);
-            await DialogService.ShowException(ex);
-        }
     }
 
-    [RelayCommand]
+    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
     private async Task OfflineOnlyAsync()
     {
-        try
-        {
-            _settings.SyncMode = PlanAhead.Core.Models.Enums.SyncMode.Offline;
+        _settings.SyncMode = PlanAhead.Core.Models.Enums.SyncMode.Offline;
 
-            await Shell.Current.GoToAsync("//Dashboard");
-        }
-        catch (Exception ex)
-        {
-            LogService.LogException(ex);
-            await DialogService.ShowException(ex);
-        }
+        await Shell.Current.GoToAsync("//Dashboard");
     }
 
-    [RelayCommand]
+    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
     private async Task GoogleAsync()
     {
-        try
-        {
-
-        }
-        catch (Exception ex)
-        {
-            LogService.LogException(ex);
-            await DialogService.ShowException(ex);
-        }
     }
 
-    [RelayCommand]
+    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
     private async Task CancelAsync()
     {
-        try
-        {
-
-        }
-        catch (Exception ex)
-        {
-            LogService.LogException(ex);
-            await DialogService.ShowException(ex);
-        }
     }
 }

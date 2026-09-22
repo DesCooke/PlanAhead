@@ -84,17 +84,9 @@ public class FundRepository : IFundRepository
     {
         var db = await Database();
 
-        try { 
         return await db.Table<Fund>()
             .Where(a => a.NeedsSync)
             .ToListAsync();
-        }
-        catch
-        {
-
-        }
-        return new List<Fund>();
-
     }
 
     public async Task MarkSyncedAsync(Guid id)

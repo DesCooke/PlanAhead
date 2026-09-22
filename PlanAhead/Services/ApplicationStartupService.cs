@@ -46,9 +46,9 @@ public class ApplicationStartupService : IApplicationStartupService
 
     public async Task NavigateToStartupPageAsync()
     {
-        await _logService.LogAsync("Setting _syncStatusService.IsSyncing to false");
+        MethodLoggingService.Write("  Setting _syncStatusService.IsSyncing to false");
         _syncStatusService.IsSyncing = false;
-        await _logService.LogAsync($".._syncStatusService.IsSyncing is {_syncStatusService.IsSyncing}");
+        MethodLoggingService.Write($"  .._syncStatusService.IsSyncing is {_syncStatusService.IsSyncing}");
 
         //
         // User is currently offline - go into offline mode

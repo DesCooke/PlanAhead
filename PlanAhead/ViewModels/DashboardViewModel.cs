@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using PlanAhead.Core.Constants;
 using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Core.Messaging;
+using PlanAhead.Core.MethodLogging;
 using PlanAhead.Infrastructure.Authentication;
 using PlanAhead.Infrastructure.Logging;
 using PlanAhead.Infrastructure.Repositories;
@@ -79,47 +80,39 @@ public partial class DashboardViewModel : BaseViewModel
             OnPropertyChanged(nameof(IsSyncButtonEnabled));
         }
     }
-    [RelayCommand(CanExecute = nameof(CanSync))]
+    [RelayCommand(CanExecute = nameof(CanSync), FlowExceptionsToTaskScheduler = true)]
     private async Task SyncAsync()
     {
-        try
+        MethodLoggingService.Write($"  Manual Sync starts");
+        var userIdString = await _authenticationService.GetCurrentUserIdAsync();
+        if (userIdString != null)
         {
-            await LogService.LogAsync("Manual Sync starts");
-            var userIdString = await _authenticationService.GetCurrentUserIdAsync();
-            if (userIdString != null)
+            var userId = Guid.Parse(userIdString);
+            if (userId != Guid.Empty)
             {
-                var userId = Guid.Parse(userIdString);
-                if (userId != Guid.Empty)
+                bool hasLocalChanges = await _syncStateService.HasLocalChangesAsync();
+                bool hasRemoteChanges = await _syncStateService.HasRemoteChangesAsync(userId);
+                if (hasLocalChanges || hasRemoteChanges)
                 {
-                    bool hasLocalChanges = await _syncStateService.HasLocalChangesAsync();
-                    bool hasRemoteChanges = await _syncStateService.HasRemoteChangesAsync(userId);
-                    if (hasLocalChanges || hasRemoteChanges)
-                    {
-                        await _syncService.SyncAsync(userId, hasLocalChanges, hasRemoteChanges);
-                        await _syncStateService.UpdateRemoteSyncVersionAsync(userId);
-                    }
-                    else
-                    {
-                        await LogService.LogAsync("No changes detected");
-                    }
+                    await _syncService.SyncAsync(userId, hasLocalChanges, hasRemoteChanges);
+                    await _syncStateService.UpdateRemoteSyncVersionAsync(userId);
                 }
                 else
                 {
-                    await LogService.LogAsync("Could not parse userId");
+                    MethodLoggingService.Write($"  No changes detected");
                 }
-
             }
             else
             {
-                await LogService.LogAsync("_authenticationService.GetCurrentUserIdAsync did not return a userIdString");
+                MethodLoggingService.Write($"  Could not parse userId");
             }
-            await LogService.LogAsync("Manual Sync end");
+
         }
-        catch (Exception ex)
+        else
         {
-            LogService.LogException(ex);
-            await DialogService.ShowException(ex);
+            MethodLoggingService.Write($"  _authenticationService.GetCurrentUserIdAsync did not return a userIdString");
         }
+        MethodLoggingService.Write($"  Manual Sync end");
     }
 
 
@@ -132,34 +125,17 @@ public partial class DashboardViewModel : BaseViewModel
     }
 
 
-    [RelayCommand]
+    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
     private async Task TestRepository()
     {
-        try
-        {
-            var accounts = await _repository.GetAllAsync();
+        var accounts = await _repository.GetAllAsync();
 
-            await LogService.LogAsync(
-                $"Number of accounts = {accounts.Count}");
-        }
-        catch (Exception ex)
-        {
-            LogService.LogException(ex);
-            await DialogService.ShowException(ex);
-        }
+        MethodLoggingService.Write($"  Number of accounts = {accounts.Count}");
     }
 
 
     public async Task RefreshAsync()
     {
-        try
-        {
-            WeakReferenceMessenger.Default.Send(new SyncStatusChangedMessage());
-        }
-        catch (Exception ex)
-        {
-            LogService.LogException(ex);
-            await DialogService.ShowException(ex);
-        }
+        WeakReferenceMessenger.Default.Send(new SyncStatusChangedMessage());
     }
 }

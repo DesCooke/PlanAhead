@@ -1,8 +1,10 @@
-﻿using PlanAhead.Core.Models.Domain;
+﻿using PlanAhead.Core.MethodLogging;
+using PlanAhead.Core.Models.Domain;
 using PlanAhead.Core.Models.Enums;
 
 namespace PlanAhead.Tests.Builders;
 
+[MethodLogging]
 public class FundBuilder
 {
     private readonly Fund _fund;

@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using PlanAhead.Core.Interfaces.Repositories;
 using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.MethodLogging;
 using PlanAhead.Infrastructure.Authentication;
 using PlanAhead.Infrastructure.DB;
 using PlanAhead.Infrastructure.DB.SQLite;
@@ -12,6 +13,7 @@ using System.Diagnostics;
 
 namespace PlanAhead.Infrastructure.Sync;
 
+[MethodLogging]
 public class SyncService : ISyncService
 {
     private readonly IApplicationSettingsService _settings;
@@ -59,75 +61,64 @@ public class SyncService : ISyncService
         bool hasLocalChanges,
         CancellationToken cancellationToken = default)
     {
-        await _logService.LogAsync("SyncAsync starts");
-
         if (_syncStatusService.IsSyncing)
         {
-            await _logService.LogAsync("_syncStatusService.IsSyncing is true - so ignoring");
+            MethodLoggingService.Write($"  _syncStatusService.IsSyncing is true - so ignoring");
         }
         else
         {
-            await _logService.LogAsync("Setting _syncStatusService.IsSyncing to true");
+            MethodLoggingService.Write($"  Setting _syncStatusService.IsSyncing to true");
             _syncStatusService.IsSyncing = true;
             try
             {
-                try
+                if (!_networkService.IsConnected)
                 {
-                    if (!_networkService.IsConnected)
+                    MethodLoggingService.Write($"  _networkService.IsConnected is false - so ignoring");
+                    MethodLoggingService.Write($"  Setting _syncStatusService.IsSyncing to false");
+                    _syncStatusService.IsSyncing = false;
+                    MethodLoggingService.Write($"  .._syncStatusService.IsSyncing is {_syncStatusService.IsSyncing}");
+                }
+                else
+                {
+
+                    if (hasLocalChanges)
                     {
-                        await _logService.LogAsync("_networkService.IsConnected is false - so ignoring");
-                        await _logService.LogAsync("Setting _syncStatusService.IsSyncing to false");
-                        _syncStatusService.IsSyncing = false;
-                        await _logService.LogAsync($".._syncStatusService.IsSyncing is {_syncStatusService.IsSyncing}");
+                        MethodLoggingService.Write($"  Uploading local changes");
+                        foreach (var synchroniser in _synchronisers)
+                        {
+                            await synchroniser.UploadPendingAsync(userId);
+                        }
+                        _settings.LastLocalSyncUtc = DateTime.UtcNow;
+                        _settings.LastLocalSyncVersion = _settings.LastLocalVersion;
                     }
                     else
                     {
-
-                        if (hasLocalChanges)
-                        {
-                            await _logService.LogAsync($"Uploading local changes");
-                            foreach (var synchroniser in _synchronisers)
-                            {
-                                await synchroniser.UploadPendingAsync(userId);
-                            }
-                            _settings.LastLocalSyncUtc = DateTime.UtcNow;
-                            _settings.LastLocalSyncVersion = _settings.LastLocalVersion;
-                        }
-                        else
-                        {
-                            await _logService.LogAsync("hasLocalChanges is false for this device");
-                        }
+                        MethodLoggingService.Write($"  hasLocalChanges is false for this device");
+                    }
 
 
-                        if (hasRemoteChanges)
+                    if (hasRemoteChanges)
+                    {
+                        MethodLoggingService.Write($"  Downloading changes since {_settings.LastRemoteSyncUtc}");
+                        foreach (var synchroniser in _synchronisers)
                         {
-                            await _logService.LogAsync($"Downloading changes since {_settings.LastRemoteSyncUtc}");
-                            foreach (var synchroniser in _synchronisers)
-                            {
-                                await synchroniser.DownloadChangesAsync(_settings.LastRemoteSyncUtc);
-                            }
-                        }
-                        else
-                        {
-                            await _logService.LogAsync("hasRemoteChanges is false for this user");
+                            await synchroniser.DownloadChangesAsync(_settings.LastRemoteSyncUtc);
                         }
                     }
-                }
-                catch (Exception ex)
-                {
-                    _logService.LogException(ex);
+                    else
+                    {
+                        MethodLoggingService.Write($"  hasRemoteChanges is false for this user");
+                    }
                 }
             }
             finally
             {
-                await _logService.LogAsync("Setting _syncStatusService.IsSyncing to false");
+                MethodLoggingService.Write($"  Setting _syncStatusService.IsSyncing to false");
                 _syncStatusService.IsSyncing = false;
-                await _logService.LogAsync($".._syncStatusService.IsSyncing is {_syncStatusService.IsSyncing}");
+                MethodLoggingService.Write($"  .._syncStatusService.IsSyncing is {_syncStatusService.IsSyncing}");
             }
 
         }
-        await _logService.LogAsync("SyncAsync ends");
-
         return true;
     }
 

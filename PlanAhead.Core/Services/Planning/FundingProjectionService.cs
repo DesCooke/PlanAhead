@@ -1,9 +1,11 @@
 ﻿using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.MethodLogging;
 using PlanAhead.Core.Models.Domain;
 using PlanAhead.Core.Models.Projections;
 
 namespace PlanAhead.Core.Services.Planning;
 
+[MethodLogging]
 public class FundingProjectionService : IFundingProjectionService
 {
     private readonly IPeriodCalculator _periodCalculator;

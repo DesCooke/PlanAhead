@@ -104,100 +104,60 @@ public partial class AccountViewViewModel : BaseViewModel
     }
 
 
-    [RelayCommand]
+    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
     public async Task LoadAsync()
     {
-        try
+        if (Id == Guid.Empty)
         {
-            if (Id == Guid.Empty)
-            {
-                Id = _navigationContext.Get<Guid>();
-                _navigationContext.Clear();
-            }
-
-            var account = await _accountService.GetByIdAsync(Id);
-
-            if (account != null)
-                Load(account);
+            Id = _navigationContext.Get<Guid>();
+            _navigationContext.Clear();
         }
-        catch (Exception ex)
-        {
-            LogService.LogException(ex);
-            await DialogService.ShowException(ex);
-        }
+
+        var account = await _accountService.GetByIdAsync(Id);
+
+        if (account != null)
+            Load(account);
     }
 
-    [RelayCommand]
+    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
     private async Task EditAsync()
     {
-        try
-        {
-            _navigationContext.Set(Id);
+        _navigationContext.Set(Id);
 
-            await Shell.Current.GoToAsync("AccountEditPage");
-        }
-        catch (Exception ex)
-        {
-            LogService.LogException(ex);
-            await DialogService.ShowException(ex);
-        }
+        await Shell.Current.GoToAsync("AccountEditPage");
     }
 
-    [RelayCommand]
+    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
     private Task CancelAsync()
     {
-        try
-        {
-            return Navigation.GoBackAsync();
-        }
-        catch (Exception ex)
-        {
-            LogService.LogException(ex);
-            DialogService.ShowException(ex);
-        }
-        return Task.CompletedTask;
+        return Navigation.GoBackAsync();
     }
 
-    [RelayCommand]
+    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
     private async Task DeleteAsync()
     {
-        try
-        {
-            var delete =
-                await DialogService.ConfirmAsync(
-                    "Delete Account",
-                    $"Delete '{Name}'?");
+        var delete =
+            await DialogService.ConfirmAsync(
+                "Delete Account",
+                $"Delete '{Name}'?");
 
-            if (!delete)
-                return;
+        if (!delete)
+            return;
 
-            await _accountService.DeleteAsync(Build());
+        await _accountService.DeleteAsync(Build());
 
-            await _syncStateService.IncreaseLocalVersion();
+        await _syncStateService.IncreaseLocalVersion();
 
-            await Navigation.GoBackAsync();
-        }
-        catch (Exception ex)
-        {
-            LogService.LogException(ex);
-            await DialogService.ShowException(ex);
-        }
+        await Navigation.GoBackAsync();
+
     }
 
-    [RelayCommand]
+    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
     private async Task GoToFundsAsync()
     {
-        try
-        {
-            _navigationContext.Set(Id);
+        _navigationContext.Set(Id);
 
-            await Shell.Current.GoToAsync("FundsPage");
-        }
-        catch (Exception ex)
-        {
-            LogService.LogException(ex);
-            await DialogService.ShowException(ex);
-        }
+        await Shell.Current.GoToAsync("FundsPage");
     }
 
 }

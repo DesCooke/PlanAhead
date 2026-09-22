@@ -46,112 +46,70 @@ namespace PlanAhead.ViewModels
         }
 
 
-        [RelayCommand]
+        [RelayCommand(FlowExceptionsToTaskScheduler = true)]
         private async Task DeveloperTools()
         {
-            try
-            {
-                await Shell.Current.GoToAsync("DeveloperToolsPage");
-            }
-            catch (Exception ex)
-            {
-                LogService.LogException(ex);
-                await DialogService.ShowException(ex);
-            }
+            await Shell.Current.GoToAsync("DeveloperToolsPage");
         }
 
 
 
-        [RelayCommand]
+        [RelayCommand(FlowExceptionsToTaskScheduler = true)]
         private async Task LogoutAsync()
         {
-            try
-            {
-                if (!await DialogService.ConfirmAsync(
-                        "Logout",
-                        "Are you sure you want to logout?"))
-                    return;
+            if (!await DialogService.ConfirmAsync(
+                    "Logout",
+                    "Are you sure you want to logout?"))
+                return;
 
-                await _authenticationService.LogoutAsync();
+            await _authenticationService.LogoutAsync();
 
-                await _autoSyncService.StopAsync();
+            await _autoSyncService.StopAsync();
 
-                SecureStorage.Default.Remove("supabase-session");
+            SecureStorage.Default.Remove("supabase-session");
 
-                await Shell.Current.GoToAsync("//Login");
-            }
-            catch (Exception ex)
-            {
-                LogService.LogException(ex);
-                await DialogService.ShowException(ex);
-            }
+            await Shell.Current.GoToAsync("//Login");
         }
 
-        [RelayCommand]
+        [RelayCommand(FlowExceptionsToTaskScheduler = true)]
         private async Task ClearLocalDatabase()
         {
-            try
-            {
-                if (!await DialogService.ConfirmAsync(
-                        "Clear Local Database",
-                        "Are you sure you want to clear the local database?.  This cannot be undone"))
-                    return;
+            if (!await DialogService.ConfirmAsync(
+                    "Clear Local Database",
+                    "Are you sure you want to clear the local database?.  This cannot be undone"))
+                return;
 
-                await _localDatabase.DeleteDatabaseAsync();
+            await _localDatabase.DeleteDatabaseAsync();
 
-                _applicationSettingsService.ResetToFactory();
+            _applicationSettingsService.ResetToFactory();
 
-                await Shell.Current.GoToAsync("//Dashboard");
-            }
-            catch (Exception ex)
-            {
-                LogService.LogException(ex);
-                await DialogService.ShowException(ex);
-            }
+            await Shell.Current.GoToAsync("//Dashboard");
         }
 
-        [RelayCommand]
+        [RelayCommand(FlowExceptionsToTaskScheduler = true)]
         private async Task Diagnostics()
         {
-            try
-            {
-                await Shell.Current.GoToAsync("DiagnosticsPage");
-            }
-            catch (Exception ex)
-            {
-                LogService.LogException(ex);
-                await DialogService.ShowException(ex);
-            }
+            await Shell.Current.GoToAsync("DiagnosticsPage");
         }
 
-        [RelayCommand]
+        [RelayCommand(FlowExceptionsToTaskScheduler = true)]
         private async Task ClearRemoteDatabase()
         {
-            try
-            {
-                if (!await DialogService.ConfirmAsync(
-                        "Clear Remote Database",
-                        "Are you sure you want to clear the remote database?.  This cannot be undone"))
-                    return;
+            if (!await DialogService.ConfirmAsync(
+                    "Clear Remote Database",
+                    "Are you sure you want to clear the remote database?.  This cannot be undone"))
+                return;
 
-                await _remoteDatabase.DeleteUserDataAsync();
+            await _remoteDatabase.DeleteUserDataAsync();
 
-                SecureStorage.Default.Remove("supabase-session");
+            SecureStorage.Default.Remove("supabase-session");
 
-                await Shell.Current.GoToAsync("//Welcome");
-            }
-            catch (Exception ex)
-            {
-                LogService.LogException(ex);
-                await DialogService.ShowException(ex);
-            }
+            await Shell.Current.GoToAsync("//Welcome");
         }
 
-        [RelayCommand]
+        [RelayCommand(FlowExceptionsToTaskScheduler = true)]
         private async Task FactoryReset()
         {
-            try
-            {
                 if (!await DialogService.ConfirmAsync(
                         "Factory Reset?",
                         "This will clear the local and remote database and clear settings.  This cannot be undone"))
@@ -168,39 +126,17 @@ namespace PlanAhead.ViewModels
                 SecureStorage.Default.Remove("supabase-session");
 
                 await Shell.Current.GoToAsync("//Welcome");
-            }
-            catch (Exception ex)
-            {
-                LogService.LogException(ex);
-                await DialogService.ShowException(ex);
-            }
         }
 
-        [RelayCommand]
+        [RelayCommand(FlowExceptionsToTaskScheduler = true)]
         private async Task ChangeSignIn()
         {
-            try
-            {
-                await Shell.Current.GoToAsync("//Welcome");
-            }
-            catch (Exception ex)
-            {
-                LogService.LogException(ex);
-                await DialogService.ShowException(ex);
-            }
+            await Shell.Current.GoToAsync("//Welcome");
         }
 
         public async Task InitialiseAsync()
         {
-            try
-            {
-                IsLoggedIn = await _authenticationService.IsLoggedInAsync();
-            }
-            catch (Exception ex)
-            {
-                LogService.LogException(ex);
-                await DialogService.ShowException(ex);
-            }
+            IsLoggedIn = await _authenticationService.IsLoggedInAsync();
         }
 
     }

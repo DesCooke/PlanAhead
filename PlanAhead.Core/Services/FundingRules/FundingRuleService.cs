@@ -1,9 +1,11 @@
 ﻿using PlanAhead.Core.Interfaces.Repositories;
 using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.MethodLogging;
 using PlanAhead.Core.Models.Domain;
 
 namespace PlanAhead.Core.Services.FundingRules;
 
+[MethodLogging]
 public class FundingRuleService : IFundingRuleService
 {
     private readonly IFundingRuleRepository _repository;

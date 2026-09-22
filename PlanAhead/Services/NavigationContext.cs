@@ -1,7 +1,9 @@
-﻿using PlanAhead.Interfaces;
+﻿using PlanAhead.Core.MethodLogging;
+using PlanAhead.Interfaces;
 
 namespace PlanAhead.Services;
 
+[MethodLogging]
 public class NavigationContext : INavigationContext
 {
     private readonly Dictionary<Type, object> _items = new();

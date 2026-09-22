@@ -84,84 +84,50 @@ public partial class FundViewViewModel : BaseViewModel
         };
     }
 
-    [RelayCommand]
+    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
     public async Task LoadAsync()
     {
-        try
+        if (Id == Guid.Empty)
         {
-            if (Id == Guid.Empty)
-            {
-                Id = _navigationContext.Get<Guid>();
-                _navigationContext.Clear();
-            }
-
-            var fund = await _fundService.GetByIdAsync(Id);
-
-            if (fund != null)
-                Load(fund);
+            Id = _navigationContext.Get<Guid>();
+            _navigationContext.Clear();
         }
-        catch (Exception ex)
-        {
-            LogService.LogException(ex);
-            await DialogService.ShowException(ex);
-        }
+
+        var fund = await _fundService.GetByIdAsync(Id);
+
+        if (fund != null)
+            Load(fund);
     }
 
-    [RelayCommand]
+    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
     private async Task EditAsync()
     {
-        try
-        {
-            _navigationContext.Set(Id);
+        _navigationContext.Set(Id);
 
-            await Shell.Current.GoToAsync("FundEditPage");
-        }
-        catch (Exception ex)
-        {
-            LogService.LogException(ex);
-            await DialogService.ShowException(ex);
-        }
+        await Shell.Current.GoToAsync("FundEditPage");
     }
 
-    [RelayCommand]
+    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
     private Task CancelAsync()
     {
-        try
-        {
-            return Navigation.GoBackAsync();
-        }
-        catch (Exception ex)
-        {
-            LogService.LogException(ex);
-            DialogService.ShowException(ex);
-        }
-        return Task.CompletedTask;
+        return Navigation.GoBackAsync();
     }
 
-    [RelayCommand]
+    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
     private async Task DeleteAsync()
     {
-        try
-        {
-            var delete =
-                await DialogService.ConfirmAsync(
-                    "Delete Fund",
-                    $"Delete '{Name}'?");
+        var delete =
+            await DialogService.ConfirmAsync(
+                "Delete Fund",
+                $"Delete '{Name}'?");
 
-            if (!delete)
-                return;
+        if (!delete)
+            return;
 
-            await _fundService.DeleteAsync(Build());
+        await _fundService.DeleteAsync(Build());
 
-            await _syncStateService.IncreaseLocalVersion();
+        await _syncStateService.IncreaseLocalVersion();
 
-            await Navigation.GoBackAsync();
-        }
-        catch (Exception ex)
-        {
-            LogService.LogException(ex);
-            await DialogService.ShowException(ex);
-        }
-
+        await Navigation.GoBackAsync();
     }
 }

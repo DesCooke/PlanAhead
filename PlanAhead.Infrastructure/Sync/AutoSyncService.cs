@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using PlanAhead.Core.Interfaces.Repositories;
 using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.MethodLogging;
 using PlanAhead.Infrastructure.Authentication;
 using PlanAhead.Infrastructure.DB;
 using PlanAhead.Infrastructure.DB.SQLite;
@@ -11,6 +12,7 @@ using System.Diagnostics;
 
 namespace PlanAhead.Infrastructure.Sync;
 
+[MethodLogging]
 public class AutoSyncService : IAutoSyncService, IDisposable
 {
     private readonly IApplicationSettingsService _settings;
@@ -77,24 +79,17 @@ public class AutoSyncService : IAutoSyncService, IDisposable
                 {
                     _autoSyncRunning = true;
 
-                    await _logService.LogAsync("AutoSyncing Start");
-                    try
+                    MethodLoggingService.Write($"  AutoSyncing Start");
+                    bool hasLocalChanges = await _syncStateService.HasLocalChangesAsync(token);
+                    bool hasRemoteChanges = await _syncStateService.HasRemoteChangesAsync(_userId, token);
+                    if (hasLocalChanges || hasRemoteChanges)
                     {
-                        bool hasLocalChanges = await _syncStateService.HasLocalChangesAsync(token);
-                        bool hasRemoteChanges = await _syncStateService.HasRemoteChangesAsync(_userId, token);
-                        if (hasLocalChanges || hasRemoteChanges)
-                        {
-                            await _syncService.SyncAsync(_userId, hasLocalChanges, hasRemoteChanges, token);
+                        await _syncService.SyncAsync(_userId, hasLocalChanges, hasRemoteChanges, token);
 
-                            await _syncStateService.UpdateRemoteSyncVersionAsync(_userId, token);
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        _logService.LogException(ex);
+                        await _syncStateService.UpdateRemoteSyncVersionAsync(_userId, token);
                     }
                     await Task.Delay(TimeSpan.FromSeconds(2), token);
-                    await _logService.LogAsync("AutoSyncing End");
+                    MethodLoggingService.Write($"  AutoSyncing End");
                 }
             }
             finally
@@ -149,22 +144,20 @@ public class AutoSyncService : IAutoSyncService, IDisposable
     public async Task<bool> AutoSyncAsync(
         CancellationToken cancellationToken = default)
     {
-        await _logService.LogAsync("AutoSyncAsync starting");
-
         if (!_networkService.IsConnected)
         {
-            await _logService.LogAsync("  - Not connected to network - skipping");
+            MethodLoggingService.Write($"    - Not connected to network - skipping");
         }
         else
         {
             bool hasLocalChanges = await _syncStateService.HasLocalChangesAsync(cancellationToken);
             bool hasRemoteChanges = await _syncStateService.HasRemoteChangesAsync(_userId, cancellationToken);
 
-            await _logService.LogAsync($"  - hasLocalChanges {hasLocalChanges}, hasRemoteChanges {hasRemoteChanges}");
+            MethodLoggingService.Write($"    - hasLocalChanges {hasLocalChanges}, hasRemoteChanges {hasRemoteChanges}");
 
             if (hasLocalChanges || hasRemoteChanges)
             {
-                await _logService.LogAsync("  - calling _syncService.SyncAsync for current user");
+                MethodLoggingService.Write($"    - calling _syncService.SyncAsync for current user");
 
                 await _syncService.SyncAsync(_userId, hasLocalChanges, hasRemoteChanges, cancellationToken);
 
@@ -172,12 +165,10 @@ public class AutoSyncService : IAutoSyncService, IDisposable
             }
             else
             {
-                await _logService.LogAsync("  - No changes - skipping");
+                MethodLoggingService.Write($"    - No changes - skipping");
             }
 
         }
-
-        await _logService.LogAsync("AutoSyncAsync ending");
 
         return true;
     }

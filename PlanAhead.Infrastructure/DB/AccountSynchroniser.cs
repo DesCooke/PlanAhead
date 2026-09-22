@@ -78,12 +78,12 @@ namespace PlanAhead.Infrastructure.DB
 
                 var remote = ToDomain(record);
 
-                await _logService.LogAsync($"Record {record.Name}");
+                MethodLoggingService.Write($"  Record {record.Name}");
                 var local = await _repository.GetByIdAsync(remote.Id);
 
                 if (local == null)
                 {
-                    await _logService.LogAsync(" -> Adding");
+                    MethodLoggingService.Write($"    -> Adding");
                     remote.NeedsSync = false;
 
                     await _repository.AddAsync(remote);
@@ -93,7 +93,7 @@ namespace PlanAhead.Infrastructure.DB
 
                 if (remote.UpdatedUtc > local.UpdatedUtc)
                 {
-                    await _logService.LogAsync(" -> Updating");
+                    MethodLoggingService.Write($"    -> Updating");
                     remote.NeedsSync = false;
 
                     await _repository.UpdateAsync(remote);

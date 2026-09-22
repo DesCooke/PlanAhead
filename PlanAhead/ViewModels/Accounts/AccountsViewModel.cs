@@ -50,111 +50,71 @@ public partial class AccountsViewModel : BaseViewModel
         await LoadAsync();
     }
 
-    [RelayCommand]
+    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
     private async Task LoadAsync()
     {
-        try
+        var accounts = await _accountService.GetAllAsync();
+
+        Accounts.Clear();
+
+        foreach (var account in accounts)
         {
-            var accounts = await _accountService.GetAllAsync();
+            var status = await _accountHealthService.GetStatusAsync(account);
 
-            Accounts.Clear();
-
-            foreach (var account in accounts)
+            Accounts.Add(new AccountListItem
             {
-                var status = await _accountHealthService.GetStatusAsync(account);
-
-                Accounts.Add(new AccountListItem
-                {
-                    Account = account,
-                    Status = status
-                });
-            }
-
-            RefreshUi(
-                nameof(HasAccounts),
-                nameof(HasNoAccounts),
-                nameof(Title));
-
-            Title = $"Accounts ({Accounts.Count})";
+                Account = account,
+                Status = status
+            });
         }
-        catch (Exception ex)
-        {
-            LogService.LogException(ex);
-            await DialogService.ShowException(ex);
-        }
+
+        RefreshUi(
+            nameof(HasAccounts),
+            nameof(HasNoAccounts),
+            nameof(Title));
+
+        Title = $"Accounts ({Accounts.Count})";
     }
 
 
-    [RelayCommand]
+    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
     private async Task DeleteAsync(AccountListItem accountListItem)
     {
-        try
-        {
-            var delete =
-                await DialogService.ConfirmAsync(
-                    "Delete Account",
-                    $"Delete '{accountListItem.Account.Name}'?");
+        var delete =
+            await DialogService.ConfirmAsync(
+                "Delete Account",
+                $"Delete '{accountListItem.Account.Name}'?");
 
-            if (!delete)
-                return;
+        if (!delete)
+            return;
 
-            await _accountService.DeleteAsync(accountListItem.Account);
+        await _accountService.DeleteAsync(accountListItem.Account);
 
-            await _syncStateService.IncreaseLocalVersion();
+        await _syncStateService.IncreaseLocalVersion();
 
-            await InitialiseAsync();
-        }
-        catch (Exception ex)
-        {
-            LogService.LogException(ex);
-            await DialogService.ShowException(ex);
-        }
+        await InitialiseAsync();
     }
 
-    [RelayCommand]
+    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
     private async Task AddAsync()
     {
-        try
-        {
-            await Shell.Current.GoToAsync("AccountEditPage");
-        }
-        catch (Exception ex)
-        {
-            LogService.LogException(ex);
-            await DialogService.ShowException(ex);
-        }
+        await Shell.Current.GoToAsync("AccountEditPage");
     }
 
-    [RelayCommand]
+    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
     private async Task OpenAsync(AccountListItem accountListItem)
     {
-        try
-        {
-            _navigationContext.Set(accountListItem.Account.Id);
+        _navigationContext.Set(accountListItem.Account.Id);
 
-            await Shell.Current.GoToAsync("AccountViewPage");
-        }
-        catch (Exception ex)
-        {
-            LogService.LogException(ex);
-            await DialogService.ShowException(ex);
-        }
+        await Shell.Current.GoToAsync("AccountViewPage");
     }
 
-    [RelayCommand]
+    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
     private async Task EditAsync(AccountListItem accountListItem)
     {
-        try
-        {
-            _navigationContext.Set(accountListItem.Account.Id);
+        _navigationContext.Set(accountListItem.Account.Id);
 
-            await Shell.Current.GoToAsync("AccountEditPage");
-        }
-        catch (Exception ex)
-        {
-            LogService.LogException(ex);
-            await DialogService.ShowException(ex);
-        }
+        await Shell.Current.GoToAsync("AccountEditPage");
     }
 
 }

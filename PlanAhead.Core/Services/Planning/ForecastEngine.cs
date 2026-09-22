@@ -1,9 +1,11 @@
 ﻿using PlanAhead.Core.Interfaces.Repositories;
 using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.MethodLogging;
 using PlanAhead.Core.Models.Projections;
 
 namespace PlanAhead.Core.Services.Planning;
 
+[MethodLogging]
 public class ForecastEngine : IForecastEngine
 {
     private readonly IFundRepository _fundRepository;

@@ -59,41 +59,33 @@ public partial class FundEditViewModel : BaseViewModel
 
     public async Task InitialiseAsync()
     {
-        try
+        // has a guid - it is the Account Id - it is a new fund
+        if (_navigationContext.Has<Guid>())
         {
-            // has a guid - it is the Account Id - it is a new fund
-            if (_navigationContext.Has<Guid>())
-            {
-                AccountId = _navigationContext.Get<Guid>();
+            AccountId = _navigationContext.Get<Guid>();
 
-                Title = "New Fund";
+            Title = "New Fund";
 
-                Id = Guid.Empty;
-                Name = "";
-                Description = "";
-                Notes = "";
-                IconId = "";
+            Id = Guid.Empty;
+            Name = "";
+            Description = "";
+            Notes = "";
+            IconId = "";
 
-                return;
-            }
-
-            Title = "Change Fund";
-
-            //
-            // Existing Fund
-            //
-
-            var fund = _navigationContext.Get<Fund>();
-            if(fund!=null)
-                Load(fund);
-
-            _navigationContext.Clear();
+            return;
         }
-        catch (Exception ex)
-        {
-            LogService.LogException(ex);
-            await DialogService.ShowException(ex);
-        }
+
+        Title = "Change Fund";
+
+        //
+        // Existing Fund
+        //
+
+        var fund = _navigationContext.Get<Fund>();
+        if (fund != null)
+            Load(fund);
+
+        _navigationContext.Clear();
     }
 
     private void Load(Fund fund)
@@ -134,50 +126,32 @@ public partial class FundEditViewModel : BaseViewModel
         return null;
     }
 
-    [RelayCommand]
+    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
     private async Task SaveAsync()
     {
-        try
+        var error = Validate();
+        if (error != null)
         {
-            var error = Validate();
-            if (error != null)
-            {
-                await DialogService.ShowMessageAsync(
-                    "Validation",
-                    error);
+            await DialogService.ShowMessageAsync(
+                "Validation",
+                error);
 
-                return;
-            }
-
-            if (Id == Guid.Empty)
-                await _fundService.AddAsync(Build());
-            else
-                await _fundService.UpdateAsync(Build());
-
-            await _syncStateService.IncreaseLocalVersion();
-
-            await Navigation.GoBackAsync();
+            return;
         }
-        catch (Exception ex)
-        {
-            LogService.LogException(ex);
-            await DialogService.ShowException(ex);
-        }
+
+        if (Id == Guid.Empty)
+            await _fundService.AddAsync(Build());
+        else
+            await _fundService.UpdateAsync(Build());
+
+        await _syncStateService.IncreaseLocalVersion();
+
+        await Navigation.GoBackAsync();
     }
 
-    [RelayCommand]
+    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
     private Task CancelAsync()
     {
-        try
-        {
-            return Navigation.GoBackAsync();
-        }
-        catch (Exception ex)
-        {
-            LogService.LogException(ex);
-            DialogService.ShowException(ex);
-        }
-        return Task.CompletedTask;
-            
+        return Navigation.GoBackAsync();
     }
 }

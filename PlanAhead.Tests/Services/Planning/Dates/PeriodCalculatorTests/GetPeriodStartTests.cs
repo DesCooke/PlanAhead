@@ -1,9 +1,11 @@
 ﻿using FluentAssertions;
+using PlanAhead.Core.MethodLogging;
 using PlanAhead.Core.Models.Enums;
 using PlanAhead.Core.Services.Planning.Dates;
 
 namespace PlanAhead.Tests.Services.Planning.Dates.PeriodCalculatorTests;
 
+[MethodLogging]
 public class GetPeriodStartTests
 {
     private readonly PeriodCalculator _calculator = new();
