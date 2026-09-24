@@ -1,4 +1,5 @@
 ﻿using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.Logging;
 using PlanAhead.Infrastructure.Authentication;
 using PlanAhead.Infrastructure.Logging;
 using PlanAhead.Infrastructure.Sync.Models;
@@ -27,72 +28,134 @@ public class SyncStateService : ISyncStateService
     public async Task UpdateRemoteSyncVersionAsync(Guid userId,
         CancellationToken cancellationToken = default)
     {
-        var remoteVersion =
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var remoteVersion =
             await GetRemoteSyncVersionAsync(userId, cancellationToken);
 
-        _settings.LastRemoteSyncVersion = remoteVersion;
-        await _logService.LogAsync($"_settings.LastRemoteSyncVersion now {_settings.LastRemoteSyncVersion}");
+            _settings.LastRemoteSyncVersion = remoteVersion;
+            await _logService.LogAsync($"_settings.LastRemoteSyncVersion now {_settings.LastRemoteSyncVersion}");
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 
     public async Task<bool> HasRemoteChangesAsync(Guid userId,
         CancellationToken cancellationToken = default)
     {
-        var remoteVersion =
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var remoteVersion =
             await GetRemoteSyncVersionAsync(userId, cancellationToken);
 
-        await _logService.LogAsync($"HasRemoteChangesAsync, remoteVersion {remoteVersion}, Local {_settings.LastRemoteSyncVersion}");
+            await _logService.LogAsync($"HasRemoteChangesAsync, remoteVersion {remoteVersion}, Local {_settings.LastRemoteSyncVersion}");
 
-        return remoteVersion > _settings.LastRemoteSyncVersion;
+            return remoteVersion > _settings.LastRemoteSyncVersion;
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 
     public async Task<long> GetRemoteSyncVersionAsync(Guid userId,
         CancellationToken cancellationToken = default)
     {
-        var response = await _client
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var response = await _client
             .From<UserSyncRecord>()
             .Where(x => x.UserId == userId)
             .Single();
 
-        if (response == null)
-            return 0;
+            if (response == null)
+                return 0;
 
-        await _logService.LogAsync($"GetRemoteSyncVersionAsync returns response.SyncVersion");
+            await _logService.LogAsync($"GetRemoteSyncVersionAsync returns response.SyncVersion");
 
-        return response.SyncVersion;
+            return response.SyncVersion;
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 
     public async Task UpdateLocalSyncVersionAsync(CancellationToken cancellationToken = default)
     {
-        var localVersion =
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var localVersion =
             await GetLocalSyncVersionAsync(cancellationToken);
 
-        _settings.LastLocalSyncVersion = localVersion;
+            _settings.LastLocalSyncVersion = localVersion;
 
-        await _logService.LogAsync($"_settings.LastLocalSyncVersion is not {_settings.LastLocalSyncVersion}");
+            await _logService.LogAsync($"_settings.LastLocalSyncVersion is not {_settings.LastLocalSyncVersion}");
 
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 
     public async Task<bool> HasLocalChangesAsync(CancellationToken cancellationToken = default)
     {
-        var localVersion =
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var localVersion =
             await GetLocalSyncVersionAsync(cancellationToken);
 
-        await _logService.LogAsync($"HasLocalChangesAsync, localVersion {localVersion}, _settings.LastLocalSyncVersion {_settings.LastLocalSyncVersion}");
+            await _logService.LogAsync($"HasLocalChangesAsync, localVersion {localVersion}, _settings.LastLocalSyncVersion {_settings.LastLocalSyncVersion}");
 
-        return localVersion > _settings.LastLocalSyncVersion;
+            return localVersion > _settings.LastLocalSyncVersion;
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 
     public async Task<long> GetLocalSyncVersionAsync(CancellationToken cancellationToken = default)
     {
-        await _logService.LogAsync($"GetLocalSyncVersionAsync returns _settings.LastLocalVersion");
-        return _settings.LastLocalVersion;
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            await _logService.LogAsync($"GetLocalSyncVersionAsync returns _settings.LastLocalVersion");
+            return _settings.LastLocalVersion;
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 
     public async Task IncreaseLocalVersion(CancellationToken cancellationToken = default)
     {
-        
-        _settings.LastLocalVersion++;
-        await _logService.LogAsync($"IncreaseLocalVersion, _settings.LastLocalVersion is now {_settings.LastLocalVersion}");
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            _settings.LastLocalVersion++;
+            await _logService.LogAsync($"IncreaseLocalVersion, _settings.LastLocalVersion is now {_settings.LastLocalVersion}");
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 
 }

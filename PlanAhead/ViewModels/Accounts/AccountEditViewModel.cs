@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.Logging;
 using PlanAhead.Core.Models.Domain;
 using PlanAhead.Core.Models.Enums;
 using PlanAhead.Infrastructure.Sync;
@@ -61,6 +62,7 @@ public partial class AccountEditViewModel : BaseViewModel
 
     public async Task InitialiseAsync()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             if (!_navigationContext.Has<Guid>())
@@ -98,21 +100,29 @@ public partial class AccountEditViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in AccountEditViewModel:InitialiseAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
-
     }
 
     private void Load(Account account)
     {
-        Id = account.Id;
-        Name = account.Name;
-        Description = account.Description;
-        OpeningBalance = account.OpeningBalance;
-        Archived = account.Archived;
-        Notes = account.Notes;
-        IconId = account.IconId;
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            Id = account.Id;
+            Name = account.Name;
+            Description = account.Description;
+            OpeningBalance = account.OpeningBalance;
+            Archived = account.Archived;
+            Notes = account.Notes;
+            IconId = account.IconId;
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            Dialogs.ShowExceptionAsync(ex);
+        }
     }
 
     private Account Build()
@@ -140,6 +150,7 @@ public partial class AccountEditViewModel : BaseViewModel
     [RelayCommand]
     private async Task SaveAsync()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             var error = Validate();
@@ -163,22 +174,23 @@ public partial class AccountEditViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in AccountEditViewModel:SaveAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
     }
 
     [RelayCommand]
     private Task CancelAsync()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             return Navigation.GoBackAsync();
         }
         catch (Exception ex)
         {
-            var msg = $"Error in AccountEditViewModel:CancelAsync:{ex.Message}";
-            Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            Dialogs.ShowExceptionAsync(ex);
         }
         return Task.CompletedTask;
     }
@@ -186,6 +198,7 @@ public partial class AccountEditViewModel : BaseViewModel
     [RelayCommand]
     private async Task ChooseIconAsync()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             var iconId = await _dialogService.PickIconAsync(IconId);
@@ -195,9 +208,8 @@ public partial class AccountEditViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in AccountEditViewModel:ChooseIconAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
-
     }
 }

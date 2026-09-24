@@ -1,4 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
+using PlanAhead.Core.Logging;
 using PlanAhead.Interfaces;
 
 namespace PlanAhead.ViewModels;
@@ -35,6 +36,7 @@ public abstract partial class BaseViewModel : ObservableObject
 
     protected async Task ExecuteBusyAsync(Func<Task> action)
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             if (IsBusy)
@@ -52,9 +54,8 @@ public abstract partial class BaseViewModel : ObservableObject
         }
         catch (Exception ex)
         {
-            var msg = $"Error in BaseViewModel:ExecuteBusyAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
-
     }
 }

@@ -1,5 +1,6 @@
 ﻿using PlanAhead.Core.Interfaces.Repositories;
 using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.Logging;
 using PlanAhead.Core.Models.Domain;
 using PlanAhead.Core.Models.Enums;
 using PlanAhead.Core.Models.Sync;
@@ -25,102 +26,182 @@ public class AccountRepository: IAccountRepository
 
     public async Task<List<Account>> GetPendingSyncAsync()
     {
-        var db = await _context.GetConnectionAsync();
-
+        using var log = MethodLoggingService.Begin();
         try
         {
+            var db = await _context.GetConnectionAsync();
             return await db.Table<Account>()
                 .Where(a => a.NeedsSync)
                 .ToListAsync();
-        } catch 
-        {
-
         }
-         return new List<Account>();
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 
     public async Task MarkSyncedAsync(Guid id)
     {
-        var db = await _context.GetConnectionAsync();
-
-        var account = await GetByIdAsync(id);
-        if (account != null)
+        using var log = MethodLoggingService.Begin();
+        try
         {
-            account.NeedsSync = false;
+            var db = await _context.GetConnectionAsync();
 
-            await db.UpdateAsync(account);
+            var account = await GetByIdAsync(id);
+            if (account != null)
+            {
+                account.NeedsSync = false;
+
+                await db.UpdateAsync(account);
+            }
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
         }
     }
     public async Task<List<Account>> GetAllAsync()
     {
-        var db = await Database();
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var db = await Database();
 
-        return await db.Table<Account>()
-            .Where(a => !a.Deleted)
-            .OrderBy(a => a.DisplayOrder)
-            .ToListAsync();
+            return await db.Table<Account>()
+                .Where(a => !a.Deleted)
+                .OrderBy(a => a.DisplayOrder)
+                .ToListAsync();
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 
     public async Task UpsertAsync(Account account)
     {
-        var db = await Database();
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var db = await Database();
 
-        await db.InsertOrReplaceAsync(account);
+            await db.InsertOrReplaceAsync(account);
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 
     private async Task<SQLiteAsyncConnection> Database()
     {
-        var db = await _context.GetConnectionAsync();
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var db = await _context.GetConnectionAsync();
 
-        await db.CreateTableAsync<Account>();
+            await db.CreateTableAsync<Account>();
 
-        return db;
+            return db;
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 
     public async Task<List<Account>> GetActiveAsync()
     {
-        var db = await Database();
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var db = await Database();
 
-        return await db.Table<Account>()
-            .Where(a => !a.Deleted && !a.Archived)
-            .OrderBy(a => a.DisplayOrder)
-            .ToListAsync();
+            return await db.Table<Account>()
+                .Where(a => !a.Deleted && !a.Archived)
+                .OrderBy(a => a.DisplayOrder)
+                .ToListAsync();
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
     public async Task<Account?> GetByIdAsync(Guid id)
     {
-        var db = await Database();
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var db = await Database();
 
-        return await db.Table<Account>()
-                       .FirstOrDefaultAsync(a => a.Id == id &&
-            !a.Deleted);
+            return await db.Table<Account>()
+                           .FirstOrDefaultAsync(a => a.Id == id &&
+                !a.Deleted);
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 
     public async Task AddAsync(Account account)
     {
-        var db = await Database();
-
-        if (account.Id == Guid.Empty)
+        using var log = MethodLoggingService.Begin();
+        try
         {
-            account.Id = Guid.NewGuid();
-            account.DisplayOrder = await db.Table<Account>().CountAsync() + 1;
+            var db = await Database();
+
+            if (account.Id == Guid.Empty)
+            {
+                account.Id = Guid.NewGuid();
+                account.DisplayOrder = await db.Table<Account>().CountAsync() + 1;
+            }
+
+            await db.InsertAsync(account);
         }
-
-        await db.InsertAsync(account);
-
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 
     public async Task UpdateAsync(Account account)
     {
-        var db = await Database();
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var db = await Database();
 
-        await db.UpdateAsync(account);
-
+            await db.UpdateAsync(account);
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 
     public async Task DeleteAsync(Account account)
     {
-        var db = await Database();
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var db = await Database();
 
-        await db.UpdateAsync(account);
+            await db.UpdateAsync(account);
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 }

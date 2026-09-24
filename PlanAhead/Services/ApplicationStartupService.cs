@@ -2,11 +2,13 @@
 using PlanAhead.Core.Models.Sync;
 using PlanAhead.Infrastructure.Authentication;
 using PlanAhead.Infrastructure.DB;
+using PlanAhead.Infrastructure.Logging;
 using PlanAhead.Infrastructure.Sync;
 using PlanAhead.Interfaces;
 using PlanAhead.Views.Startup;
 using Supabase;
 using System.Text.Json;
+using PlanAhead.Core.Logging;
 
 namespace PlanAhead.Services;
 
@@ -43,13 +45,11 @@ public class ApplicationStartupService : IApplicationStartupService
 
     public async Task NavigateToStartupPageAsync()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
-            await _logService.ClearAsync();
 
-            await _logService.LogAsync("Setting _syncStatusService.IsSyncing to false");
             _syncStatusService.IsSyncing = false;
-            await _logService.LogAsync($".._syncStatusService.IsSyncing is {_syncStatusService.IsSyncing}");
 
             //
             // User is currently offline - go into offline mode
@@ -106,12 +106,10 @@ public class ApplicationStartupService : IApplicationStartupService
 
             // go to login page
             await Shell.Current.GoToAsync("//Login");
-
         }
         catch (Exception ex)
         {
-            await _dialogs.ShowErrorAsync(
-                $"Unable to navigate to startup page.  {ex.Message}");
+            log.Exception(ex);
         }
 
     }

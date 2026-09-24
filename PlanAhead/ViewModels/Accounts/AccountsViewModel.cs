@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.Logging;
 using PlanAhead.Core.Models.Domain;
 using PlanAhead.Core.Services.Accounts;
 using PlanAhead.Core.Services.Funds;
@@ -51,6 +52,7 @@ public partial class AccountsViewModel : BaseViewModel
     [RelayCommand]
     private async Task LoadAsync()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             var accounts = await _accountService.GetAllAsync();
@@ -77,16 +79,16 @@ public partial class AccountsViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in AccountsViewModel:LoadAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
-
     }
 
 
     [RelayCommand]
     private async Task DeleteAsync(AccountListItem accountListItem)
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             var delete =
@@ -105,30 +107,30 @@ public partial class AccountsViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in AccountsViewModel:DeleteAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
-
     }
 
     [RelayCommand]
     private async Task AddAsync()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             await Shell.Current.GoToAsync("AccountEditPage");
         }
         catch (Exception ex)
         {
-            var msg = $"Error in AccountsViewModel:AddAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
-
     }
 
     [RelayCommand]
     private async Task OpenAsync(AccountListItem accountListItem)
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             _navigationContext.Set(accountListItem.Account.Id);
@@ -137,15 +139,15 @@ public partial class AccountsViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in AccountsViewModel:OpenAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
-
     }
 
     [RelayCommand]
     private async Task EditAsync(AccountListItem accountListItem)
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             _navigationContext.Set(accountListItem.Account.Id);
@@ -154,10 +156,9 @@ public partial class AccountsViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in AccountsViewModel:EditAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
-
     }
 
 }

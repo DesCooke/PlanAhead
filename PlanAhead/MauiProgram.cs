@@ -1,9 +1,11 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using PlanAhead.Core.Extensions;
+using PlanAhead.Core.Interfaces.Services;
 using PlanAhead.Extensions;
 using PlanAhead.Infrastructure.Authentication;
 using PlanAhead.Infrastructure.Extensions;
+using PlanAhead.Core.Logging;
 using Supabase;
 
 namespace PlanAhead
@@ -48,7 +50,13 @@ namespace PlanAhead
             builder.Logging.AddDebug();
 #endif
 
-            return builder.Build();
+            var app = builder.Build();
+
+            var logService = app.Services.GetRequiredService<ILogService>();
+
+            MethodLoggingService.Configure(logService);
+
+            return app;
         }
     }
 }

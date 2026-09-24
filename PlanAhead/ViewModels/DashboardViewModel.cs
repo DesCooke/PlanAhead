@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using PlanAhead.Core.Constants;
 using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.Logging;
 using PlanAhead.Core.Messaging;
 using PlanAhead.Infrastructure.Authentication;
 using PlanAhead.Infrastructure.Repositories;
@@ -82,9 +83,9 @@ public partial class DashboardViewModel : BaseViewModel
     [RelayCommand(CanExecute = nameof(CanSync))]
     private async Task SyncAsync()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
-            await _logService.LogAsync("Manual Sync starts");
             var userIdString = await _authenticationService.GetCurrentUserIdAsync();
             if (userIdString != null)
             {
@@ -100,25 +101,24 @@ public partial class DashboardViewModel : BaseViewModel
                     }
                     else
                     {
-                        await _logService.LogAsync("No changes detected");
+                        MethodLoggingService.Write("No changes detected");
                     }
                 }
                 else
                 {
-                    await _logService.LogAsync("Could not parse userId");
+                    MethodLoggingService.Write("Could not parse userId");
                 }
 
             }
             else
             {
-                await _logService.LogAsync("_authenticationService.GetCurrentUserIdAsync did not return a userIdString");
+                MethodLoggingService.Write("_authenticationService.GetCurrentUserIdAsync did not return a userIdString");
             }
-            await _logService.LogAsync("Manual Sync end");
         }
         catch (Exception ex)
         {
-            var msg = $"Error in DashboardViewModel:SyncAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
     }
 
@@ -135,6 +135,7 @@ public partial class DashboardViewModel : BaseViewModel
     [RelayCommand]
     private async Task TestRepository()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             var accounts = await _repository.GetAllAsync();
@@ -144,24 +145,23 @@ public partial class DashboardViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in DashboardViewModel:TestRepository:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
-
     }
 
 
     public async Task RefreshAsync()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             WeakReferenceMessenger.Default.Send(new SyncStatusChangedMessage());
         }
         catch (Exception ex)
         {
-            var msg = $"Error in DashboardViewModel:RefreshAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
-
     }
 }

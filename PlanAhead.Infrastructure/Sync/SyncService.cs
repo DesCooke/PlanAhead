@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using PlanAhead.Core.Interfaces.Repositories;
 using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.Logging;
 using PlanAhead.Infrastructure.Authentication;
 using PlanAhead.Infrastructure.DB;
 using PlanAhead.Infrastructure.DB.SQLite;
@@ -58,33 +59,32 @@ public class SyncService : ISyncService
         bool hasLocalChanges,
         CancellationToken cancellationToken = default)
     {
-        await _logService.LogAsync("SyncAsync starts");
-
-        if (_syncStatusService.IsSyncing)
+        using var log = MethodLoggingService.Begin();
+        try
         {
-            await _logService.LogAsync("_syncStatusService.IsSyncing is true - so ignoring");
-        }
-        else
-        {
-            await _logService.LogAsync("Setting _syncStatusService.IsSyncing to true");
-            _syncStatusService.IsSyncing = true;
-            try
+            if (_syncStatusService.IsSyncing)
             {
+                MethodLoggingService.Write("_syncStatusService.IsSyncing is true - so ignoring");
+            }
+            else
+            {
+                MethodLoggingService.Write("Setting _syncStatusService.IsSyncing to true");
+                _syncStatusService.IsSyncing = true;
                 try
                 {
                     if (!_networkService.IsConnected)
                     {
-                        await _logService.LogAsync("_networkService.IsConnected is false - so ignoring");
-                        await _logService.LogAsync("Setting _syncStatusService.IsSyncing to false");
+                        MethodLoggingService.Write("_networkService.IsConnected is false - so ignoring");
+                        MethodLoggingService.Write("Setting _syncStatusService.IsSyncing to false");
                         _syncStatusService.IsSyncing = false;
-                        await _logService.LogAsync($".._syncStatusService.IsSyncing is {_syncStatusService.IsSyncing}");
+                        MethodLoggingService.Write($".._syncStatusService.IsSyncing is {_syncStatusService.IsSyncing}");
                     }
                     else
                     {
 
                         if (hasLocalChanges)
                         {
-                            await _logService.LogAsync($"Uploading local changes");
+                            MethodLoggingService.Write($"Uploading local changes");
                             foreach (var synchroniser in _synchronisers)
                             {
                                 await synchroniser.UploadPendingAsync(userId);
@@ -94,13 +94,13 @@ public class SyncService : ISyncService
                         }
                         else
                         {
-                            await _logService.LogAsync("hasLocalChanges is false for this device");
+                            MethodLoggingService.Write("hasLocalChanges is false for this device");
                         }
 
 
                         if (hasRemoteChanges)
                         {
-                            await _logService.LogAsync($"Downloading changes since {_settings.LastRemoteSyncUtc}");
+                            MethodLoggingService.Write($"Downloading changes since {_settings.LastRemoteSyncUtc}");
                             foreach (var synchroniser in _synchronisers)
                             {
                                 await synchroniser.DownloadChangesAsync(_settings.LastRemoteSyncUtc);
@@ -108,24 +108,24 @@ public class SyncService : ISyncService
                         }
                         else
                         {
-                            await _logService.LogAsync("hasRemoteChanges is false for this user");
+                            MethodLoggingService.Write("hasRemoteChanges is false for this user");
                         }
                     }
                 }
-                catch (Exception ex)
+                finally
                 {
-                    await _logService.LogExceptionAsync(ex);
+                    MethodLoggingService.Write("Setting _syncStatusService.IsSyncing to false");
+                    _syncStatusService.IsSyncing = false;
+                    MethodLoggingService.Write($".._syncStatusService.IsSyncing is {_syncStatusService.IsSyncing}");
                 }
-            }
-            finally
-            {
-                await _logService.LogAsync("Setting _syncStatusService.IsSyncing to false");
-                _syncStatusService.IsSyncing = false;
-                await _logService.LogAsync($".._syncStatusService.IsSyncing is {_syncStatusService.IsSyncing}");
-            }
 
+            }
         }
-        await _logService.LogAsync("SyncAsync ends");
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
 
         return true;
     }

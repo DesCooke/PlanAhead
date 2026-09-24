@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.Logging;
 using PlanAhead.Core.Services.Accounts;
 using PlanAhead.Infrastructure.Sync;
 using PlanAhead.Interfaces;
@@ -47,6 +48,7 @@ public partial class FundsViewModel : BaseViewModel
 
     public async Task InitialiseAsync()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             if (_navigationContext.Has<Guid>())
@@ -62,15 +64,15 @@ public partial class FundsViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in FundsViewModel:InitialiseAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
-
     }
 
     [RelayCommand]
     private async Task LoadAsync(Guid accountId)
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             var funds = await _fundService.GetByAccountIdAsync(accountId);
@@ -88,15 +90,15 @@ public partial class FundsViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in FundsViewModel:LoadAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
-
     }
 
     [RelayCommand]
     private async Task DeleteAsync(Fund fund)
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             var delete =
@@ -115,15 +117,15 @@ public partial class FundsViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in FundsViewModel:DeleteAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
-
     }
 
     [RelayCommand]
     private async Task AddAsync()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             _navigationContext.Set(AccountId);
@@ -132,10 +134,9 @@ public partial class FundsViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in FundsViewModel:AddAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
-
     }
 
     partial void OnSelectedFundChanged(Fund? value)
@@ -149,6 +150,7 @@ public partial class FundsViewModel : BaseViewModel
     [RelayCommand]
     private async Task OpenASync(Fund fund)
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             _navigationContext.Set(fund.Id);
@@ -157,14 +159,15 @@ public partial class FundsViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in FundsViewModel:OpenAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
     }
 
     [RelayCommand]
     private async Task EditAsync(Fund fund)
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             _navigationContext.Set(fund);
@@ -175,8 +178,8 @@ public partial class FundsViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in FundsViewModel:EditAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
     }
 

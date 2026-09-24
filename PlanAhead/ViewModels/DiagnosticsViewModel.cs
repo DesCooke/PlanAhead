@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.Logging;
 using PlanAhead.Core.Services.Funds;
 using PlanAhead.Interfaces;
 using PlanAhead.Services;
@@ -24,14 +25,15 @@ public partial class DiagnosticsViewModel : BaseViewModel
 
     public async Task InitialiseAsync()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             Log = await _logService.GetLogAsync();
         }
         catch (Exception ex)
         {
-            var msg = $"Error in DiagnosticsViewModel:InitialiseAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
     }
 

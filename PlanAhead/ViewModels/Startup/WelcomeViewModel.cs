@@ -1,9 +1,11 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.Logging;
 using PlanAhead.Core.Models.Enums;
 using PlanAhead.Core.Services.Accounts;
 using PlanAhead.Infrastructure.Authentication;
+using PlanAhead.Infrastructure.DB.SQLite;
 using PlanAhead.Interfaces;
 using PlanAhead.Navigation;
 using PlanAhead.Services;
@@ -13,7 +15,6 @@ using PlanAhead.Views.Accounts;
 using PlanAhead.Views.Funds;
 using PlanAhead.Views.Startup;
 using System.Collections.ObjectModel;
-using PlanAhead.Infrastructure.DB.SQLite;
 
 namespace PlanAhead.ViewModels.Funds;
 
@@ -36,6 +37,7 @@ public partial class WelcomeViewModel : BaseViewModel
     [RelayCommand]
     private async Task OfflineAsync()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             _settings.SyncMode = SyncMode.Offline;
@@ -50,15 +52,15 @@ public partial class WelcomeViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in WelcomeViewModel:OfflineAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
-
     }
 
     [RelayCommand]
     private async Task OnlineManualAsync()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             _settings.SyncMode = SyncMode.SupabaseManual;
@@ -73,14 +75,15 @@ public partial class WelcomeViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in WelcomeViewModel:OnlineManualAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
     }
 
     [RelayCommand]
     private async Task OnlineAutoAsync()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             _settings.SyncMode = SyncMode.SupabaseAuto;
@@ -95,9 +98,8 @@ public partial class WelcomeViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in WelcomeViewModel:OnlineAutoAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
-
     }
 }

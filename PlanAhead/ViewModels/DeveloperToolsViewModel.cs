@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using PlanAhead.Core.Logging;
 using PlanAhead.Infrastructure.Repositories;
 using PlanAhead.Interfaces;
 
@@ -19,6 +20,7 @@ public partial class DeveloperToolsViewModel : BaseViewModel
     [RelayCommand]
     private async Task ShowAllAccounts()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             var accounts = await _repository.GetAllAsync();
@@ -33,15 +35,15 @@ public partial class DeveloperToolsViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in DeveloperToolsViewModel:ShowAllAccounts:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
-
     }
 
     [RelayCommand]
     private async Task DeleteAll()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             var path = Path.Combine(
@@ -54,16 +56,15 @@ public partial class DeveloperToolsViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in DeveloperToolsViewModel:DeleteAll:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
-
-
     }
 
     [RelayCommand]
     private async Task ShowAccountCount()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             var accounts = await _repository.GetAllAsync();
@@ -73,15 +74,15 @@ public partial class DeveloperToolsViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in DeveloperToolsViewModel:ShowAccountCount:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
-
     }
 
     [RelayCommand]
     private async Task ShowDatabasePath()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             var path = Path.Combine(
@@ -93,9 +94,8 @@ public partial class DeveloperToolsViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in DeveloperToolsViewModel:ShowDatabasePath:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
-
     }
 }

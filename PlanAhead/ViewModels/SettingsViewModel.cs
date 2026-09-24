@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.Logging;
 using PlanAhead.Infrastructure.Authentication;
 using PlanAhead.Infrastructure.DB.SQLite;
 using PlanAhead.Infrastructure.DB.Supabase;
@@ -46,16 +47,16 @@ namespace PlanAhead.ViewModels
         [RelayCommand]
         private async Task DeveloperTools()
         {
+            using var log = MethodLoggingService.Begin();
             try
             {
                 await Shell.Current.GoToAsync("DeveloperToolsPage");
             }
             catch (Exception ex)
             {
-                var msg = $"Error in SettingsViewModel:DeveloperTools:{ex.Message}";
-                await Dialogs.ShowErrorAsync(msg);
+                log.Exception(ex);
+                await Dialogs.ShowExceptionAsync(ex);
             }
-
         }
 
 
@@ -63,6 +64,7 @@ namespace PlanAhead.ViewModels
         [RelayCommand]
         private async Task LogoutAsync()
         {
+            using var log = MethodLoggingService.Begin();
             try
             {
                 if (!await Dialogs.ConfirmAsync(
@@ -80,15 +82,15 @@ namespace PlanAhead.ViewModels
             }
             catch (Exception ex)
             {
-                var msg = $"Error in SettingsViewModel:LogoutAsync:{ex.Message}";
-                await Dialogs.ShowErrorAsync(msg);
+                log.Exception(ex);
+                await Dialogs.ShowExceptionAsync(ex);
             }
-
         }
 
         [RelayCommand]
         private async Task ClearLocalDatabase()
         {
+            using var log = MethodLoggingService.Begin();
             try
             {
                 if (!await Dialogs.ConfirmAsync(
@@ -104,30 +106,30 @@ namespace PlanAhead.ViewModels
             }
             catch (Exception ex)
             {
-                var msg = $"Error in SettingsViewModel:ClearLocalDatabase:{ex.Message}";
-                await Dialogs.ShowErrorAsync(msg);
+                log.Exception(ex);
+                await Dialogs.ShowExceptionAsync(ex);
             }
-
         }
 
         [RelayCommand]
         private async Task Diagnostics()
         {
+            using var log = MethodLoggingService.Begin();
             try
             {
                 await Shell.Current.GoToAsync("DiagnosticsPage");
             }
             catch (Exception ex)
             {
-                var msg = $"Error in SettingsViewModel:Dignostics:{ex.Message}";
-                await Dialogs.ShowErrorAsync(msg);
+                log.Exception(ex);
+                await Dialogs.ShowExceptionAsync(ex);
             }
-
         }
 
         [RelayCommand]
         private async Task ClearRemoteDatabase()
         {
+            using var log = MethodLoggingService.Begin();
             try
             {
                 if (!await Dialogs.ConfirmAsync(
@@ -143,15 +145,15 @@ namespace PlanAhead.ViewModels
             }
             catch (Exception ex)
             {
-                var msg = $"Error in SettingsViewModel:ClearRemoteDatabase:{ex.Message}";
-                await Dialogs.ShowErrorAsync(msg);
+                log.Exception(ex);
+                await Dialogs.ShowExceptionAsync(ex);
             }
-
         }
 
         [RelayCommand]
         private async Task FactoryReset()
         {
+            using var log = MethodLoggingService.Begin();
             try
             {
                 if (!await Dialogs.ConfirmAsync(
@@ -173,39 +175,38 @@ namespace PlanAhead.ViewModels
             }
             catch (Exception ex)
             {
-                var msg = $"Error in SettingsViewModel:FactoryReset:{ex.Message}";
-                await Dialogs.ShowErrorAsync(msg);
+                log.Exception(ex);
+                await Dialogs.ShowExceptionAsync(ex);
             }
-
         }
 
         [RelayCommand]
         private async Task ChangeSignIn()
         {
+            using var log = MethodLoggingService.Begin();
             try
             {
                 await Shell.Current.GoToAsync("//Welcome");
             }
             catch (Exception ex)
             {
-                var msg = $"Error in SettingsViewModel:ChangeSignIn:{ex.Message}";
-                await Dialogs.ShowErrorAsync(msg);
+                log.Exception(ex);
+                await Dialogs.ShowExceptionAsync(ex);
             }
-
         }
 
         public async Task InitialiseAsync()
         {
+            using var log = MethodLoggingService.Begin();
             try
             {
                 IsLoggedIn = await _authenticationService.IsLoggedInAsync();
             }
             catch (Exception ex)
             {
-                var msg = $"Error in SettingsViewModel:InitialiseAsync:{ex.Message}";
-                await Dialogs.ShowErrorAsync(msg);
+                log.Exception(ex);
+                await Dialogs.ShowExceptionAsync(ex);
             }
-
         }
 
     }

@@ -1,6 +1,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.Logging;
 using PlanAhead.Core.Models.Domain;
 using PlanAhead.Core.Models.Enums;
 using PlanAhead.Infrastructure.Sync;
@@ -105,6 +106,7 @@ public partial class AccountViewViewModel : BaseViewModel
     [RelayCommand]
     public async Task LoadAsync()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             if (Id == Guid.Empty)
@@ -120,15 +122,15 @@ public partial class AccountViewViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in AccountViewViewModel:LoadAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
-
     }
 
     [RelayCommand]
     private async Task EditAsync()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             _navigationContext.Set(Id);
@@ -137,15 +139,15 @@ public partial class AccountViewViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in AccountViewViewModel:EditAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
-
     }
 
     [RelayCommand]
     private Task CancelAsync()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             return Navigation.GoBackAsync();
@@ -161,6 +163,7 @@ public partial class AccountViewViewModel : BaseViewModel
     [RelayCommand]
     private async Task DeleteAsync()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             var delete =
@@ -179,15 +182,15 @@ public partial class AccountViewViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in AccountViewViewModel:DeleteAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
-
     }
 
     [RelayCommand]
     private async Task GoToFundsAsync()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             _navigationContext.Set(Id);
@@ -196,8 +199,8 @@ public partial class AccountViewViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in AccountViewViewModel:GoToFundsAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
     }
 

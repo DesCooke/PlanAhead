@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PlanAhead.Core.Logging;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -48,13 +49,36 @@ namespace PlanAhead.Resources.Icons
 
         public static string GetResourceName(string id)
         {
-            if (id==null || id.Length == 0) return "piggy_bank";
+            String? ret = id;
+            using var log = MethodLoggingService.Begin();
+            try
+            {
+                if (id == null || id.Length == 0)
+                {
+                    ret = "piggy_bank";
+                }
+                else
+                {
 
-            var ret = Get(id);
+                    var iconDef = Get(id);
 
-            if(ret==null) return id;
-
-            return ret.ResourceName;
+                    if (iconDef == null)
+                    {
+                        ret = id;
+                    }
+                    else
+                    {
+                        ret = iconDef.ResourceName;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Exception(ex);
+                throw;
+            }
+            MethodLoggingService.Write($"  Returning {ret}");
+            return ret;
         }
     }
 }

@@ -1,16 +1,17 @@
 ﻿using PlanAhead.Core.Interfaces.Repositories;
+using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.Logging;
 using PlanAhead.Core.Models.Domain;
+using PlanAhead.Infrastructure.Authentication;
 using PlanAhead.Infrastructure.Repositories;
 using PlanAhead.Infrastructure.Sync.Models;
 using Supabase;
-using Supabase.Postgrest.Models;
 using Supabase.Postgrest.Attributes;
+using Supabase.Postgrest.Models;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using PlanAhead.Infrastructure.Authentication;
 using System.Diagnostics;
-using PlanAhead.Core.Interfaces.Services;
+using System.Text;
 
 
 namespace PlanAhead.Infrastructure.DB
@@ -34,28 +35,46 @@ namespace PlanAhead.Infrastructure.DB
 
         public override async Task UploadAsync(Account account)
         {
-            await UploadRecordAsync(ToRecord(account));
+            using var log = MethodLoggingService.Begin();
+            try
+            {
+                await UploadRecordAsync(ToRecord(account));
+            }
+            catch (Exception ex)
+            {
+                log.Exception(ex);
+                throw;
+            }
         }
 
         public override async Task UploadPendingAsync(
             Guid userId,
             CancellationToken cancellationToken = default)
         {
-            var pending = await _repository.GetPendingSyncAsync();
-
-            // Get the logged in user once
-            foreach (var account in pending)
+            using var log = MethodLoggingService.Begin();
+            try
             {
-                cancellationToken.ThrowIfCancellationRequested();
+                var pending = await _repository.GetPendingSyncAsync();
 
-                if (account.UserId == Guid.Empty)
-                    account.UserId = userId;
+                // Get the logged in user once
+                foreach (var account in pending)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
 
-                await UploadRecordAsync(ToRecord(account));
+                    if (account.UserId == Guid.Empty)
+                        account.UserId = userId;
 
-                account.NeedsSync = false;
+                    await UploadRecordAsync(ToRecord(account));
 
-                await _repository.UpdateAsync(account);
+                    account.NeedsSync = false;
+
+                    await _repository.UpdateAsync(account);
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Exception(ex);
+                throw;
             }
         }
 
@@ -63,38 +82,47 @@ namespace PlanAhead.Infrastructure.DB
             DateTime sinceUtc,
             CancellationToken cancellationToken = default)
         {
-            var response = await Supabase
+            using var log = MethodLoggingService.Begin();
+            try
+            {
+                var response = await Supabase
                 .From<AccountRecord>()
                 .Where(x => x.UpdatedUtc > sinceUtc)
                 .Get();
 
 
-            foreach (var record in response.Models)
+                foreach (var record in response.Models)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    var remote = ToDomain(record);
+
+                    await _logService.LogAsync($"Record {record.Name}");
+                    var local = await _repository.GetByIdAsync(remote.Id);
+
+                    if (local == null)
+                    {
+                        await _logService.LogAsync(" -> Adding");
+                        remote.NeedsSync = false;
+
+                        await _repository.AddAsync(remote);
+
+                        continue;
+                    }
+
+                    if (remote.UpdatedUtc > local.UpdatedUtc)
+                    {
+                        await _logService.LogAsync(" -> Updating");
+                        remote.NeedsSync = false;
+
+                        await _repository.UpdateAsync(remote);
+                    }
+                }
+            }
+            catch (Exception ex)
             {
-                cancellationToken.ThrowIfCancellationRequested();
-
-                var remote = ToDomain(record);
-
-                await _logService.LogAsync($"Record {record.Name}");
-                var local = await _repository.GetByIdAsync(remote.Id);
-
-                if (local == null)
-                {
-                    await _logService.LogAsync(" -> Adding");
-                    remote.NeedsSync = false;
-
-                    await _repository.AddAsync(remote);
-
-                    continue;
-                }
-
-                if (remote.UpdatedUtc > local.UpdatedUtc)
-                {
-                    await _logService.LogAsync(" -> Updating");
-                    remote.NeedsSync = false;
-
-                    await _repository.UpdateAsync(remote);
-                }
+                log.Exception(ex);
+                throw;
             }
         }
 

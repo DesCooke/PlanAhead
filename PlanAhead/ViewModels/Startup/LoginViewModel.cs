@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Input;
 using PlanAhead;
 using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.Logging;
 using PlanAhead.Infrastructure.Authentication;
 using PlanAhead.Infrastructure.Sync;
 using PlanAhead.Interfaces;
@@ -47,6 +48,7 @@ public partial class LoginViewModel : BaseViewModel
     [RelayCommand]
     private async Task LoginAsync()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             var response = await _authenticationService.LoginAsync(Email, Password);
@@ -79,14 +81,15 @@ public partial class LoginViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in LoginViewModel:LoginAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
     }
 
 
     public async Task InitialiseAsync()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             Email = "";
@@ -94,14 +97,15 @@ public partial class LoginViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in LoginViewModel:InitialiseAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
     }
 
     [RelayCommand]
     private async Task RegisterAsync()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             await _authenticationService.RegisterAsync(
@@ -132,14 +136,15 @@ public partial class LoginViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in LoginViewModel:RegisterAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
     }
 
     [RelayCommand]
     private async Task OfflineOnlyAsync()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             _settings.SyncMode = PlanAhead.Core.Models.Enums.SyncMode.Offline;
@@ -148,36 +153,38 @@ public partial class LoginViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in LoginViewModel:OfflineOnlyAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
     }
 
     [RelayCommand]
     private async Task GoogleAsync()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
 
         }
         catch (Exception ex)
         {
-            var msg = $"Error in LoginViewModel:GoogleAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
     }
 
     [RelayCommand]
     private async Task CancelAsync()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
 
         }
         catch (Exception ex)
         {
-            var msg = $"Error in LoginViewModel:CancelAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
     }
 }

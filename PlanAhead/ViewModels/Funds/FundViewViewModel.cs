@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.Logging;
 using PlanAhead.Core.Models.Enums;
 using PlanAhead.Core.Services.Accounts;
 using PlanAhead.Infrastructure.Sync;
@@ -85,6 +86,7 @@ public partial class FundViewViewModel : BaseViewModel
     [RelayCommand]
     public async Task LoadAsync()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             if (Id == Guid.Empty)
@@ -100,14 +102,15 @@ public partial class FundViewViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in FundViewViewModel:LoadAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
     }
 
     [RelayCommand]
     private async Task EditAsync()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             _navigationContext.Set(Id);
@@ -116,23 +119,23 @@ public partial class FundViewViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in FundViewViewModel:EditAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
-
     }
 
     [RelayCommand]
     private Task CancelAsync()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             return Navigation.GoBackAsync();
         }
         catch (Exception ex)
         {
-            var msg = $"Error in FundViewViewModel:CancelAsync:{ex.Message}";
-            Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            Dialogs.ShowExceptionAsync(ex);
         }
         return Task.CompletedTask;
     }
@@ -140,6 +143,7 @@ public partial class FundViewViewModel : BaseViewModel
     [RelayCommand]
     private async Task DeleteAsync()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             var delete =
@@ -158,9 +162,8 @@ public partial class FundViewViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in FundViewViewModel:DeleteAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
-
     }
 }

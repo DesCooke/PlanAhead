@@ -1,4 +1,5 @@
 ﻿using PlanAhead.Core.Interfaces.Repositories;
+using PlanAhead.Core.Logging;
 using PlanAhead.Core.Models.Domain;
 using PlanAhead.Core.Models.Enums;
 using PlanAhead.Infrastructure.Authentication;
@@ -30,37 +31,55 @@ namespace PlanAhead.Infrastructure.DB
 
         public override async Task UploadAsync(Fund fund)
         {
-            await UploadRecordAsync(ToRecord(fund));
+            using var log = MethodLoggingService.Begin();
+            try
+            {
+                await UploadRecordAsync(ToRecord(fund));
+            }
+            catch (Exception ex)
+            {
+                log.Exception(ex);
+                throw;
+            }
         }
 
         public override async Task DownloadChangesAsync(
             DateTime sinceUtc,
             CancellationToken cancellationToken = default)
         {
-            var response = await Supabase
+            using var log = MethodLoggingService.Begin();
+            try
+            {
+                var response = await Supabase
                 .From<FundRecord>()
                 .Where(x => x.UpdatedUtc > sinceUtc)
                 .Get();
 
-            foreach (var record in response.Models)
+                foreach (var record in response.Models)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    var remote = ToDomain(record);
+
+                    var local = await _repository.GetByIdAsync(remote.Id);
+
+                    if (local == null)
+                    {
+                        await _repository.AddAsync(remote);
+
+                        continue;
+                    }
+
+                    if (remote.UpdatedUtc > local.UpdatedUtc)
+                    {
+                        await _repository.UpdateAsync(remote);
+                    }
+                }
+            }
+            catch (Exception ex)
             {
-                cancellationToken.ThrowIfCancellationRequested();
-
-                var remote = ToDomain(record);
-
-                var local = await _repository.GetByIdAsync(remote.Id);
-
-                if (local == null)
-                {
-                    await _repository.AddAsync(remote);
-
-                    continue;
-                }
-
-                if (remote.UpdatedUtc > local.UpdatedUtc)
-                {
-                    await _repository.UpdateAsync(remote);
-                }
+                log.Exception(ex);
+                throw;
             }
         }
 
@@ -68,24 +87,33 @@ namespace PlanAhead.Infrastructure.DB
             Guid userId,
             CancellationToken cancellationToken = default)
         {
-            var pending = await _repository.GetPendingSyncAsync();
-
-            foreach (var fund in pending)
+            using var log = MethodLoggingService.Begin();
+            try
             {
-                cancellationToken.ThrowIfCancellationRequested();
+                var pending = await _repository.GetPendingSyncAsync();
 
-                if (fund.UserId == Guid.Empty)
-                    fund.UserId = userId;
+                foreach (var fund in pending)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
 
-                //
-                // Deletions are just updates - we just set the delete flag and update
-                // we never actually delete the record
-                //
-                await UploadRecordAsync(ToRecord(fund));
+                    if (fund.UserId == Guid.Empty)
+                        fund.UserId = userId;
 
-                fund.NeedsSync = false;
+                    //
+                    // Deletions are just updates - we just set the delete flag and update
+                    // we never actually delete the record
+                    //
+                    await UploadRecordAsync(ToRecord(fund));
 
-                await _repository.UpdateAsync(fund);
+                    fund.NeedsSync = false;
+
+                    await _repository.UpdateAsync(fund);
+                }
+            }
+            catch (Exception ex)
+            {
+                log.Exception(ex);
+                throw;
             }
         }
 

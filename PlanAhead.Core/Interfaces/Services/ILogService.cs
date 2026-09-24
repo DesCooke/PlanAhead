@@ -2,16 +2,19 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace PlanAhead.Core.Interfaces.Services
+namespace PlanAhead.Core.Interfaces.Services;
+
+public interface ILogService
 {
-    public interface ILogService
-    {
-        Task LogAsync(string message);
+    void Log(string message);
 
-        Task LogExceptionAsync(Exception ex, string? context = null);
+    Task LogAsync(string message);
 
-        Task<string> GetLogAsync();
+    Task LogExceptionAsync(
+        Exception ex,
+        string? context = null);
 
-        Task ClearAsync();
-    }
+    Task<string> GetLogAsync();
+
+    Task ClearAsync();
 }

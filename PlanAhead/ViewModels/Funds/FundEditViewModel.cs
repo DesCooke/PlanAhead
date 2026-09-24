@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.Logging;
 using PlanAhead.Core.Models.Enums;
 using PlanAhead.Core.Services.Accounts;
 using PlanAhead.Infrastructure.Sync;
@@ -57,6 +58,7 @@ public partial class FundEditViewModel : BaseViewModel
 
     public async Task InitialiseAsync()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             // has a guid - it is the Account Id - it is a new fund
@@ -89,10 +91,9 @@ public partial class FundEditViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in FundEditViewModel:InitialiseAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
-
     }
 
     private void Load(Fund fund)
@@ -136,6 +137,7 @@ public partial class FundEditViewModel : BaseViewModel
     [RelayCommand]
     private async Task SaveAsync()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             var error = Validate();
@@ -159,22 +161,23 @@ public partial class FundEditViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            var msg = $"Error in FundEditViewModel:SaveAsync:{ex.Message}";
-            await Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
     }
 
     [RelayCommand]
     private Task CancelAsync()
     {
+        using var log = MethodLoggingService.Begin();
         try
         {
             return Navigation.GoBackAsync();
         }
         catch (Exception ex)
         {
-            var msg = $"Error in FundEditViewModel:CancelAsync:{ex.Message}";
-            Dialogs.ShowErrorAsync(msg);
+            log.Exception(ex);
+            Dialogs.ShowExceptionAsync(ex);
         }
         return Task.CompletedTask;
             
