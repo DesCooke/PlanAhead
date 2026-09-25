@@ -9,10 +9,49 @@ using PlanAhead.ViewModels;
 
 public partial class DiagnosticsViewModel : BaseViewModel
 {
+
     private readonly ILogService _logService;
+
+    private string _filter = string.Empty;
+
+    public string Filter
+    {
+        get => _filter;
+        set
+        {
+            if (_filter == value)
+                return;
+
+            _filter = value;
+            OnPropertyChanged();
+
+            UpdateLog();
+        }
+    }
+
+    private void UpdateLog()
+    {
+        var lines = _logService.Lines;
+
+        if (string.IsNullOrWhiteSpace(Filter))
+        {
+            Log = string.Join(Environment.NewLine, lines);
+        }
+        else
+        {
+            Log = string.Join(
+                Environment.NewLine,
+                lines.Where(x =>
+                    x.Contains(Filter, StringComparison.OrdinalIgnoreCase)));
+        }
+
+        OnPropertyChanged(nameof(Log));
+    }
 
     [ObservableProperty]
     private string log = string.Empty;
+
+
 
     public DiagnosticsViewModel(
         INavigationService navigation,

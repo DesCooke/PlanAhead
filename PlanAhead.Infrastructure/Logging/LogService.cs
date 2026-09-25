@@ -1,11 +1,15 @@
 ﻿using PlanAhead.Core.Interfaces.Services;
 using System.Text;
+using System.Runtime.CompilerServices;
+using System.IO;
 
 namespace PlanAhead.Infrastructure.Logging;
 
 public class LogService : ILogService
 {
     private readonly List<string> _lines = [];
+
+    public IReadOnlyList<string> Lines => _lines;
 
     private readonly object _lock = new();
 
@@ -35,28 +39,17 @@ public class LogService : ILogService
         return Task.CompletedTask;
     }
 
-    public Task LogExceptionAsync(
-        Exception ex,
-        string? context = null)
+    public void LogException(
+        Exception exception,
+        [CallerMemberName] string memberName = "",
+        [CallerFilePath] string filePath = "")
     {
-        var sb = new StringBuilder();
+        var unitName = System.IO.Path.GetFileNameWithoutExtension(filePath).Split('/', '\\').Last();
 
-        sb.Append($"{GetTime()}: ");
-        sb.Append("(***EXCEPTION***): ");
+        var message =
+            $"Error in {unitName}:{memberName}:{exception.Message}";
 
-        if (!string.IsNullOrWhiteSpace(context))
-        {
-            sb.Append(context).Append(": ");
-        }
-
-        sb.Append(ex);
-
-        lock (_lock)
-        {
-            _lines.Add(sb.ToString());
-        }
-
-        return Task.CompletedTask;
+        Log(message);
     }
 
     public Task<string> GetLogAsync()
