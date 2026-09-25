@@ -20,7 +20,7 @@ public class ApplicationSettingsService
     {
         get
         {
-            return Preferences.Default.Get("LastRemoteSyncVersion", 0);
+            return Preferences.Default.Get("LastRemoteSyncVersion", 0L);
         }
         set
         {
@@ -32,7 +32,7 @@ public class ApplicationSettingsService
     {
         get
         {
-            return Preferences.Default.Get("LastLocalSyncVersion", 0);
+            return Preferences.Default.Get("LastLocalSyncVersion", 0L);
         }
         set
         {
@@ -44,7 +44,7 @@ public class ApplicationSettingsService
     {
         get
         {
-            return Preferences.Default.Get("LastLocalVersion", 0);
+            return Preferences.Default.Get("LastLocalVersion", 0L);
         }
         set
         {
@@ -112,9 +112,9 @@ public class ApplicationSettingsService
     public void ResetToFactory()
     {
         IsFirstRun = true;
-        LastRemoteSyncVersion = 0;
-        LastLocalSyncVersion = 0;
-        LastLocalVersion = 0;
+        LastRemoteSyncVersion = 0L;
+        LastLocalSyncVersion = 0L;
+        LastLocalVersion = 0L;
         LastRemoteSyncUtc = new DateTime(2001, 1, 1 );
         LastLocalSyncUtc = new DateTime(2001, 1, 1);
         LastLocalUtc = new DateTime(2001, 1, 1);
