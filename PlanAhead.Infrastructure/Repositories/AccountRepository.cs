@@ -1,19 +1,15 @@
 ﻿using PlanAhead.Core.Interfaces.Repositories;
 using PlanAhead.Core.Interfaces.Services;
-using PlanAhead.Core.MethodLogging;
+using PlanAhead.Core.Logging;
 using PlanAhead.Core.Models.Domain;
 using PlanAhead.Core.Models.Enums;
 using PlanAhead.Core.Models.Sync;
 using PlanAhead.Infrastructure.DB.SQLite;
-using PlanAhead.Infrastructure.Logging;
 using SQLite;
 using Supabase.Postgrest.Models;
-using System.Security.Principal;
-using System.Text.Json;
 
 namespace PlanAhead.Infrastructure.Repositories;
 
-[MethodLogging]
 public class AccountRepository: IAccountRepository
 {
     private readonly SQLiteContext _context;
@@ -30,141 +26,182 @@ public class AccountRepository: IAccountRepository
 
     public async Task<List<Account>> GetPendingSyncAsync()
     {
-        var db = await _context.GetConnectionAsync();
-
-        var retAccounts = await db.Table<Account>()
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var db = await _context.GetConnectionAsync();
+            return await db.Table<Account>()
                 .Where(a => a.NeedsSync)
                 .ToListAsync();
-
-        foreach (var account in retAccounts)
-        {
-            MethodLoggingService.Write(
-              $"{JsonSerializer.Serialize(account)}");
         }
-
-        return retAccounts;
-
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 
     public async Task MarkSyncedAsync(Guid id)
     {
-        var db = await _context.GetConnectionAsync();
-
-        var account = await GetByIdAsync(id);
-        if (account != null)
+        using var log = MethodLoggingService.Begin();
+        try
         {
-            account.NeedsSync = false;
+            var db = await _context.GetConnectionAsync();
 
-            MethodLoggingService.Write(
-              $"Marking {id} as NeedsSync = false");
+            var account = await GetByIdAsync(id);
+            if (account != null)
+            {
+                account.NeedsSync = false;
 
-            await db.UpdateAsync(account);
+                await db.UpdateAsync(account);
+            }
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
         }
     }
     public async Task<List<Account>> GetAllAsync()
     {
-        var db = await Database();
-
-        var retAccounts = await db.Table<Account>()
-            .Where(a => !a.Deleted)
-            .OrderBy(a => a.DisplayOrder)
-            .ToListAsync();
-
-        foreach (var account in retAccounts)
+        using var log = MethodLoggingService.Begin();
+        try
         {
-            MethodLoggingService.Write(
-              $"{JsonSerializer.Serialize(account)}");
+            var db = await Database();
+
+            return await db.Table<Account>()
+                .Where(a => !a.Deleted)
+                .OrderBy(a => a.DisplayOrder)
+                .ToListAsync();
         }
-
-        return retAccounts;
-
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 
     public async Task UpsertAsync(Account account)
     {
-        var db = await Database();
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var db = await Database();
 
-        MethodLoggingService.Write(
-          $"UpsertAccount Account: {JsonSerializer.Serialize(account)}");
-
-        await db.InsertOrReplaceAsync(account);
+            await db.InsertOrReplaceAsync(account);
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 
     private async Task<SQLiteAsyncConnection> Database()
     {
-        var db = await _context.GetConnectionAsync();
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var db = await _context.GetConnectionAsync();
 
-        await db.CreateTableAsync<Account>();
+            await db.CreateTableAsync<Account>();
 
-        return db;
+            return db;
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 
     public async Task<List<Account>> GetActiveAsync()
     {
-        var db = await Database();
-
-        var retAccounts = await db.Table<Account>()
-            .Where(a => !a.Deleted && !a.Archived)
-            .OrderBy(a => a.DisplayOrder)
-            .ToListAsync();
-
-        foreach (var account in retAccounts)
+        using var log = MethodLoggingService.Begin();
+        try
         {
-            MethodLoggingService.Write(
-              $"{JsonSerializer.Serialize(account)}");
-        }
+            var db = await Database();
 
-        return retAccounts;
+            return await db.Table<Account>()
+                .Where(a => !a.Deleted && !a.Archived)
+                .OrderBy(a => a.DisplayOrder)
+                .ToListAsync();
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
     public async Task<Account?> GetByIdAsync(Guid id)
     {
-        var db = await Database();
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var db = await Database();
 
-        var retAccount = await db.Table<Account>()
-                       .FirstOrDefaultAsync(a => a.Id == id &&
-            !a.Deleted);
-
-        MethodLoggingService.Write(
-          $"Account {id}: {JsonSerializer.Serialize(retAccount)}");
-
-        return retAccount;
+            return await db.Table<Account>()
+                           .FirstOrDefaultAsync(a => a.Id == id &&
+                !a.Deleted);
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 
     public async Task AddAsync(Account account)
     {
-        var db = await Database();
-
-        if (account.Id == Guid.Empty)
+        using var log = MethodLoggingService.Begin();
+        try
         {
-            account.Id = Guid.NewGuid();
-            account.DisplayOrder = await db.Table<Account>().CountAsync() + 1;
+            var db = await Database();
+
+            if (account.Id == Guid.Empty)
+            {
+                account.Id = Guid.NewGuid();
+                account.DisplayOrder = await db.Table<Account>().CountAsync() + 1;
+            }
+
+            await db.InsertAsync(account);
         }
-
-        MethodLoggingService.Write(
-            $"Adding Account: {JsonSerializer.Serialize(account)}");
-
-        await db.InsertAsync(account);
-
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 
     public async Task UpdateAsync(Account account)
     {
-        var db = await Database();
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var db = await Database();
 
-        MethodLoggingService.Write(
-            $"Updating Account: {JsonSerializer.Serialize(account)}");
-
-        await db.UpdateAsync(account);
-
+            await db.UpdateAsync(account);
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 
     public async Task DeleteAsync(Account account)
     {
-        var db = await Database();
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var db = await Database();
 
-        MethodLoggingService.Write(
-            $"Marking Account as Deleted: {JsonSerializer.Serialize(account)}");
-
-        await db.UpdateAsync(account);
+            await db.UpdateAsync(account);
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 }

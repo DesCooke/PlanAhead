@@ -9,12 +9,10 @@ using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using static System.Collections.Specialized.BitVector32;
-using PlanAhead.Core.MethodLogging;
-
+using PlanAhead.Core.Logging;
 
 namespace PlanAhead.Infrastructure.Authentication;
 
-[MethodLogging]
 public class AuthenticationService : IAuthenticationService
 {
     private readonly ISupabaseClientProvider _provider;
@@ -30,116 +28,187 @@ public class AuthenticationService : IAuthenticationService
         _logService = logService;
     }
 
-
     public async Task<Supabase.Gotrue.Session?> LoginAsync(
         string email,
         string password)
     {
-        var client = await _provider.GetClientAsync();
-
-        var session = await client.Auth.SignIn(email, password);
-        if (session != null)
+        using var log = MethodLoggingService.Begin();
+        try
         {
-            var json = JsonSerializer.Serialize(session);
-            await _secureStorageService.SetAsync(
-                "supabase-session",
-                json);            
+            var client = await _provider.GetClientAsync();
+
+            var session = await client.Auth.SignIn(email, password);
+
+            if (session != null)
+            {
+                await _secureStorageService.SetAsync(
+                    "supabase-session",
+                    JsonSerializer.Serialize(session));
+            }
+
+            return session;
         }
-        return session;
-       
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 
     public async Task<User?> GetCurrentUserAsync()
     {
-        var client = await _provider.GetClientAsync();
-        return client.Auth.CurrentUser;
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var client = await _provider.GetClientAsync();
+            return client.Auth.CurrentUser;
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 
     public async Task LogoutAsync()
     {
-        var client = await _provider.GetClientAsync();
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var client = await _provider.GetClientAsync();
 
-        await client.Auth.SignOut();
+            await client.Auth.SignOut();
 
-        _secureStorageService.Remove("supabase-session");
+            _secureStorageService.Remove("supabase-session");
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 
     public async Task<bool> RegisterAsync(
         string email,
         string password)
     {
-        var client = await _provider.GetClientAsync();
-
-        var session = await client.Auth.SignUp(email, password);
-
-        if (session != null)
+        using var log = MethodLoggingService.Begin();
+        try
         {
-            await _secureStorageService.SetAsync(
-                "supabase-session",
-                JsonSerializer.Serialize(session));
-        }
+            var client = await _provider.GetClientAsync();
 
-        return session?.User != null;
+            var session = await client.Auth.SignUp(email, password);
+
+            if (session != null)
+            {
+                await _secureStorageService.SetAsync(
+                    "supabase-session",
+                    JsonSerializer.Serialize(session));
+            }
+
+            return session?.User != null;
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 
     public async Task<bool> IsLoggedInAsync()
     {
-        var client = await _provider.GetClientAsync();
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var client = await _provider.GetClientAsync();
 
-        MethodLoggingService.Write($"  CurrentUser    : {client.Auth.CurrentUser?.Email}");
+            MethodLoggingService.Write($"CurrentUser    : {client.Auth.CurrentUser?.Email}");
+            MethodLoggingService.Write($"CurrentSession : {client.Auth.CurrentSession != null}");
 
-        var retval = client.Auth.CurrentUser != null;
-
-        MethodLoggingService.Write($"  retval : {retval}");
-
-        return retval;
+            return client.Auth.CurrentUser != null;
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 
     public async Task<string?> GetCurrentUserIdAsync()
     {
-        var client = await _provider.GetClientAsync();
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var client = await _provider.GetClientAsync();
 
-        return client.Auth.CurrentUser?.Id;
+            return client.Auth.CurrentUser?.Id;
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 
     public async Task<string?> GetCurrentUserEmailAsync()
     {
-        var client = await _provider.GetClientAsync();
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var client = await _provider.GetClientAsync();
 
-        return client.Auth.CurrentUser?.Email;
+            return client.Auth.CurrentUser?.Email;
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 
     public async Task EnsureSessionAsync()
     {
-        var client = await _provider.GetClientAsync();
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var client = await _provider.GetClientAsync();
 
-        var session = client.Auth.CurrentSession;
+            var session = client.Auth.CurrentSession;
 
-        if (session == null)
-            throw new Exception("Not logged in.");
+            if (session == null)
+                throw new Exception("Not logged in.");
 
-        var newSession = await client.Auth.SetSession(
-            session.AccessToken!,
-            session.RefreshToken!);
+            var newSession = await client.Auth.SetSession(
+                session.AccessToken!,
+                session.RefreshToken!);
 
-        await _secureStorageService.SetAsync(
-            "supabase-session",
-            JsonSerializer.Serialize(newSession));
+            await _secureStorageService.SetAsync(
+                "supabase-session",
+                JsonSerializer.Serialize(newSession));
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 
     public async Task<bool> RestoreSessionAsync()
     {
-        var json = await _secureStorageService.GetAsync("supabase-session");
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var json = await _secureStorageService.GetAsync("supabase-session");
 
-        if (string.IsNullOrWhiteSpace(json))
-            return false;
+            if (string.IsNullOrWhiteSpace(json))
+                return false;
 
-        var session = JsonSerializer.Deserialize<Session>(json);
+            var session = JsonSerializer.Deserialize<Session>(json);
 
-        if (session == null || session.AccessToken==null || session.RefreshToken==null)
-            return false;
+            if (session == null || session.AccessToken == null || session.RefreshToken == null)
+                return false;
 
-        var client = await _provider.GetClientAsync();
+            var client = await _provider.GetClientAsync();
 
             var newSession = await client.Auth.SetSession(
                 session.AccessToken,
@@ -148,6 +217,12 @@ public class AuthenticationService : IAuthenticationService
             await _secureStorageService.SetAsync(
                 "supabase-session",
                 JsonSerializer.Serialize(newSession));
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
         return true;
     }
 

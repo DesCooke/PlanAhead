@@ -3,10 +3,9 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using PlanAhead.Core.Constants;
 using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.Logging;
 using PlanAhead.Core.Messaging;
-using PlanAhead.Core.MethodLogging;
 using PlanAhead.Infrastructure.Authentication;
-using PlanAhead.Infrastructure.Logging;
 using PlanAhead.Infrastructure.Repositories;
 using PlanAhead.Infrastructure.Sync;
 using PlanAhead.Interfaces;
@@ -42,6 +41,7 @@ public partial class DashboardViewModel : BaseViewModel
     private readonly IAuthenticationService _authenticationService;
     private readonly IApplicationStartupService _startupService;
     private readonly ISyncService _syncService;
+    private readonly ILogService _logService;
     private readonly ISyncStateService _syncStateService;
 
 
@@ -54,9 +54,8 @@ public partial class DashboardViewModel : BaseViewModel
         IApplicationSettingsService settings, 
         ISyncService syncService,
         ISyncStatusService syncStatusService, 
-        ISyncStateService syncStateService,
-        ILogService logService)
-        : base(navigation, dialogs, logService)
+        ILogService logService,
+        ISyncStateService syncStateService): base (navigation, dialogs)
     {
         _repository = repository;
         _settings = settings;
@@ -66,6 +65,7 @@ public partial class DashboardViewModel : BaseViewModel
         _startupService = startupService;
         _syncService = syncService;
         _syncStatusService = syncStatusService;
+        _logService = logService;
         _syncStateService = syncStateService;
 
         _syncStatusService.PropertyChanged += SyncStatusChanged;
@@ -80,39 +80,46 @@ public partial class DashboardViewModel : BaseViewModel
             OnPropertyChanged(nameof(IsSyncButtonEnabled));
         }
     }
-    [RelayCommand(CanExecute = nameof(CanSync), FlowExceptionsToTaskScheduler = true)]
+    [RelayCommand(CanExecute = nameof(CanSync))]
     private async Task SyncAsync()
     {
-        MethodLoggingService.Write($"  Manual Sync starts");
-        var userIdString = await _authenticationService.GetCurrentUserIdAsync();
-        if (userIdString != null)
+        using var log = MethodLoggingService.Begin();
+        try
         {
-            var userId = Guid.Parse(userIdString);
-            if (userId != Guid.Empty)
+            var userIdString = await _authenticationService.GetCurrentUserIdAsync();
+            if (userIdString != null)
             {
-                bool hasLocalChanges = await _syncStateService.HasLocalChangesAsync();
-                bool hasRemoteChanges = await _syncStateService.HasRemoteChangesAsync(userId);
-                if (hasLocalChanges || hasRemoteChanges)
+                var userId = Guid.Parse(userIdString);
+                if (userId != Guid.Empty)
                 {
-                    await _syncService.SyncAsync(userId, hasLocalChanges, hasRemoteChanges);
-                    await _syncStateService.UpdateRemoteSyncVersionAsync(userId);
+                    bool hasLocalChanges = await _syncStateService.HasLocalChangesAsync();
+                    bool hasRemoteChanges = await _syncStateService.HasRemoteChangesAsync(userId);
+                    if (hasLocalChanges || hasRemoteChanges)
+                    {
+                        await _syncService.SyncAsync(userId, hasLocalChanges, hasRemoteChanges);
+                        await _syncStateService.UpdateRemoteSyncVersionAsync(userId);
+                    }
+                    else
+                    {
+                        MethodLoggingService.Write("No changes detected");
+                    }
                 }
                 else
                 {
-                    MethodLoggingService.Write($"  No changes detected");
+                    MethodLoggingService.Write("Could not parse userId");
                 }
+
             }
             else
             {
-                MethodLoggingService.Write($"  Could not parse userId");
+                MethodLoggingService.Write("_authenticationService.GetCurrentUserIdAsync did not return a userIdString");
             }
-
         }
-        else
+        catch (Exception ex)
         {
-            MethodLoggingService.Write($"  _authenticationService.GetCurrentUserIdAsync did not return a userIdString");
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
-        MethodLoggingService.Write($"  Manual Sync end");
     }
 
 
@@ -125,17 +132,36 @@ public partial class DashboardViewModel : BaseViewModel
     }
 
 
-    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
+    [RelayCommand]
     private async Task TestRepository()
     {
-        var accounts = await _repository.GetAllAsync();
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var accounts = await _repository.GetAllAsync();
 
-        MethodLoggingService.Write($"  Number of accounts = {accounts.Count}");
+            await _logService.LogAsync(
+                $"Number of accounts = {accounts.Count}");
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
+        }
     }
 
 
     public async Task RefreshAsync()
     {
-        WeakReferenceMessenger.Default.Send(new SyncStatusChangedMessage());
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            WeakReferenceMessenger.Default.Send(new SyncStatusChangedMessage());
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
+        }
     }
 }

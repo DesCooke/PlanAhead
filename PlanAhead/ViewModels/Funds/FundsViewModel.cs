@@ -1,8 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.Logging;
 using PlanAhead.Core.Services.Accounts;
-using PlanAhead.Infrastructure.Logging;
 using PlanAhead.Infrastructure.Sync;
 using PlanAhead.Interfaces;
 using PlanAhead.Services;
@@ -37,9 +37,8 @@ public partial class FundsViewModel : BaseViewModel
         INavigationService navigation,
         INavigationContext navigationContext,
         IDialogService dialogs,
-        ISyncStateService syncStateService,
-        ILogService logService)
-        : base(navigation, dialogs, logService)
+        ISyncStateService syncStateService)
+        : base(navigation, dialogs)
     {
         _accountService = accountService;
         _fundService = fundService;
@@ -49,59 +48,95 @@ public partial class FundsViewModel : BaseViewModel
 
     public async Task InitialiseAsync()
     {
-        if (_navigationContext.Has<Guid>())
+        using var log = MethodLoggingService.Begin();
+        try
         {
-            AccountId = _navigationContext.Get<Guid>();
-            _navigationContext.Clear();
-        }
+            if (_navigationContext.Has<Guid>())
+            {
+                AccountId = _navigationContext.Get<Guid>();
+                _navigationContext.Clear();
+            }
 
-        if (AccountId != Guid.Empty)
+            if (AccountId != Guid.Empty)
+            {
+                await LoadAsync(AccountId);
+            }
+        }
+        catch (Exception ex)
         {
-            await LoadAsync(AccountId);
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
     }
 
-    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
+    [RelayCommand]
     private async Task LoadAsync(Guid accountId)
     {
-        var funds = await _fundService.GetByAccountIdAsync(accountId);
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var funds = await _fundService.GetByAccountIdAsync(accountId);
 
-        Funds.Clear();
-        foreach (var fund in funds)
-            Funds.Add(fund);
+            Funds.Clear();
+            foreach (var fund in funds)
+                Funds.Add(fund);
 
-        RefreshUi(
-            nameof(HasFunds),
-            nameof(HasNoFunds),
-            nameof(Title));
+            RefreshUi(
+                nameof(HasFunds),
+                nameof(HasNoFunds),
+                nameof(Title));
 
-        Title = $"Funds ({Funds.Count})";
+            Title = $"Funds ({Funds.Count})";
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
+        }
     }
 
-    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
+    [RelayCommand]
     private async Task DeleteAsync(Fund fund)
     {
-        var delete =
-            await DialogService.ConfirmAsync(
-                "Delete Fund",
-                $"Delete '{fund.Name}'?");
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var delete =
+                await Dialogs.ConfirmAsync(
+                    "Delete Fund",
+                    $"Delete '{fund.Name}'?");
 
-        if (!delete)
-            return;
+            if (!delete)
+                return;
 
-        await _fundService.DeleteAsync(fund);
+            await _fundService.DeleteAsync(fund);
 
-        await _syncStateService.IncreaseLocalVersion();
+            await _syncStateService.IncreaseLocalVersion();
 
-        await LoadAsync(AccountId);
+            await LoadAsync(AccountId);
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
+        }
     }
 
-    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
+    [RelayCommand]
     private async Task AddAsync()
     {
-        _navigationContext.Set(AccountId);
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            _navigationContext.Set(AccountId);
 
-        await Shell.Current.GoToAsync("FundEditPage");
+            await Shell.Current.GoToAsync("FundEditPage");
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
+        }
     }
 
     partial void OnSelectedFundChanged(Fund? value)
@@ -112,22 +147,40 @@ public partial class FundsViewModel : BaseViewModel
         EditCommand.Execute(value);
     }
 
-    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
+    [RelayCommand]
     private async Task OpenASync(Fund fund)
     {
-        _navigationContext.Set(fund.Id);
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            _navigationContext.Set(fund.Id);
 
-        await Shell.Current.GoToAsync("FundViewPage");
+            await Shell.Current.GoToAsync("FundViewPage");
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
+        }
     }
 
-    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
+    [RelayCommand]
     private async Task EditAsync(Fund fund)
     {
-        _navigationContext.Set(fund);
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            _navigationContext.Set(fund);
 
-        await Shell.Current.GoToAsync("FundEditPage");
+            await Shell.Current.GoToAsync("FundEditPage");
 
-        SelectedFund = null;
+            SelectedFund = null;
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
+        }
     }
 
 }

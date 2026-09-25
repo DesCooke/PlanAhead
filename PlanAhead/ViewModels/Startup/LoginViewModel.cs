@@ -2,8 +2,8 @@
 using CommunityToolkit.Mvvm.Input;
 using PlanAhead;
 using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.Logging;
 using PlanAhead.Infrastructure.Authentication;
-using PlanAhead.Infrastructure.Logging;
 using PlanAhead.Infrastructure.Sync;
 using PlanAhead.Interfaces;
 using PlanAhead.Services;
@@ -19,10 +19,7 @@ public partial class LoginViewModel : BaseViewModel
     private ISyncService _syncService;
     private IAutoSyncService _autoSyncService;
     private ISyncStateService _syncStateService;
-    private ISupabaseClientProvider _provider;
-    private ISecureStorageService _secureStorageService;
-  
-
+    
 
     public LoginViewModel(
         IApplicationSettingsService settings,
@@ -31,19 +28,14 @@ public partial class LoginViewModel : BaseViewModel
         IDialogService dialogs,
         ISyncService syncService,
         IAutoSyncService autoSyncService,
-        ISyncStateService syncStateService,
-        ILogService logService,
-        ISupabaseClientProvider provider,
-        ISecureStorageService secureStorageService)
-        : base(navigation, dialogs, logService)
+        ISyncStateService syncStateService)
+        : base(navigation, dialogs)
     {
         _settings = settings;
         _authenticationService = authenticationService;
         _syncService = syncService;
         _autoSyncService = autoSyncService;
         _syncStateService = syncStateService;
-        _provider = provider;
-        _secureStorageService = secureStorageService;
     }
 
 
@@ -53,9 +45,12 @@ public partial class LoginViewModel : BaseViewModel
     [ObservableProperty]
     private string password = "";
 
-    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
+    [RelayCommand]
     private async Task LoginAsync()
     {
+        using var log = MethodLoggingService.Begin();
+        try
+        {
             var response = await _authenticationService.LoginAsync(Email, Password);
 
             await SecureStorage.Default.SetAsync(
@@ -83,18 +78,36 @@ public partial class LoginViewModel : BaseViewModel
 
 
             await Shell.Current.GoToAsync("//Dashboard");
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
+        }
     }
 
 
     public async Task InitialiseAsync()
     {
-        Email = "";
-        Password = "";
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            Email = "";
+            Password = "";
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
+        }
     }
 
-    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
+    [RelayCommand]
     private async Task RegisterAsync()
     {
+        using var log = MethodLoggingService.Begin();
+        try
+        {
             await _authenticationService.RegisterAsync(
                 Email,
                 Password);
@@ -115,28 +128,63 @@ public partial class LoginViewModel : BaseViewModel
                 "supabase-session",
                 JsonSerializer.Serialize(response));
 
-            await DialogService.ShowMessageAsync(
+            await Dialogs.ShowMessageAsync(
                 "Registration",
                 "Your account has been created and logged in.");
 
             await Shell.Current.GoToAsync("//Dashboard");
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
+        }
     }
 
-    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
+    [RelayCommand]
     private async Task OfflineOnlyAsync()
     {
-        _settings.SyncMode = PlanAhead.Core.Models.Enums.SyncMode.Offline;
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            _settings.SyncMode = PlanAhead.Core.Models.Enums.SyncMode.Offline;
 
-        await Shell.Current.GoToAsync("//Dashboard");
+            await Shell.Current.GoToAsync("//Dashboard");
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
+        }
     }
 
-    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
+    [RelayCommand]
     private async Task GoogleAsync()
     {
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
+        }
     }
 
-    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
+    [RelayCommand]
     private async Task CancelAsync()
     {
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
+        }
     }
 }

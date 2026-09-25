@@ -2,20 +2,11 @@
 using Microsoft.Extensions.Logging;
 using PlanAhead.Core.Extensions;
 using PlanAhead.Core.Interfaces.Services;
-using PlanAhead.Core.MethodLogging;
 using PlanAhead.Extensions;
 using PlanAhead.Infrastructure.Authentication;
 using PlanAhead.Infrastructure.Extensions;
-using PlanAhead.Infrastructure.Logging;
+using PlanAhead.Core.Logging;
 using Supabase;
-using PlanAhead.Interfaces;
-using System.Diagnostics;
-
-
-#if ANDROID
-using Android.Text;
-using Microsoft.Maui.Handlers;
-#endif
 
 namespace PlanAhead
 {
@@ -31,7 +22,6 @@ namespace PlanAhead
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                    fonts.AddFont("cour.ttf", "CourierNew");
                 });
 
             string dbPath = Path.Combine(
@@ -60,54 +50,9 @@ namespace PlanAhead
             builder.Logging.AddDebug();
 #endif
 
-#if ANDROID
-            EditorHandler.Mapper.AppendToMapping("DiagnosticsEditor", (handler, view) =>
-            {
-                var editor = handler.PlatformView;
-
-                // Multiline, but don't wrap lines horizontally
-                editor.SetSingleLine(false);
-                editor.SetHorizontallyScrolling(true);
-
-                // Prevent Android from introducing its own line wrapping
-                editor.SetMaxLines(int.MaxValue);
-                editor.Ellipsize = null;
-
-                // Use the simplest text layout
-                editor.BreakStrategy = BreakStrategy.Simple;
-
-                // Enable scrolling
-                editor.VerticalScrollBarEnabled = true;
-                editor.HorizontalScrollBarEnabled = true;
-            });
-#endif
             var app = builder.Build();
 
-            var logService =
-                app.Services.GetRequiredService<ILogService>();
-
-            var dialogService =
-                app.Services.GetRequiredService<IDialogService>();
-
-            MethodLoggingService.SetExceptionHandler(
-                async exception =>
-                {
-                    try
-                    {
-                        await MainThread.InvokeOnMainThreadAsync(
-                            async () =>
-                            {
-                                await dialogService.ShowException(exception);
-                            });
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine(
-                            $"Exception displaying error dialog: {ex}");
-                    }
-                });
-            
-            logService.ClearAsync();
+            var logService = app.Services.GetRequiredService<ILogService>();
 
             MethodLoggingService.Configure(logService);
 

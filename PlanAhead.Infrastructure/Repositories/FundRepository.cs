@@ -1,13 +1,11 @@
 ﻿using PlanAhead.Core.Interfaces.Repositories;
+using PlanAhead.Core.Logging;
 using PlanAhead.Core.Models.Domain;
 using PlanAhead.Infrastructure.DB.SQLite;
-using PlanAhead.Infrastructure.Logging;
 using SQLite;
-using PlanAhead.Core.MethodLogging;
 
 namespace PlanAhead.Infrastructure.Repositories;
 
-[MethodLogging]
 public class FundRepository : IFundRepository
 {
     private readonly SQLiteContext _context;
@@ -19,94 +17,175 @@ public class FundRepository : IFundRepository
 
     private async Task<SQLiteAsyncConnection> Database()
     {
-        var db = await _context.GetConnectionAsync();
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var db = await _context.GetConnectionAsync();
 
-        await db.CreateTableAsync<Fund>();
+            await db.CreateTableAsync<Fund>();
 
-        return db;
+            return db;
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 
     public async Task<List<Fund>> GetAllAsync()
     {
-        var db = await Database();
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var db = await Database();
 
-        return await db.Table<Fund>()
-            .Where(f => !f.Deleted)
-            .OrderBy(f => f.DisplayOrder)
-            .ToListAsync();
+            return await db.Table<Fund>()
+                .Where(f => !f.Deleted)
+                .OrderBy(f => f.DisplayOrder)
+                .ToListAsync();
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 
     public async Task<Fund?> GetByIdAsync(Guid id)
     {
-        var db = await Database();
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var db = await Database();
 
-        return await db.Table<Fund>()
-            .FirstOrDefaultAsync(f => f.Id == id && !f.Deleted);
+            return await db.Table<Fund>()
+                .FirstOrDefaultAsync(f => f.Id == id && !f.Deleted);
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 
     public async Task<List<Fund>> GetByAccountIdAsync(Guid accountId)
     {
-        var db = await Database();
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var db = await Database();
 
-        return await db.Table<Fund>()
-            .Where(f => f.AccountId == accountId && !f.Deleted)
-            .OrderBy(f => f.DisplayOrder)
-            .ToListAsync();
+            return await db.Table<Fund>()
+                .Where(f => f.AccountId == accountId && !f.Deleted)
+                .OrderBy(f => f.DisplayOrder)
+                .ToListAsync();
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 
     public async Task AddAsync(Fund fund)
     {
-        var db = await Database();
-
-        if (fund.Id == Guid.Empty)
+        using var log = MethodLoggingService.Begin();
+        try
         {
-            fund.Id = Guid.NewGuid();
+            var db = await Database();
 
-            // Put new funds at the end of the list - only for
-            // actually new funds - not synchronised
-            fund.DisplayOrder =
-                await db.Table<Fund>()
-                        .Where(f => f.AccountId == fund.AccountId && !f.Deleted)
-                        .CountAsync() + 1;
+            if (fund.Id == Guid.Empty)
+            {
+                fund.Id = Guid.NewGuid();
+
+                // Put new funds at the end of the list - only for
+                // actually new funds - not synchronised
+                fund.DisplayOrder =
+                    await db.Table<Fund>()
+                            .Where(f => f.AccountId == fund.AccountId && !f.Deleted)
+                            .CountAsync() + 1;
+            }
+
+            await db.InsertAsync(fund);
         }
-
-        await db.InsertAsync(fund);
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 
     public async Task UpdateAsync(Fund fund)
     {
-        var db = await Database();
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var db = await Database();
 
-        await db.UpdateAsync(fund);
+            await db.UpdateAsync(fund);
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 
     public async Task<List<Fund>> GetPendingSyncAsync()
     {
-        var db = await Database();
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var db = await Database();
 
-        return await db.Table<Fund>()
-            .Where(a => a.NeedsSync)
-            .ToListAsync();
+            return await db.Table<Fund>()
+                .Where(a => a.NeedsSync)
+                .ToListAsync();
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 
     public async Task MarkSyncedAsync(Guid id)
     {
-        var db = await Database();
-        if (db != null)
+        using var log = MethodLoggingService.Begin();
+        try
         {
-            var fund = await GetByIdAsync(id);
-            if (fund != null)
+            var db = await Database();
+            if (db != null)
             {
-                fund.NeedsSync = false;
+                var fund = await GetByIdAsync(id);
+                if (fund != null)
+                {
+                    fund.NeedsSync = false;
 
-                await db.UpdateAsync(fund);
+                    await db.UpdateAsync(fund);
+                }
             }
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
         }
     }
     public async Task DeleteAsync(Fund fund)
     {
-        var db = await Database();
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var db = await Database();
 
-        await db.UpdateAsync(fund);
+            await db.UpdateAsync(fund);
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 }

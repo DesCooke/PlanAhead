@@ -1,11 +1,9 @@
 ﻿using PlanAhead.Core.Interfaces.Repositories;
 using PlanAhead.Core.Interfaces.Services;
-using PlanAhead.Core.MethodLogging;
 using PlanAhead.Core.Models.Domain;
 
 namespace PlanAhead.Core.Services.Ledger;
 
-[MethodLogging]
 public class LedgerService : ILedgerService
 {
     private readonly ILedgerEntryRepository _repository;

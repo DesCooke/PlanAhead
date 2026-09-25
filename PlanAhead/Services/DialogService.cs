@@ -1,13 +1,11 @@
 ﻿using CommunityToolkit.Maui.Extensions;
 using PlanAhead.Core.Interfaces.Services;
-using PlanAhead.Core.MethodLogging;
 using PlanAhead.Interfaces;
 using PlanAhead.Views.Popups;
-using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace PlanAhead.Services;
 
-[MethodLogging]
 public class DialogService
     : IDialogService
 {
@@ -48,7 +46,7 @@ public class DialogService
         string title,
         string message)
     {
-        MethodLoggingService.Write($"  Message shown: {title}, {message}");
+        _logService.LogAsync($"  Message shown: {title}, {message}");
 
         var page = GetCurrentPage(Application.Current?.Windows[0].Page);
 
@@ -62,10 +60,36 @@ public class DialogService
         return Task.CompletedTask;
     }
 
+    public Task ShowExceptionAsync(
+        Exception ex,
+        [CallerFilePath] string filePath = "")
+    {
+        const string projectName = "PlanAhead";
+
+        var projectIndex = filePath.IndexOf(
+            projectName,
+            StringComparison.OrdinalIgnoreCase);
+
+        var relativePath = projectIndex >= 0
+            ? filePath[projectIndex..]
+            : filePath;
+
+        var page = GetCurrentPage(Application.Current?.Windows[0].Page);
+
+        if (page != null)
+        {
+            return page.DisplayAlertAsync(
+            $"Exception in {relativePath}",
+            ex.Message,
+            "OK");
+        }
+        return Task.CompletedTask;
+    }
+
     public Task ShowErrorAsync(
         string message)
     {
-        MethodLoggingService.Write($"  Error shown: {message}");
+        _logService.LogAsync($"  Error shown: {message}");
 
         var page = GetCurrentPage(Application.Current?.Windows[0].Page);
 
@@ -79,41 +103,11 @@ public class DialogService
         return Task.CompletedTask;
     }
 
-    public Task ShowException(Exception ex)
-    {
-        MainThread.BeginInvokeOnMainThread(async () =>
-        {
-            try
-            {
-                // Allow the current page lifecycle/navigation
-                // to finish before attempting the alert.
-                await Task.Yield();
-
-                var page =
-                    GetCurrentPage(
-                        Application.Current?.Windows[0].Page);
-
-                if (page == null)
-                    return;
-
-                await page.DisplayAlertAsync(
-                    $"Exception: {ex.Message}",
-                    $"Call Stack: {ex.StackTrace}",
-                    "OK");
-            }
-            catch (Exception alertException)
-            {
-                Debug.WriteLine(
-                    $"DisplayAlertAsync failed: {alertException}");
-            }
-        });
-        return Task.CompletedTask;
-    }
     public async Task<bool> ConfirmAsync(
         string title,
         string message)
     {
-        MethodLoggingService.Write($"  Confirmation shown: {title} {message}");
+        await _logService.LogAsync($"  Confirmation shown: {title} {message}");
 
         var page = GetCurrentPage(Application.Current?.Windows[0].Page);
 

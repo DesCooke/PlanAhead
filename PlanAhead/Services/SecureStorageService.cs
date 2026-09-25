@@ -1,6 +1,5 @@
 ﻿using Microsoft.Maui.Storage;
 using PlanAhead.Core.Interfaces.Services;
-using PlanAhead.Core.MethodLogging;
 using PlanAhead.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -9,7 +8,6 @@ using System.Text;
 namespace PlanAhead.Services
 {
 
-    [MethodLogging]
     public class SecureStorageService : ISecureStorageService
     {
         public Task SetAsync(string key, string value) =>

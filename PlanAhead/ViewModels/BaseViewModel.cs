@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
-using PlanAhead.Core.Interfaces.Services;
-using PlanAhead.Infrastructure.Logging;
+using PlanAhead.Core.Logging;
 using PlanAhead.Interfaces;
 
 namespace PlanAhead.ViewModels;
@@ -8,17 +7,14 @@ namespace PlanAhead.ViewModels;
 public abstract partial class BaseViewModel : ObservableObject
 {
     protected INavigationService Navigation { get; }
-    protected IDialogService DialogService { get; }
-    protected ILogService LogService { get; }
+    protected IDialogService Dialogs { get; }
 
     protected BaseViewModel(
         INavigationService navigation,
-        IDialogService dialogService, 
-        ILogService logService)
+        IDialogService dialogs)
     {
         Navigation = navigation;
-        DialogService = dialogService;
-        LogService = logService;
+        Dialogs = dialogs;
     }
 
     [ObservableProperty]
@@ -40,17 +36,26 @@ public abstract partial class BaseViewModel : ObservableObject
 
     protected async Task ExecuteBusyAsync(Func<Task> action)
     {
-        if (IsBusy)
-            return;
-
+        using var log = MethodLoggingService.Begin();
         try
         {
-            IsBusy = true;
-            await action();
+            if (IsBusy)
+                return;
+
+            try
+            {
+                IsBusy = true;
+                await action();
+            }
+            finally
+            {
+                IsBusy = false;
+            }
         }
-        finally
+        catch (Exception ex)
         {
-            IsBusy = false;
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
     }
 }

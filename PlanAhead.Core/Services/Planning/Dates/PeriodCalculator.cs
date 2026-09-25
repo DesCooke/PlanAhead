@@ -1,10 +1,8 @@
 ﻿using PlanAhead.Core.Interfaces.Services;
-using PlanAhead.Core.MethodLogging;
 using PlanAhead.Core.Models.Enums;
 
 namespace PlanAhead.Core.Services.Planning.Dates;
 
-[MethodLogging]
 public class PeriodCalculator : IPeriodCalculator
 {
     public DateOnly GetPeriodStart(

@@ -4,11 +4,9 @@ using PlanAhead.Infrastructure.Logging;
 using PlanAhead.Infrastructure.Repositories;
 using Supabase;
 using Supabase.Postgrest.Models;
-using PlanAhead.Core.MethodLogging;
 
 namespace PlanAhead.Infrastructure.DB;
 
-[MethodLogging]
 public abstract class EntitySynchroniser<TEntity>
     where TEntity : SyncEntity
 {

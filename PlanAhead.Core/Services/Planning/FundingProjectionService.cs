@@ -1,11 +1,10 @@
 ﻿using PlanAhead.Core.Interfaces.Services;
-using PlanAhead.Core.MethodLogging;
+using PlanAhead.Core.Logging;
 using PlanAhead.Core.Models.Domain;
 using PlanAhead.Core.Models.Projections;
 
 namespace PlanAhead.Core.Services.Planning;
 
-[MethodLogging]
 public class FundingProjectionService : IFundingProjectionService
 {
     private readonly IPeriodCalculator _periodCalculator;
@@ -16,11 +15,11 @@ public class FundingProjectionService : IFundingProjectionService
         _periodCalculator = periodCalculator;
     }
 
-    public IEnumerable<ProjectionEntry> Generate(
-        Fund fund,
-        IEnumerable<FundingRule> rules,
-        DateOnly from,
-        DateOnly to)
+    private IEnumerable<ProjectionEntry> GenerateInternal(
+    Fund fund,
+    IEnumerable<FundingRule> rules,
+    DateOnly from,
+    DateOnly to)
     {
         var orderedRules = rules
             .OrderBy(r => r.StartDate)
@@ -46,6 +45,25 @@ public class FundingProjectionService : IFundingProjectionService
                 Amount = rule.Amount,
                 Type = ProjectionType.Funding
             };
+        }
+    }
+
+    public IEnumerable<ProjectionEntry> Generate(
+        Fund fund,
+        IEnumerable<FundingRule> rules,
+        DateOnly from,
+        DateOnly to)
+    {
+        using var log = MethodLoggingService.Begin();
+
+        try
+        {
+            return GenerateInternal(fund, rules, from, to).ToList();
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
         }
     }
 

@@ -1,10 +1,10 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.Logging;
 using PlanAhead.Core.Models.Domain;
 using PlanAhead.Core.Services.Accounts;
 using PlanAhead.Core.Services.Funds;
-using PlanAhead.Infrastructure.Logging;
 using PlanAhead.Infrastructure.Sync;
 using PlanAhead.Interfaces;
 using PlanAhead.Services;
@@ -12,7 +12,7 @@ using PlanAhead.Views.Accounts;
 using System.Collections.ObjectModel;
 
 namespace PlanAhead.ViewModels.Accounts;
-
+    
 public partial class AccountsViewModel : BaseViewModel
 {
     private readonly IAccountService _accountService;
@@ -35,9 +35,8 @@ public partial class AccountsViewModel : BaseViewModel
         INavigationContext navigationContext,
         IAccountHealthService accountHealthService,
         IDialogService dialogs,
-        ISyncStateService syncStateService,
-        ILogService logService)
-        : base(navigation, dialogs, logService)
+        ISyncStateService syncStateService)
+        : base(navigation, dialogs)
     {
         _accountService = accountService;
         _navigationContext = navigationContext;
@@ -50,71 +49,116 @@ public partial class AccountsViewModel : BaseViewModel
         await LoadAsync();
     }
 
-    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
+    [RelayCommand]
     private async Task LoadAsync()
     {
-        var accounts = await _accountService.GetAllAsync();
-
-        Accounts.Clear();
-
-        foreach (var account in accounts)
+        using var log = MethodLoggingService.Begin();
+        try
         {
-            var status = await _accountHealthService.GetStatusAsync(account);
+            var accounts = await _accountService.GetAllAsync();
 
-            Accounts.Add(new AccountListItem
+            Accounts.Clear();
+
+            foreach (var account in accounts)
             {
-                Account = account,
-                Status = status
-            });
+                var status = await _accountHealthService.GetStatusAsync(account);
+
+                Accounts.Add(new AccountListItem
+                {
+                    Account = account,
+                    Status = status
+                });
+            }
+
+            RefreshUi(
+                nameof(HasAccounts),
+                nameof(HasNoAccounts),
+                nameof(Title));
+
+            Title = $"Accounts ({Accounts.Count})";
         }
-
-        RefreshUi(
-            nameof(HasAccounts),
-            nameof(HasNoAccounts),
-            nameof(Title));
-
-        Title = $"Accounts ({Accounts.Count})";
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
+        }
     }
 
 
-    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
+    [RelayCommand]
     private async Task DeleteAsync(AccountListItem accountListItem)
     {
-        var delete =
-            await DialogService.ConfirmAsync(
-                "Delete Account",
-                $"Delete '{accountListItem.Account.Name}'?");
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var delete =
+                await Dialogs.ConfirmAsync(
+                    "Delete Account",
+                    $"Delete '{accountListItem.Account.Name}'?");
 
-        if (!delete)
-            return;
+            if (!delete)
+                return;
 
-        await _accountService.DeleteAsync(accountListItem.Account);
+            await _accountService.DeleteAsync(accountListItem.Account);
 
-        await _syncStateService.IncreaseLocalVersion();
+            await _syncStateService.IncreaseLocalVersion();
 
-        await InitialiseAsync();
+            await InitialiseAsync();
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
+        }
     }
 
-    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
+    [RelayCommand]
     private async Task AddAsync()
     {
-        await Shell.Current.GoToAsync("AccountEditPage");
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            await Shell.Current.GoToAsync("AccountEditPage");
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
+        }
     }
 
-    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
+    [RelayCommand]
     private async Task OpenAsync(AccountListItem accountListItem)
     {
-        _navigationContext.Set(accountListItem.Account.Id);
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            _navigationContext.Set(accountListItem.Account.Id);
 
-        await Shell.Current.GoToAsync("AccountViewPage");
+            await Shell.Current.GoToAsync("AccountViewPage");
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
+        }
     }
 
-    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
+    [RelayCommand]
     private async Task EditAsync(AccountListItem accountListItem)
     {
-        _navigationContext.Set(accountListItem.Account.Id);
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            _navigationContext.Set(accountListItem.Account.Id);
 
-        await Shell.Current.GoToAsync("AccountEditPage");
+            await Shell.Current.GoToAsync("AccountEditPage");
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
+        }
     }
 
 }

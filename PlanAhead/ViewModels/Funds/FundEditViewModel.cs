@@ -1,9 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.Logging;
 using PlanAhead.Core.Models.Enums;
 using PlanAhead.Core.Services.Accounts;
-using PlanAhead.Infrastructure.Logging;
 using PlanAhead.Infrastructure.Sync;
 using PlanAhead.Interfaces;
 
@@ -46,9 +46,8 @@ public partial class FundEditViewModel : BaseViewModel
         INavigationService navigation,
         INavigationContext navigationContext,
         IDialogService dialogs,
-        ISyncStateService syncStateService,
-        ILogService logService)
-        : base(navigation, dialogs, logService)
+        ISyncStateService syncStateService)
+        : base(navigation, dialogs)
     {
         _fundService = fundService;
         _navigationContext = navigationContext;
@@ -59,33 +58,42 @@ public partial class FundEditViewModel : BaseViewModel
 
     public async Task InitialiseAsync()
     {
-        // has a guid - it is the Account Id - it is a new fund
-        if (_navigationContext.Has<Guid>())
+        using var log = MethodLoggingService.Begin();
+        try
         {
-            AccountId = _navigationContext.Get<Guid>();
+            // has a guid - it is the Account Id - it is a new fund
+            if (_navigationContext.Has<Guid>())
+            {
+                AccountId = _navigationContext.Get<Guid>();
 
-            Title = "New Fund";
+                Title = "New Fund";
 
-            Id = Guid.Empty;
-            Name = "";
-            Description = "";
-            Notes = "";
-            IconId = "";
+                Id = Guid.Empty;
+                Name = "";
+                Description = "";
+                Notes = "";
+                IconId = "";
 
-            return;
+                return;
+            }
+
+            Title = "Change Fund";
+
+            //
+            // Existing Fund
+            //
+
+            var fund = _navigationContext.Get<Fund>();
+            if(fund!=null)
+                Load(fund);
+
+            _navigationContext.Clear();
         }
-
-        Title = "Change Fund";
-
-        //
-        // Existing Fund
-        //
-
-        var fund = _navigationContext.Get<Fund>();
-        if (fund != null)
-            Load(fund);
-
-        _navigationContext.Clear();
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
+        }
     }
 
     private void Load(Fund fund)
@@ -126,32 +134,52 @@ public partial class FundEditViewModel : BaseViewModel
         return null;
     }
 
-    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
+    [RelayCommand]
     private async Task SaveAsync()
     {
-        var error = Validate();
-        if (error != null)
+        using var log = MethodLoggingService.Begin();
+        try
         {
-            await DialogService.ShowMessageAsync(
-                "Validation",
-                error);
+            var error = Validate();
+            if (error != null)
+            {
+                await Dialogs.ShowMessageAsync(
+                    "Validation",
+                    error);
 
-            return;
+                return;
+            }
+
+            if (Id == Guid.Empty)
+                await _fundService.AddAsync(Build());
+            else
+                await _fundService.UpdateAsync(Build());
+
+            await _syncStateService.IncreaseLocalVersion();
+
+            await Navigation.GoBackAsync();
         }
-
-        if (Id == Guid.Empty)
-            await _fundService.AddAsync(Build());
-        else
-            await _fundService.UpdateAsync(Build());
-
-        await _syncStateService.IncreaseLocalVersion();
-
-        await Navigation.GoBackAsync();
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
+        }
     }
 
-    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
+    [RelayCommand]
     private Task CancelAsync()
     {
-        return Navigation.GoBackAsync();
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            return Navigation.GoBackAsync();
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            Dialogs.ShowExceptionAsync(ex);
+        }
+        return Task.CompletedTask;
+            
     }
 }

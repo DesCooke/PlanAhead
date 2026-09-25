@@ -1,9 +1,9 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.Logging;
 using PlanAhead.Core.Models.Domain;
 using PlanAhead.Core.Models.Enums;
-using PlanAhead.Infrastructure.Logging;
 using PlanAhead.Infrastructure.Sync;
 using PlanAhead.Interfaces;
 using PlanAhead.Views.Accounts;
@@ -56,9 +56,8 @@ public partial class AccountViewViewModel : BaseViewModel
         INavigationService navigation,
         INavigationContext navigationContext,
         IDialogService dialogs,
-        ISyncStateService syncStateService,
-        ILogService logService)
-        : base(navigation, dialogs, logService)
+        ISyncStateService syncStateService)
+        : base(navigation, dialogs)
     {
         _accountService = accountService;
         _navigationContext = navigationContext;
@@ -104,60 +103,105 @@ public partial class AccountViewViewModel : BaseViewModel
     }
 
 
-    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
+    [RelayCommand]
     public async Task LoadAsync()
     {
-        if (Id == Guid.Empty)
+        using var log = MethodLoggingService.Begin();
+        try
         {
-            Id = _navigationContext.Get<Guid>();
-            _navigationContext.Clear();
+            if (Id == Guid.Empty)
+            {
+                Id = _navigationContext.Get<Guid>();
+                _navigationContext.Clear();
+            }
+
+            var account = await _accountService.GetByIdAsync(Id);
+
+            if (account != null)
+                Load(account);
         }
-
-        var account = await _accountService.GetByIdAsync(Id);
-
-        if (account != null)
-            Load(account);
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
+        }
     }
 
-    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
+    [RelayCommand]
     private async Task EditAsync()
     {
-        _navigationContext.Set(Id);
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            _navigationContext.Set(Id);
 
-        await Shell.Current.GoToAsync("AccountEditPage");
+            await Shell.Current.GoToAsync("AccountEditPage");
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
+        }
     }
 
-    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
+    [RelayCommand]
     private Task CancelAsync()
     {
-        return Navigation.GoBackAsync();
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            return Navigation.GoBackAsync();
+        }
+        catch (Exception ex)
+        {
+            var msg = $"Error in AccountViewViewModel:CancelAsync:{ex.Message}";
+            Dialogs.ShowErrorAsync(msg);
+        }
+        return Task.CompletedTask;
     }
 
-    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
+    [RelayCommand]
     private async Task DeleteAsync()
     {
-        var delete =
-            await DialogService.ConfirmAsync(
-                "Delete Account",
-                $"Delete '{Name}'?");
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var delete =
+                await Dialogs.ConfirmAsync(
+                    "Delete Account",
+                    $"Delete '{Name}'?");
 
-        if (!delete)
-            return;
+            if (!delete)
+                return;
 
-        await _accountService.DeleteAsync(Build());
+            await _accountService.DeleteAsync(Build());
 
-        await _syncStateService.IncreaseLocalVersion();
+            await _syncStateService.IncreaseLocalVersion();
 
-        await Navigation.GoBackAsync();
-
+            await Navigation.GoBackAsync();
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
+        }
     }
 
-    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
+    [RelayCommand]
     private async Task GoToFundsAsync()
     {
-        _navigationContext.Set(Id);
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            _navigationContext.Set(Id);
 
-        await Shell.Current.GoToAsync("FundsPage");
+            await Shell.Current.GoToAsync("FundsPage");
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
+        }
     }
 
 }

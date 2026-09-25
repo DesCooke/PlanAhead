@@ -1,11 +1,10 @@
 ﻿using PlanAhead.Core.Interfaces.Repositories;
 using PlanAhead.Core.Interfaces.Services;
-using PlanAhead.Core.MethodLogging;
+using PlanAhead.Core.Logging;
 using PlanAhead.Core.Models.Projections;
 
 namespace PlanAhead.Core.Services.Planning;
 
-[MethodLogging]
 public class ForecastEngine : IForecastEngine
 {
     private readonly IFundRepository _fundRepository;
@@ -35,56 +34,66 @@ public class ForecastEngine : IForecastEngine
         DateOnly from,
         DateOnly to)
     {
-        var forecast = new Forecast
+        using var log = MethodLoggingService.Begin();
+        try
         {
-            From = from,
-            To = to
-        };
 
-        //
-        // Funding projections
-        //
+            var forecast = new Forecast
+            {
+                From = from,
+                To = to
+            };
 
-        var funds =
-            await _fundRepository.GetByAccountIdAsync(accountId);
+            //
+            // Funding projections
+            //
 
-        foreach (var fund in funds)
-        {
-            var rules =
-                await _fundingRuleRepository
-                    .GetByFundIdAsync(fund.Id);
+            var funds =
+                await _fundRepository.GetByAccountIdAsync(accountId);
+
+            foreach (var fund in funds)
+            {
+                var rules =
+                    await _fundingRuleRepository
+                        .GetByFundIdAsync(fund.Id);
+
+                forecast.Entries.AddRange(
+                    _fundingProjectionService.Generate(
+                        fund,
+                        rules,
+                        from,
+                        to));
+            }
+
+            //
+            // Ledger projections
+            //
+
+            var ledgerEntries =
+                await _ledgerEntryRepository
+                    .GetByAccountIdAsync(accountId);
 
             forecast.Entries.AddRange(
-                _fundingProjectionService.Generate(
-                    fund,
-                    rules,
+                _ledgerProjectionService.Generate(
+                    ledgerEntries,
                     from,
                     to));
+
+            //
+            // Final ordering
+            //
+
+            forecast.Entries = forecast.Entries
+                .OrderBy(e => e.Date)
+                .ThenBy(e => e.Type)
+                .ToList();
+
+            return forecast;
         }
-
-        //
-        // Ledger projections
-        //
-
-        var ledgerEntries =
-            await _ledgerEntryRepository
-                .GetByAccountIdAsync(accountId);
-
-        forecast.Entries.AddRange(
-            _ledgerProjectionService.Generate(
-                ledgerEntries,
-                from,
-                to));
-
-        //
-        // Final ordering
-        //
-
-        forecast.Entries = forecast.Entries
-            .OrderBy(e => e.Date)
-            .ThenBy(e => e.Type)
-            .ToList();
-
-        return forecast;
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 }

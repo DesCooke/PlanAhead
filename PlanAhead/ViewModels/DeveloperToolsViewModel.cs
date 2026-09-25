@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using PlanAhead.Core.Interfaces.Services;
-using PlanAhead.Infrastructure.Logging;
+using PlanAhead.Core.Logging;
 using PlanAhead.Infrastructure.Repositories;
 using PlanAhead.Interfaces;
 
@@ -13,56 +12,90 @@ public partial class DeveloperToolsViewModel : BaseViewModel
 
     public DeveloperToolsViewModel(AccountRepository repository,
         INavigationService navigation,
-        IDialogService dialogs,
-        ILogService logService)
-        : base(navigation, dialogs, logService)
+        IDialogService dialogs): base (navigation, dialogs)
     {
         _repository = repository;
     }
 
-    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
+    [RelayCommand]
     private async Task ShowAllAccounts()
     {
-        var accounts = await _repository.GetAllAsync();
-
-        if (accounts.Count == 0)
+        using var log = MethodLoggingService.Begin();
+        try
         {
-            await DialogService.ShowMessageAsync(
-                "Accounts", "No accounts found.");
+            var accounts = await _repository.GetAllAsync();
 
-            return;
+            if (accounts.Count == 0)
+            {
+                await Dialogs.ShowMessageAsync(
+                    "Accounts", "No accounts found.");
+
+                return;
+            }
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
         }
     }
 
-    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
+    [RelayCommand]
     private async Task DeleteAll()
     {
-        var path = Path.Combine(
-            FileSystem.AppDataDirectory,
-            "PlanAhead.db");
-        File.Delete(path);
-        Preferences.Default.Clear();
-        await DialogService.ShowMessageAsync(
-                "Set as New Install", $"Database and Preferences removed. Next run will be as a New Install");
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var path = Path.Combine(
+                FileSystem.AppDataDirectory,
+                "PlanAhead.db");
+            File.Delete(path);
+            Preferences.Default.Clear();
+            await Dialogs.ShowMessageAsync(
+                    "Set as New Install", $"Database and Preferences removed. Next run will be as a New Install");
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
+        }
     }
 
-    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
+    [RelayCommand]
     private async Task ShowAccountCount()
     {
-        var accounts = await _repository.GetAllAsync();
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var accounts = await _repository.GetAllAsync();
 
-        await DialogService.ShowMessageAsync(
-                "Accounts", $"There are {accounts.Count} accounts.");
+            await Dialogs.ShowMessageAsync(
+                    "Accounts", $"There are {accounts.Count} accounts.");
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
+        }
     }
 
-    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
+    [RelayCommand]
     private async Task ShowDatabasePath()
     {
-        var path = Path.Combine(
-            FileSystem.AppDataDirectory,
-            "PlanAhead.db");
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var path = Path.Combine(
+                FileSystem.AppDataDirectory,
+                "PlanAhead.db");
 
-        await DialogService.ShowMessageAsync(
-                "Database", $"{path}");
+            await Dialogs.ShowMessageAsync(
+                    "Database", $"{path}");
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
+        }
     }
 }

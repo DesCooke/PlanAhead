@@ -1,18 +1,16 @@
 ﻿using Newtonsoft.Json.Linq;
 using PlanAhead.Core.Interfaces.Repositories;
 using PlanAhead.Core.Interfaces.Services;
-using PlanAhead.Core.MethodLogging;
+using PlanAhead.Core.Logging;
 using PlanAhead.Infrastructure.Authentication;
 using PlanAhead.Infrastructure.DB;
 using PlanAhead.Infrastructure.DB.SQLite;
-using PlanAhead.Infrastructure.Logging;
 using PlanAhead.Infrastructure.Repositories;
 using PlanAhead.Infrastructure.Sync.Models;
 using System.Diagnostics;
 
 namespace PlanAhead.Infrastructure.Sync;
 
-[MethodLogging]
 public class AutoSyncService : IAutoSyncService, IDisposable
 {
     private readonly IApplicationSettingsService _settings;
@@ -58,15 +56,24 @@ public class AutoSyncService : IAutoSyncService, IDisposable
 
     public void Start(Guid userId)
     {
-        if (_worker != null)
-            return;
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            if (_worker != null)
+                return;
 
-        // need to pass in userId to remove circular dependencies
-        _userId = userId;
+            // need to pass in userId to remove circular dependencies
+            _userId = userId;
 
-        _cts = new CancellationTokenSource();
+            _cts = new CancellationTokenSource();
 
-        _worker = Task.Run(() => WorkerAsync(_cts.Token));
+            _worker = Task.Run(() => WorkerAsync(_cts.Token));
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
+        }
     }
 
     private async Task WorkerAsync(CancellationToken token)
@@ -79,17 +86,26 @@ public class AutoSyncService : IAutoSyncService, IDisposable
                 {
                     _autoSyncRunning = true;
 
-                    MethodLoggingService.Write($"  AutoSyncing Start");
-                    bool hasLocalChanges = await _syncStateService.HasLocalChangesAsync(token);
-                    bool hasRemoteChanges = await _syncStateService.HasRemoteChangesAsync(_userId, token);
-                    if (hasLocalChanges || hasRemoteChanges)
+                    await _logService.LogAsync("AutoSyncing Start");
+                    using var log = MethodLoggingService.Begin();
+                    try
                     {
-                        await _syncService.SyncAsync(_userId, hasLocalChanges, hasRemoteChanges, token);
+                        bool hasLocalChanges = await _syncStateService.HasLocalChangesAsync(token);
+                        bool hasRemoteChanges = await _syncStateService.HasRemoteChangesAsync(_userId, token);
+                        if (hasLocalChanges || hasRemoteChanges)
+                        {
+                            await _syncService.SyncAsync(_userId, hasLocalChanges, hasRemoteChanges, token);
 
-                        await _syncStateService.UpdateRemoteSyncVersionAsync(_userId, token);
+                            await _syncStateService.UpdateRemoteSyncVersionAsync(_userId, token);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        log.Exception(ex);
+                        throw;
                     }
                     await Task.Delay(TimeSpan.FromSeconds(2), token);
-                    MethodLoggingService.Write($"  AutoSyncing End");
+                    await _logService.LogAsync("AutoSyncing End");
                 }
             }
             finally
@@ -144,30 +160,40 @@ public class AutoSyncService : IAutoSyncService, IDisposable
     public async Task<bool> AutoSyncAsync(
         CancellationToken cancellationToken = default)
     {
-        if (!_networkService.IsConnected)
+        using var log = MethodLoggingService.Begin();
+        try
         {
-            MethodLoggingService.Write($"    - Not connected to network - skipping");
-        }
-        else
-        {
-            bool hasLocalChanges = await _syncStateService.HasLocalChangesAsync(cancellationToken);
-            bool hasRemoteChanges = await _syncStateService.HasRemoteChangesAsync(_userId, cancellationToken);
 
-            MethodLoggingService.Write($"    - hasLocalChanges {hasLocalChanges}, hasRemoteChanges {hasRemoteChanges}");
-
-            if (hasLocalChanges || hasRemoteChanges)
+            if (!_networkService.IsConnected)
             {
-                MethodLoggingService.Write($"    - calling _syncService.SyncAsync for current user");
-
-                await _syncService.SyncAsync(_userId, hasLocalChanges, hasRemoteChanges, cancellationToken);
-
-                await _syncStateService.UpdateRemoteSyncVersionAsync(_userId, cancellationToken);
+                MethodLoggingService.Write("  - Not connected to network - skipping");
             }
             else
             {
-                MethodLoggingService.Write($"    - No changes - skipping");
-            }
+                bool hasLocalChanges = await _syncStateService.HasLocalChangesAsync(cancellationToken);
+                bool hasRemoteChanges = await _syncStateService.HasRemoteChangesAsync(_userId, cancellationToken);
 
+                MethodLoggingService.Write($"  - hasLocalChanges {hasLocalChanges}, hasRemoteChanges {hasRemoteChanges}");
+
+                if (hasLocalChanges || hasRemoteChanges)
+                {
+                    MethodLoggingService.Write("  - calling _syncService.SyncAsync for current user");
+
+                    await _syncService.SyncAsync(_userId, hasLocalChanges, hasRemoteChanges, cancellationToken);
+
+                    await _syncStateService.UpdateRemoteSyncVersionAsync(_userId, cancellationToken);
+                }
+                else
+                {
+                    MethodLoggingService.Write("  - No changes - skipping");
+                }
+
+            }
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            throw;
         }
 
         return true;

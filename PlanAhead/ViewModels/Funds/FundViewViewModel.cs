@@ -1,9 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PlanAhead.Core.Interfaces.Services;
+using PlanAhead.Core.Logging;
 using PlanAhead.Core.Models.Enums;
 using PlanAhead.Core.Services.Accounts;
-using PlanAhead.Infrastructure.Logging;
 using PlanAhead.Infrastructure.Sync;
 using PlanAhead.Interfaces;
 using PlanAhead.Views.Accounts;
@@ -48,9 +48,8 @@ public partial class FundViewViewModel : BaseViewModel
         INavigationService navigation,
         INavigationContext navigationContext,
         IDialogService dialogs,
-        ISyncStateService syncStateService,
-        ILogService logService)
-        : base(navigation, dialogs, logService)
+        ISyncStateService syncStateService)
+        : base(navigation, dialogs)
     {
         _fundService = fundService;
         _navigationContext = navigationContext;
@@ -84,50 +83,87 @@ public partial class FundViewViewModel : BaseViewModel
         };
     }
 
-    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
+    [RelayCommand]
     public async Task LoadAsync()
     {
-        if (Id == Guid.Empty)
+        using var log = MethodLoggingService.Begin();
+        try
         {
-            Id = _navigationContext.Get<Guid>();
-            _navigationContext.Clear();
+            if (Id == Guid.Empty)
+            {
+                Id = _navigationContext.Get<Guid>();
+                _navigationContext.Clear();
+            }
+
+            var fund = await _fundService.GetByIdAsync(Id);
+
+            if (fund != null)
+                Load(fund);
         }
-
-        var fund = await _fundService.GetByIdAsync(Id);
-
-        if (fund != null)
-            Load(fund);
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
+        }
     }
 
-    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
+    [RelayCommand]
     private async Task EditAsync()
     {
-        _navigationContext.Set(Id);
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            _navigationContext.Set(Id);
 
-        await Shell.Current.GoToAsync("FundEditPage");
+            await Shell.Current.GoToAsync("FundEditPage");
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
+        }
     }
 
-    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
+    [RelayCommand]
     private Task CancelAsync()
     {
-        return Navigation.GoBackAsync();
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            return Navigation.GoBackAsync();
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            Dialogs.ShowExceptionAsync(ex);
+        }
+        return Task.CompletedTask;
     }
 
-    [RelayCommand(FlowExceptionsToTaskScheduler = true)]
+    [RelayCommand]
     private async Task DeleteAsync()
     {
-        var delete =
-            await DialogService.ConfirmAsync(
-                "Delete Fund",
-                $"Delete '{Name}'?");
+        using var log = MethodLoggingService.Begin();
+        try
+        {
+            var delete =
+                await Dialogs.ConfirmAsync(
+                    "Delete Fund",
+                    $"Delete '{Name}'?");
 
-        if (!delete)
-            return;
+            if (!delete)
+                return;
 
-        await _fundService.DeleteAsync(Build());
+            await _fundService.DeleteAsync(Build());
 
-        await _syncStateService.IncreaseLocalVersion();
+            await _syncStateService.IncreaseLocalVersion();
 
-        await Navigation.GoBackAsync();
+            await Navigation.GoBackAsync();
+        }
+        catch (Exception ex)
+        {
+            log.Exception(ex);
+            await Dialogs.ShowExceptionAsync(ex);
+        }
     }
 }
