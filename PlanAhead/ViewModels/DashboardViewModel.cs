@@ -101,18 +101,18 @@ public partial class DashboardViewModel : BaseViewModel
                     }
                     else
                     {
-                        MethodLoggingService.Write("No changes detected");
+                        log.Log($"No changes detected");
                     }
                 }
                 else
                 {
-                    MethodLoggingService.Write("Could not parse userId");
+                    log.Log($"Could not parse userId");
                 }
 
             }
             else
             {
-                MethodLoggingService.Write("_authenticationService.GetCurrentUserIdAsync did not return a userIdString");
+                log.Log($"_authenticationService.GetCurrentUserIdAsync did not return a userIdString");
             }
         }
         catch (Exception ex)
@@ -140,8 +140,7 @@ public partial class DashboardViewModel : BaseViewModel
         {
             var accounts = await _repository.GetAllAsync();
 
-            await _logService.LogAsync(
-                $"Number of accounts = {accounts.Count}");
+            MethodLoggingService.Write($"  Number of accounts = {accounts.Count}");
         }
         catch (Exception ex)
         {

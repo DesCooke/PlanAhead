@@ -122,8 +122,8 @@ public class AuthenticationService : IAuthenticationService
         {
             var client = await _provider.GetClientAsync();
 
-            MethodLoggingService.Write($"CurrentUser    : {client.Auth.CurrentUser?.Email}");
-            MethodLoggingService.Write($"CurrentSession : {client.Auth.CurrentSession != null}");
+            log.Log($"CurrentUser    : {client.Auth.CurrentUser?.Email}");
+            log.Log($"CurrentSession : {client.Auth.CurrentSession != null}");
 
             return client.Auth.CurrentUser != null;
         }

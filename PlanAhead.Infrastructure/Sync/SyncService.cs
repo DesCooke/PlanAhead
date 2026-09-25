@@ -64,27 +64,27 @@ public class SyncService : ISyncService
         {
             if (_syncStatusService.IsSyncing)
             {
-                MethodLoggingService.Write("_syncStatusService.IsSyncing is true - so ignoring");
+                log.Log($"_syncStatusService.IsSyncing is true - so ignoring");
             }
             else
             {
-                MethodLoggingService.Write("Setting _syncStatusService.IsSyncing to true");
+                log.Log($"Setting _syncStatusService.IsSyncing to true");
                 _syncStatusService.IsSyncing = true;
                 try
                 {
                     if (!_networkService.IsConnected)
                     {
-                        MethodLoggingService.Write("_networkService.IsConnected is false - so ignoring");
-                        MethodLoggingService.Write("Setting _syncStatusService.IsSyncing to false");
+                        log.Log($"_networkService.IsConnected is false - so ignoring");
+                        log.Log($"Setting _syncStatusService.IsSyncing to false");
                         _syncStatusService.IsSyncing = false;
-                        MethodLoggingService.Write($".._syncStatusService.IsSyncing is {_syncStatusService.IsSyncing}");
+                        log.Log($".._syncStatusService.IsSyncing is {_syncStatusService.IsSyncing}");
                     }
                     else
                     {
 
                         if (hasLocalChanges)
                         {
-                            MethodLoggingService.Write($"Uploading local changes");
+                            log.Log($"Uploading local changes");
                             foreach (var synchroniser in _synchronisers)
                             {
                                 await synchroniser.UploadPendingAsync(userId);
@@ -94,13 +94,13 @@ public class SyncService : ISyncService
                         }
                         else
                         {
-                            MethodLoggingService.Write("hasLocalChanges is false for this device");
+                            log.Log($"hasLocalChanges is false for this device");
                         }
 
 
                         if (hasRemoteChanges)
                         {
-                            MethodLoggingService.Write($"Downloading changes since {_settings.LastRemoteSyncUtc}");
+                            log.Log($"Downloading changes since {_settings.LastRemoteSyncUtc}");
                             foreach (var synchroniser in _synchronisers)
                             {
                                 await synchroniser.DownloadChangesAsync(_settings.LastRemoteSyncUtc);
@@ -108,15 +108,15 @@ public class SyncService : ISyncService
                         }
                         else
                         {
-                            MethodLoggingService.Write("hasRemoteChanges is false for this user");
+                            log.Log($"hasRemoteChanges is false for this user");
                         }
                     }
                 }
                 finally
                 {
-                    MethodLoggingService.Write("Setting _syncStatusService.IsSyncing to false");
+                    log.Log($"Setting _syncStatusService.IsSyncing to false");
                     _syncStatusService.IsSyncing = false;
-                    MethodLoggingService.Write($".._syncStatusService.IsSyncing is {_syncStatusService.IsSyncing}");
+                    log.Log($".._syncStatusService.IsSyncing is {_syncStatusService.IsSyncing}");
                 }
 
             }

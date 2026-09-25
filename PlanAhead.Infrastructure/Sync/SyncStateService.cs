@@ -35,7 +35,7 @@ public class SyncStateService : ISyncStateService
             await GetRemoteSyncVersionAsync(userId, cancellationToken);
 
             _settings.LastRemoteSyncVersion = remoteVersion;
-            await _logService.LogAsync($"_settings.LastRemoteSyncVersion now {_settings.LastRemoteSyncVersion}");
+            log.Log($"_settings.LastRemoteSyncVersion now {_settings.LastRemoteSyncVersion}");
         }
         catch (Exception ex)
         {
@@ -53,7 +53,7 @@ public class SyncStateService : ISyncStateService
             var remoteVersion =
             await GetRemoteSyncVersionAsync(userId, cancellationToken);
 
-            await _logService.LogAsync($"HasRemoteChangesAsync, remoteVersion {remoteVersion}, Local {_settings.LastRemoteSyncVersion}");
+            log.Log($"HasRemoteChangesAsync, remoteVersion {remoteVersion}, Local {_settings.LastRemoteSyncVersion}");
 
             return remoteVersion > _settings.LastRemoteSyncVersion;
         }
@@ -78,7 +78,7 @@ public class SyncStateService : ISyncStateService
             if (response == null)
                 return 0;
 
-            await _logService.LogAsync($"GetRemoteSyncVersionAsync returns response.SyncVersion");
+            log.Log($"GetRemoteSyncVersionAsync returns response.SyncVersion");
 
             return response.SyncVersion;
         }
@@ -99,7 +99,7 @@ public class SyncStateService : ISyncStateService
 
             _settings.LastLocalSyncVersion = localVersion;
 
-            await _logService.LogAsync($"_settings.LastLocalSyncVersion is not {_settings.LastLocalSyncVersion}");
+            log.Log($"_settings.LastLocalSyncVersion is not {_settings.LastLocalSyncVersion}");
 
         }
         catch (Exception ex)
@@ -117,7 +117,7 @@ public class SyncStateService : ISyncStateService
             var localVersion =
             await GetLocalSyncVersionAsync(cancellationToken);
 
-            await _logService.LogAsync($"HasLocalChangesAsync, localVersion {localVersion}, _settings.LastLocalSyncVersion {_settings.LastLocalSyncVersion}");
+            log.Log($"HasLocalChangesAsync, localVersion {localVersion}, _settings.LastLocalSyncVersion {_settings.LastLocalSyncVersion}");
 
             return localVersion > _settings.LastLocalSyncVersion;
         }
@@ -133,7 +133,7 @@ public class SyncStateService : ISyncStateService
         using var log = MethodLoggingService.Begin();
         try
         {
-            await _logService.LogAsync($"GetLocalSyncVersionAsync returns _settings.LastLocalVersion");
+            log.Log($"GetLocalSyncVersionAsync returns _settings.LastLocalVersion");
             return _settings.LastLocalVersion;
         }
         catch (Exception ex)
@@ -149,7 +149,7 @@ public class SyncStateService : ISyncStateService
         try
         {
             _settings.LastLocalVersion++;
-            await _logService.LogAsync($"IncreaseLocalVersion, _settings.LastLocalVersion is now {_settings.LastLocalVersion}");
+            log.Log($"IncreaseLocalVersion, _settings.LastLocalVersion is now {_settings.LastLocalVersion}");
         }
         catch (Exception ex)
         {

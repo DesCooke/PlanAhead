@@ -28,13 +28,18 @@ public sealed class MethodLogScope : IDisposable
         MethodLoggingService.IncreaseDepth();
     }
 
+    public void Log(string message)
+    {
+        MethodLoggingService.Write(
+            $"  {MethodLoggingService.Indent(_depth)}{message}");
+    }
     public void Exception(Exception exception)
     {
         MethodLoggingService.Write(
-            $"{MethodLoggingService.Indent(_depth + 1)}<Red>EXCEPTION</Red> {_filePath}.{_methodName}: {exception.Message}");
+            $"  {MethodLoggingService.Indent(_depth + 1)}<Red>EXCEPTION</Red> {_filePath}.{_methodName}: {exception.Message}");
 
         MethodLoggingService.Write(
-            $"{MethodLoggingService.Indent(_depth + 1)}{exception}");
+            $"  {MethodLoggingService.Indent(_depth + 1)}{exception}");
     }
 
     public void Dispose()

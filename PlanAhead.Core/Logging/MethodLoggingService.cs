@@ -37,9 +37,8 @@ public static class MethodLoggingService
 
     public static void Write(string message)
     {
-        _logService?.Log(message);
+        _logService?.Log($"{message}");
     }
-
     internal static string Indent(int depth)
     {
         return new string(' ', depth * 2);

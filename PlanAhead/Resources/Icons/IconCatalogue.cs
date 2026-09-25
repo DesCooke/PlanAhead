@@ -71,13 +71,13 @@ namespace PlanAhead.Resources.Icons
                         ret = iconDef.ResourceName;
                     }
                 }
+                log.Log($"Returning {ret}");
             }
             catch (Exception ex)
             {
                 log.Exception(ex);
                 throw;
             }
-            MethodLoggingService.Write($"  Returning {ret}");
             return ret;
         }
     }

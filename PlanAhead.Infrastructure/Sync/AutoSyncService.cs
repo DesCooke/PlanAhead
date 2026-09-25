@@ -86,7 +86,6 @@ public class AutoSyncService : IAutoSyncService, IDisposable
                 {
                     _autoSyncRunning = true;
 
-                    await _logService.LogAsync("AutoSyncing Start");
                     using var log = MethodLoggingService.Begin();
                     try
                     {
@@ -105,7 +104,6 @@ public class AutoSyncService : IAutoSyncService, IDisposable
                         throw;
                     }
                     await Task.Delay(TimeSpan.FromSeconds(2), token);
-                    await _logService.LogAsync("AutoSyncing End");
                 }
             }
             finally
@@ -166,18 +164,18 @@ public class AutoSyncService : IAutoSyncService, IDisposable
 
             if (!_networkService.IsConnected)
             {
-                MethodLoggingService.Write("  - Not connected to network - skipping");
+                log.Log($"- Not connected to network - skipping");
             }
             else
             {
                 bool hasLocalChanges = await _syncStateService.HasLocalChangesAsync(cancellationToken);
                 bool hasRemoteChanges = await _syncStateService.HasRemoteChangesAsync(_userId, cancellationToken);
 
-                MethodLoggingService.Write($"  - hasLocalChanges {hasLocalChanges}, hasRemoteChanges {hasRemoteChanges}");
+                log.Log($"- hasLocalChanges {hasLocalChanges}, hasRemoteChanges {hasRemoteChanges}");
 
                 if (hasLocalChanges || hasRemoteChanges)
                 {
-                    MethodLoggingService.Write("  - calling _syncService.SyncAsync for current user");
+                    log.Log($"- calling _syncService.SyncAsync for current user");
 
                     await _syncService.SyncAsync(_userId, hasLocalChanges, hasRemoteChanges, cancellationToken);
 
@@ -185,7 +183,7 @@ public class AutoSyncService : IAutoSyncService, IDisposable
                 }
                 else
                 {
-                    MethodLoggingService.Write("  - No changes - skipping");
+                    log.Log($"- No changes - skipping");
                 }
 
             }
