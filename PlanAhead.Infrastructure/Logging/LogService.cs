@@ -19,9 +19,10 @@ public class LogService : ILogService
 
     private string GetTime()
     {
-        return $"{DateTime.Now:HH:mm:ss.fff}";
-    }
+        var threadId = Environment.CurrentManagedThreadId;
 
+        return $"{DateTime.Now:HH:mm:ss.fff} [T{threadId:D4}]";
+    }
     public void Log(string message)
     {
         var line = $"{GetTime()}: {message}";
