@@ -164,18 +164,18 @@
 
 
                 <!--  Log contents  -->
-                <Editor
-                    x:Name="LogEditor"
+                <ScrollView
+                    x:Name="LogScrollView"
                     Grid.Row="1"
                     BackgroundColor="Transparent"
-                    FontFamily="CourierNew"
-                    FontSize="12"
-                    IsReadOnly="True"
-                    IsSpellCheckEnabled="False"
-                    IsTextPredictionEnabled="False"
-                    Loaded="LogEditor_Loaded"
-                    Text="{Binding Log}"
-                    TextColor="#E8EAED" />
+                    Orientation="Both">
+
+                    <VerticalStackLayout
+                        x:Name="LogStack"
+                        Padding="14,10"
+                        Spacing="0" />
+
+                </ScrollView>
             </Grid>
 
         </Border>

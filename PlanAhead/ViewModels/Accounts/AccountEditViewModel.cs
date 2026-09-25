@@ -153,6 +153,8 @@ public partial class AccountEditViewModel : BaseViewModel
         using var log = MethodLoggingService.Begin();
         try
         {
+            MethodLoggingService.Write("  <Green>SAVING ACCOUNT</Green>");
+
             var error = Validate();
             if (error != null)
             {
@@ -169,6 +171,8 @@ public partial class AccountEditViewModel : BaseViewModel
                 await _accountService.UpdateAsync(Build());
 
             await _syncStateService.IncreaseLocalVersion();
+
+            MethodLoggingService.Write("  <Green>SAVED ACCOUNT</Green>");
 
             await Navigation.GoBackAsync();
         }

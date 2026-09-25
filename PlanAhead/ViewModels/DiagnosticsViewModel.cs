@@ -12,6 +12,8 @@ public partial class DiagnosticsViewModel : BaseViewModel
 
     private readonly ILogService _logService;
 
+    private bool _initialised;
+
     private string _filter = string.Empty;
 
     public string Filter
@@ -44,10 +46,7 @@ public partial class DiagnosticsViewModel : BaseViewModel
                 lines.Where(x =>
                     x.Contains(Filter, StringComparison.OrdinalIgnoreCase)));
         }
-
-        OnPropertyChanged(nameof(Log));
     }
-
     [ObservableProperty]
     private string log = string.Empty;
 
@@ -64,7 +63,13 @@ public partial class DiagnosticsViewModel : BaseViewModel
 
     public async Task InitialiseAsync()
     {
+        if (_initialised)
+            return;
+
+        _initialised = true;
+
         using var log = MethodLoggingService.Begin();
+
         try
         {
             Log = await _logService.GetLogAsync();
